@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="email">E-mail</string>
+    <string name="password">Password</string>
+    <string name="navigate_to_register_text">Do not have an account? Register here</string>
+    <string name="navigate_to_login_text">Already have an account? Sign In</string>
+    <string name="error_invalid_email">Please enter a valid email address.</string>
+    <string name="error_invalid_password">Password must be at least 6 characters long.</string>
+    <string name="error_invalid_username">Username is invalid.</string>
+    <string name="error_default">The operation could not be completed. An error occurred.</string>
+</resources>

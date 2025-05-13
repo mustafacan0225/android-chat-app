@@ -21,4 +21,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "android-chat-app"
 include(":app")
- 
+include(":core:ui")
+include(":feature:auth")
+include(":core:common")
+include(":data:network")
+include(":core:domain")

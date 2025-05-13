@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login">Giriş Yap</string>
+    <string name="register">Kayıt Ol</string>
+    <string name="email">E-posta</string>
+    <string name="password">Parola</string>
+    <string name="navigate_to_register_text">Henüz hesabın yok mu? Kayıt Ol</string>
+    <string name="navigate_to_login_text">Zaten bir hesabın var mı? Giriş Yap</string>
+    <string name="error_invalid_email">Geçerli bir e-posta adresi giriniz.</string>
+    <string name="error_invalid_password">Şifre en az 6 karakter olmalıdır.</string>
+    <string name="error_invalid_username">Kullanıcı adı geçersiz.</string>
+    <string name="error_default">İşlem gerçekleştirilemedi, bir hata oluştu.</string>
+</resources>

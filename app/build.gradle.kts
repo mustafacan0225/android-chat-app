@@ -2,6 +2,10 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.dagger.hilt)
+    alias(libs.plugins.kapt)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
+
 }
 
 android {
@@ -37,10 +41,28 @@ android {
     buildFeatures {
         compose = true
     }
+
+    flavorDimensions += "default"
+
+    productFlavors {
+        create("dev") {
+            dimension = "default"
+            applicationId = "com.mustafacan.android_chat_app.dev"
+            resValue("string", "app_name", "Chat App (Test)")
+        }
+
+        create("prod") {
+            dimension = "default"
+            applicationId = "com.mustafacan.android_chat_app"
+            resValue("string", "app_name", "Chat App (Prod)")
+        }
+    }
 }
 
 dependencies {
-
+    implementation(project(":core:ui"))
+    implementation(project(":feature:auth"))
+    implementation(project(":data:network"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -49,6 +71,17 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.lifecycle.runtime.compose)
+
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+
+    implementation(libs.navigation.compose)
+    implementation(libs.lifecycle.viewmodel.compose)
+
+    implementation(libs.kotlinx.serialization.json)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
