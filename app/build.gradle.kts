@@ -61,8 +61,12 @@ android {
 
 dependencies {
     implementation(project(":core:ui"))
+    implementation(project(":core:common"))
     implementation(project(":feature:auth"))
+
+    //data:network module is not used in app module, it is added only for hilt dependencies
     implementation(project(":data:network"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

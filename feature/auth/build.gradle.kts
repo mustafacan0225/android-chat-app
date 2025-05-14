@@ -51,6 +51,7 @@ android {
 dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:domain"))
+    implementation(project(":core:common"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -65,6 +66,9 @@ dependencies {
 
     implementation(libs.navigation.compose)
     implementation(libs.lifecycle.viewmodel.compose)
+
+    implementation(libs.compose.material.icons.extended)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

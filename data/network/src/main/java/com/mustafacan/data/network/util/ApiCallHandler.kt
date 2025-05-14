@@ -1,8 +1,9 @@
 package com.mustafacan.data.network.util
 
 import com.google.gson.Gson
+import com.mustafacan.core.domain.error.BackendError
+import com.mustafacan.core.domain.error.CustomNetworkError
 import com.mustafacan.data.network.api.model.ApiResponse
-import com.mustafacan.data.network.api.model.CustomException
 import retrofit2.Response
 import java.net.ConnectException
 import java.net.SocketTimeoutException
@@ -29,9 +30,9 @@ abstract class ApiCallHandler {
                 }
 
                 if (error != null) {
-                    Result.failure(CustomException.ApiError(error.message, error.code))
+                    Result.failure(BackendError.Error(error.message, error.code))
                 } else {
-                    Result.failure(CustomException.Default)
+                    Result.failure(CustomNetworkError.Default)
                 }
             }
 
@@ -40,13 +41,12 @@ abstract class ApiCallHandler {
         }
     }
 
-    private fun mapException(e: Exception): CustomException {
+    private fun mapException(e: Exception): CustomNetworkError {
         return when (e) {
-            is CustomException -> e
-            is SSLHandshakeException -> CustomException.SSL("Güvenlik sertifikası doğrulanamadı")
-            is SocketTimeoutException -> CustomException.Timeout("İstek zaman aşımına uğradı")
-            is ConnectException -> CustomException.Network("Ağ bağlantısı sağlanamadı")
-            else -> CustomException.Default
+            is SSLHandshakeException -> CustomNetworkError.SSL("Güvenlik sertifikası doğrulanamadı")
+            is SocketTimeoutException -> CustomNetworkError.Timeout("İstek zaman aşımına uğradı")
+            is ConnectException -> CustomNetworkError.Network("Ağ bağlantısı sağlanamadı")
+            else -> CustomNetworkError.Default
         }
     }
 }

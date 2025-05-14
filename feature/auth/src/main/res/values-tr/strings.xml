@@ -9,5 +9,7 @@
     <string name="error_invalid_email">Geçerli bir e-posta adresi giriniz.</string>
     <string name="error_invalid_password">Şifre en az 6 karakter olmalıdır.</string>
     <string name="error_invalid_username">Kullanıcı adı geçersiz.</string>
-    <string name="error_default">İşlem gerçekleştirilemedi, bir hata oluştu.</string>
+    <string name="hide_password">Gizle</string>
+    <string name="show_password">Göster</string>
+
 </resources>

@@ -2,7 +2,6 @@ package com.mustafacan.auth.ui.login
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
-import com.mustafacan.core.domain.error.BusinessLogicError
 import com.mustafacan.core.domain.model.auth.LoginRequest
 import com.mustafacan.core.domain.usecase.LoginUseCase
 import com.mustafacan.core.ui.viewmodel.BaseViewModel
@@ -11,7 +10,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.mustafacan.auth.R
+import com.mustafacan.core.common.app_event.AppEvent
+import com.mustafacan.core.common.app_event.AppEventManager
+import com.mustafacan.core.common.model.PopupType
+import com.mustafacan.core.ui.util.ErrorHandler
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(@ApplicationContext private val context: Context,
@@ -40,17 +42,17 @@ class LoginViewModel @Inject constructor(@ApplicationContext private val context
                 }
             }
 
+            is LoginUiEvent.TogglePasswordVisibility -> {
+                setState {
+                    copy(
+                        isPasswordVisible = !uiState.value.isPasswordVisible
+                    )
+                }
+
+            }
+
             LoginUiEvent.LoginClicked -> {
-
                 login(email = uiState.value.email, password = uiState.value.password)
-                /*viewModelScope.launch {
-
-
-                    // Simülasyon: giriş başarılı
-                    sendEffect(LoginUiEffect.NavigateToHome)
-
-                }*/
-
             }
 
             LoginUiEvent.RegisterClicked -> {
@@ -69,28 +71,18 @@ class LoginViewModel @Inject constructor(@ApplicationContext private val context
             setState { copy(isLoading = true) }
             delay(2000)
             val result = loginUseCase.invoke(request = LoginRequest(email, password))
+            setState { copy(isLoading = false) }
             result
                 .onSuccess {
-                    setState { copy(isLoading = false) }
+                    sendEffect(LoginUiEffect.NavigateToHome)
                     println("login basarili ${it.id} - ${it.email} - ${it.username}")
                 }
-                .onFailure { error ->
-                    setState { copy(isLoading = false) }
+                .onFailure { throwable ->
+                    //get user friendly message
+                    val errorMessage = ErrorHandler.resolveErrorMessage(context, throwable)
 
-                    var message = ""
-                    if (error is BusinessLogicError) {
-                        val messageResId = when (error) {
-                            BusinessLogicError.InvalidEmail -> R.string.error_invalid_email
-                            BusinessLogicError.InvalidPassword -> R.string.error_invalid_password
-                            else -> { R.string.error_default }
-                        }
-                        message = context.getString(messageResId)
-
-                    } else {
-                        message = error.message?: context.getString(R.string.error_default)
-                    }
-
-                    println("login basarisiz ${message}")
+                    //show popup
+                    AppEventManager.emit(AppEvent.ShowPopup(message = errorMessage, popupType = PopupType.Info))
                 }
 
         }

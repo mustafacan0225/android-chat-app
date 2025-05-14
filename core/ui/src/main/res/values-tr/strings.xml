@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="popup_title_default">Uyarı</string>
+    <string name="error_default">İşlem gerçekleştirilemedi.</string>
+    <string name="error_network_default">Şuan sunucudan yanıt alınamıyor, daha sonra tekrar deneyiniz.</string>
+
+    <string name="error_invalid_email">Geçerli bir e-posta adresi giriniz.</string>
+    <string name="error_invalid_password">Şifre en az 6 karakter olmalıdır.</string>
+    <string name="error_invalid_username">Kullanıcı adı geçersiz.</string>
+</resources>

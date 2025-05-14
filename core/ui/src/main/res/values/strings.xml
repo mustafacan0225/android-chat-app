@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="popup_title_default">Warning</string>
+    <string name="error_default">Your action could not be completed!</string>
+    <string name="error_network_default">There is currently no response from the server, try again later.</string>
+
+    <string name="error_invalid_email">Please enter a valid email address.</string>
+    <string name="error_invalid_password">Password must be at least 6 characters long.</string>
+    <string name="error_invalid_username">Username is invalid.</string>
+</resources>

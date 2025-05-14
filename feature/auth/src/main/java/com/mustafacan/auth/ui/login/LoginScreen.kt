@@ -21,6 +21,12 @@ import com.mustafacan.core.ui.component.button.DefaultButtonColors
 import com.mustafacan.core.ui.component.textfield.DefaultTextFieldColors
 import com.mustafacan.core.ui.navigation.NavDestinationItem
 import com.mustafacan.core.ui.util.rememberFlowWithLifecycle
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
 fun LoginRoute(viewModel: LoginViewModel = hiltViewModel(), navController: NavController) {
@@ -84,7 +90,15 @@ fun LoginScreen(
             onValueChange = { onEvent(LoginUiEvent.PasswordChanged(it)) },
             label = { Text(stringResource(R.string.password)) },
             modifier = Modifier.fillMaxWidth(),
-            visualTransformation = PasswordVisualTransformation(),
+            visualTransformation = if (uiState.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            trailingIcon = {
+                val image = if (uiState.isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                val description = if (uiState.isPasswordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password)
+
+                IconButton(onClick = { onEvent(LoginUiEvent.TogglePasswordVisibility) }) {
+                    Icon(imageVector = image, contentDescription = description, tint = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
+                }
+            },
             singleLine = true,
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(

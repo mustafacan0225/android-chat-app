@@ -9,5 +9,6 @@
     <string name="error_invalid_email">Please enter a valid email address.</string>
     <string name="error_invalid_password">Password must be at least 6 characters long.</string>
     <string name="error_invalid_username">Username is invalid.</string>
-    <string name="error_default">The operation could not be completed. An error occurred.</string>
+    <string name="hide_password">Hide</string>
+    <string name="show_password">Show</string>
 </resources>
