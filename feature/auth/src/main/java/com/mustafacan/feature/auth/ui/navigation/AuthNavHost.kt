@@ -1,10 +1,6 @@
 package com.mustafacan.feature.auth.ui.navigation
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -13,6 +9,8 @@ import androidx.navigation.compose.rememberNavController
 import com.mustafacan.feature.auth.ui.login.LoginRoute
 import com.mustafacan.feature.auth.ui.login.LoginViewModel
 import com.mustafacan.core.ui.navigation.NavDestinationItem
+import com.mustafacan.feature.auth.ui.register.RegisterRoute
+import com.mustafacan.feature.auth.ui.register.RegisterViewModel
 
 @Composable
 fun AuthNavHost(parentNavController: NavHostController) {
@@ -28,7 +26,8 @@ fun AuthNavHost(parentNavController: NavHostController) {
         }
 
         composable<NavDestinationItem.Register> {
-            Text("Register Page", modifier = Modifier.padding(16.dp,50.dp,16.dp))
+            val viewModel = hiltViewModel<RegisterViewModel>()
+            RegisterRoute(viewModel, navController)
         }
 
     }

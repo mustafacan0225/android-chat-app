@@ -16,6 +16,7 @@ object ErrorHandler {
                 val resId = when (error) {
                     BusinessLogicError.InvalidEmail -> R.string.error_invalid_email
                     BusinessLogicError.InvalidPassword -> R.string.error_invalid_password
+                    BusinessLogicError.InvalidUsername -> R.string.error_invalid_username
                     else -> R.string.error_default
                 }
                 context.getString(resId)

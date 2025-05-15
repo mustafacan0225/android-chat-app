@@ -52,7 +52,7 @@ class LoginViewModel @Inject constructor(@ApplicationContext private val context
             }
 
             LoginUiEvent.LoginClicked -> {
-                login(email = uiState.value.email, password = uiState.value.password)
+                login()
             }
 
             LoginUiEvent.RegisterClicked -> {
@@ -65,12 +65,12 @@ class LoginViewModel @Inject constructor(@ApplicationContext private val context
         return email.isNotBlank() && password.trim().isNotBlank()
     }
 
-    private fun login(email: String, password: String) {
+    private fun login() {
 
         viewModelScope.launch {
             setState { copy(isLoading = true) }
             delay(2000)
-            val result = loginUseCase.invoke(request = LoginRequest(email, password))
+            val result = loginUseCase.invoke(request = LoginRequest(uiState.value.email, uiState.value.password))
             setState { copy(isLoading = false) }
             result
                 .onSuccess {
@@ -78,10 +78,7 @@ class LoginViewModel @Inject constructor(@ApplicationContext private val context
                     println("login basarili ${it.id} - ${it.email} - ${it.username}")
                 }
                 .onFailure { throwable ->
-                    //get user friendly message
                     val errorMessage = ErrorHandler.resolveErrorMessage(context, throwable)
-
-                    //show popup
                     AppEventManager.emit(AppEvent.ShowPopup(message = errorMessage, popupType = PopupType.Info))
                 }
 

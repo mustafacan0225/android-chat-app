@@ -18,6 +18,7 @@ material = "1.10.0"
 retrofit = "2.11.0"
 logging-interceptor = "4.12.0"
 compose-icons = "1.6.5"
+accompanist = "0.36.0"
 
 
 [libraries]
@@ -60,9 +61,14 @@ retrofit-converter = { group = "com.squareup.retrofit2", name = "converter-gson"
 # Logging Interceptor
 logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "logging-interceptor"}
 
+# Javax inject
 javax-inject = { group = "javax.inject", name = "javax.inject", version = "1" }
 
+# Material Icons Extended
 compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "compose-icons" }
+
+# Accompanist Navigation Animation
+accompanist-navigation-animation = { group = "com.google.accompanist", name = "accompanist-navigation-animation", version.ref = "accompanist" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -3,6 +3,7 @@
     <string name="login">Giriş Yap</string>
     <string name="register">Kayıt Ol</string>
     <string name="email">E-posta</string>
+    <string name="username">Kullanıcı Adı</string>
     <string name="password">Parola</string>
     <string name="navigate_to_register_text">Henüz hesabın yok mu? Kayıt Ol</string>
     <string name="navigate_to_login_text">Zaten bir hesabın var mı? Giriş Yap</string>
