@@ -1,4 +1,4 @@
-package com.mustafacan.auth.ui.login
+package com.mustafacan.feature.auth.ui.login
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -16,7 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mustafacan.auth.R
+import com.mustafacan.feature.auth.R
 import com.mustafacan.core.ui.component.button.DefaultButtonColors
 import com.mustafacan.core.ui.component.textfield.DefaultTextFieldColors
 import com.mustafacan.core.ui.navigation.NavDestinationItem

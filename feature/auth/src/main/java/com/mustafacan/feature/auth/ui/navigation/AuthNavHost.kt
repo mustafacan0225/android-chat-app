@@ -1,4 +1,4 @@
-package com.mustafacan.auth.ui.navigation
+package com.mustafacan.feature.auth.ui.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -10,8 +10,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.mustafacan.auth.ui.login.LoginRoute
-import com.mustafacan.auth.ui.login.LoginViewModel
+import com.mustafacan.feature.auth.ui.login.LoginRoute
+import com.mustafacan.feature.auth.ui.login.LoginViewModel
 import com.mustafacan.core.ui.navigation.NavDestinationItem
 
 @Composable

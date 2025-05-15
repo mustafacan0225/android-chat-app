@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mustafacan.auth"
+    namespace = "com.mustafacan.feature.auth"
     compileSdk = 35
 
     defaultConfig {

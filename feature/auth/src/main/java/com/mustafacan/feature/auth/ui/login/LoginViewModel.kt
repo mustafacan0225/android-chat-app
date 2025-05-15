@@ -1,4 +1,4 @@
-package com.mustafacan.auth.ui.login
+package com.mustafacan.feature.auth.ui.login
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope

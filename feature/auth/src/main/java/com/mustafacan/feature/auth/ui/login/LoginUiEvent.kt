@@ -1,4 +1,4 @@
-package com.mustafacan.auth.ui.login
+package com.mustafacan.feature.auth.ui.login
 
 sealed class LoginUiEvent {
     data class EmailChanged(val email: String) : LoginUiEvent()
