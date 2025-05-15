@@ -45,7 +45,6 @@ fun LoginRoute(viewModel: LoginViewModel = hiltViewModel(), navController: NavCo
                 is LoginUiEffect.ShowSnackbar -> {
                     // TODO: Show snackbar
                 }
-                null -> {}
             }
         }
     }
