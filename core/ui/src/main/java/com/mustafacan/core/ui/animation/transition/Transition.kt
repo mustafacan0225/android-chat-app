@@ -8,7 +8,7 @@ import androidx.compose.animation.slideOutHorizontally
 
 object Transition {
 
-    private const val defaultDuration = 500
+    private const val defaultDuration = 1000
 
     // 1. Slide in from the left (enters from left to right)
     fun enterFromLeft(duration: Int = defaultDuration) = slideInHorizontally(

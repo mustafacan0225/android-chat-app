@@ -2,8 +2,10 @@ package com.mustafacan.feature.auth.ui.login
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -61,12 +63,15 @@ fun LoginScreen(
 
     Column(
         modifier = Modifier
+            .verticalScroll(rememberScrollState())
             .background(MaterialTheme.colorScheme.background)
             .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+
+        Text(text = stringResource(R.string.login), style = MaterialTheme.typography.headlineLarge)
 
         // Email Field
         OutlinedTextField(
