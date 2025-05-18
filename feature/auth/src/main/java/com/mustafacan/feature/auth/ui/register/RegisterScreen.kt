@@ -46,7 +46,7 @@ import com.mustafacan.core.ui.util.rememberFlowWithLifecycle
 import com.mustafacan.feature.auth.R
 
 @Composable
-fun RegisterRoute(viewModel: RegisterViewModel = hiltViewModel(), navController: NavController) {
+fun RegisterRoute(viewModel: RegisterViewModel = hiltViewModel(), navController: NavController, parentNavController: NavController) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val uiEffect = rememberFlowWithLifecycle(viewModel.uiEffect)
 
@@ -62,7 +62,7 @@ fun RegisterRoute(viewModel: RegisterViewModel = hiltViewModel(), navController:
                 }
 
                 is RegisterUiEffect.NavigateToHome -> {
-
+                    parentNavController.navigate(NavDestinationItem.Home)
                 }
             }
         }

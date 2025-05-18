@@ -5,10 +5,12 @@ import com.mustafacan.core.domain.error.BusinessLogicError
 import com.mustafacan.core.domain.model.auth.RegisterRequest
 import com.mustafacan.core.domain.model.auth.User
 import com.mustafacan.core.domain.repository.api.AuthRepository
+import com.mustafacan.core.domain.usecase.datastore.SaveLocalUserUseCase
 import javax.inject.Inject
 
 class RegisterUseCase @Inject constructor(
-    private val repository: AuthRepository
+    private val repository: AuthRepository,
+    private val saveLocalUserUseCase: SaveLocalUserUseCase
 ) {
     suspend operator fun invoke(request: RegisterRequest): Result<User> {
 
@@ -24,6 +26,14 @@ class RegisterUseCase @Inject constructor(
             return Result.failure(BusinessLogicError.InvalidPassword)
         }
 
-        return repository.register(request)
+        val result = repository.register(request)
+        if (result.isSuccess) {
+            try {
+                saveLocalUserUseCase(result.getOrThrow())
+            } catch (e: Exception) {
+                println("Local user save error: ${e.message}")
+            }
+        }
+        return result
     }
 }

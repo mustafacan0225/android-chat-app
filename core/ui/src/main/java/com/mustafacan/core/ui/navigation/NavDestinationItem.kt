@@ -6,9 +6,15 @@ import kotlinx.serialization.Serializable
 sealed class NavDestinationItem(var titleResource: Int, var icon: Int? = null) {
 
     @Serializable
+    object Splash
+
+    @Serializable
     object Login
 
     @Serializable
     object Register
+
+    @Serializable
+    object Home
 
 }

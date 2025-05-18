@@ -27,7 +27,7 @@ fun AuthNavHost(parentNavController: NavHostController) {
             popEnterTransition = { Transition.enterFromLeft() },
             popExitTransition = { Transition.exitToLeft() }) {
             val viewModel = hiltViewModel<LoginViewModel>()
-            LoginRoute(viewModel, navController)
+            LoginRoute(viewModel, navController, parentNavController)
         }
 
         composable<NavDestinationItem.Register>(
@@ -36,7 +36,7 @@ fun AuthNavHost(parentNavController: NavHostController) {
             popEnterTransition = { Transition.enterFromRight() },
             popExitTransition = { Transition.exitToRight() }) {
             val viewModel = hiltViewModel<RegisterViewModel>()
-            RegisterRoute(viewModel, navController)
+            RegisterRoute(viewModel, navController, parentNavController)
         }
 
     }

@@ -76,7 +76,7 @@ class RegisterViewModel @Inject constructor(@ApplicationContext private val cont
         viewModelScope.launch {
             setState { copy(isLoading = true) }
             delay(2000)
-            val result = registerUseCase.invoke(RegisterRequest(uiState.value.username, uiState.value.email, uiState.value.password))
+            val result = registerUseCase(RegisterRequest(uiState.value.username, uiState.value.email, uiState.value.password))
             setState { copy(isLoading = false) }
 
             result

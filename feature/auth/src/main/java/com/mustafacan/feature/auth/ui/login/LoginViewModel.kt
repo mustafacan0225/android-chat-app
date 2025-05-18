@@ -13,12 +13,15 @@ import javax.inject.Inject
 import com.mustafacan.core.common.app_event.AppEvent
 import com.mustafacan.core.common.app_event.AppEventManager
 import com.mustafacan.core.common.model.PopupType
+import com.mustafacan.core.domain.model.auth.User
+import com.mustafacan.core.domain.usecase.datastore.SaveLocalUserUseCase
 import com.mustafacan.core.ui.util.ErrorHandler
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(@ApplicationContext private val context: Context,
-                                         private val loginUseCase: LoginUseCase,
-                                         ) : BaseViewModel<LoginUiState, LoginUiEvent, LoginUiEffect>(
+class LoginViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val loginUseCase: LoginUseCase,
+) : BaseViewModel<LoginUiState, LoginUiEvent, LoginUiEffect>(
     initialState = LoginUiState()
 ) {
 
@@ -70,7 +73,12 @@ class LoginViewModel @Inject constructor(@ApplicationContext private val context
         viewModelScope.launch {
             setState { copy(isLoading = true) }
             delay(2000)
-            val result = loginUseCase.invoke(request = LoginRequest(uiState.value.email, uiState.value.password))
+            val result = loginUseCase(
+                request = LoginRequest(
+                    uiState.value.email,
+                    uiState.value.password
+                )
+            )
             setState { copy(isLoading = false) }
             result
                 .onSuccess {
@@ -79,9 +87,15 @@ class LoginViewModel @Inject constructor(@ApplicationContext private val context
                 }
                 .onFailure { throwable ->
                     val errorMessage = ErrorHandler.resolveErrorMessage(context, throwable)
-                    AppEventManager.emit(AppEvent.ShowPopup(message = errorMessage, popupType = PopupType.Info))
+                    AppEventManager.emit(
+                        AppEvent.ShowPopup(
+                            message = errorMessage,
+                            popupType = PopupType.Info
+                        )
+                    )
                 }
 
         }
     }
+
 }

@@ -31,7 +31,7 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
-fun LoginRoute(viewModel: LoginViewModel = hiltViewModel(), navController: NavController) {
+fun LoginRoute(viewModel: LoginViewModel = hiltViewModel(), navController: NavController, parentNavController: NavController) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val uiEffect = rememberFlowWithLifecycle(viewModel.uiEffect)
 
@@ -42,7 +42,7 @@ fun LoginRoute(viewModel: LoginViewModel = hiltViewModel(), navController: NavCo
                     navController.navigate(NavDestinationItem.Register)
                 }
                 is LoginUiEffect.NavigateToHome -> {
-                    // TODO: Navigate to Home screen
+                    parentNavController.navigate(NavDestinationItem.Home)
                 }
             }
         }
