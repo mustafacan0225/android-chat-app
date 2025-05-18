@@ -1,4 +1,4 @@
-package com.mustafacan.core.domain.usecase
+package com.mustafacan.core.domain.usecase.api
 
 import com.mustafacan.core.domain.constant.AuthConstants
 import com.mustafacan.core.domain.error.BusinessLogicError

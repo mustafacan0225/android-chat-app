@@ -3,7 +3,7 @@ package com.mustafacan.feature.auth.ui.login
 import android.content.Context
 import androidx.lifecycle.viewModelScope
 import com.mustafacan.core.domain.model.auth.LoginRequest
-import com.mustafacan.core.domain.usecase.LoginUseCase
+import com.mustafacan.core.domain.usecase.api.LoginUseCase
 import com.mustafacan.core.ui.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext

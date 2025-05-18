@@ -6,7 +6,7 @@ import com.mustafacan.core.common.app_event.AppEvent
 import com.mustafacan.core.common.app_event.AppEventManager
 import com.mustafacan.core.common.model.PopupType
 import com.mustafacan.core.domain.model.auth.RegisterRequest
-import com.mustafacan.core.domain.usecase.RegisterUseCase
+import com.mustafacan.core.domain.usecase.api.RegisterUseCase
 import com.mustafacan.core.ui.util.ErrorHandler
 import com.mustafacan.core.ui.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
