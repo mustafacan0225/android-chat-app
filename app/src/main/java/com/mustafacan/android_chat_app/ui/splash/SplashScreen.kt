@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,8 +17,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.mustafacan.core.ui.animation.lottie.LottieAnimation
 import com.mustafacan.core.ui.navigation.NavDestinationItem
 import com.mustafacan.core.ui.util.rememberFlowWithLifecycle
+import com.mustafacan.core.ui.R
 
 @Composable
 fun SplashRoute(viewModel: SplashViewModel = hiltViewModel(), parentNavController: NavController) {
@@ -27,6 +29,7 @@ fun SplashRoute(viewModel: SplashViewModel = hiltViewModel(), parentNavControlle
 
     LaunchedEffect(Unit) {
         uiEffect.collect { effect ->
+
             when (effect) {
                 is SplashUiEffect.NavigateToLogin -> {
                     parentNavController.navigate(NavDestinationItem.Login) {
@@ -38,9 +41,7 @@ fun SplashRoute(viewModel: SplashViewModel = hiltViewModel(), parentNavControlle
 
                 is SplashUiEffect.NavigateToHome -> {
                     parentNavController.navigate(NavDestinationItem.Home) {
-                        popUpTo(0) {
-                            inclusive = true
-                        }
+                        popUpTo(NavDestinationItem.Splash) { inclusive = true }
                     }
                 }
             }
@@ -66,7 +67,8 @@ fun SplashScreen(uiState: SplashUiState, onEvent: (SplashUiEvent) -> Unit) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            CircularProgressIndicator()
+            LottieAnimation(R.raw.lottie_splash, Modifier.width(200.dp).height(200.dp))
+
         }
     }
 }

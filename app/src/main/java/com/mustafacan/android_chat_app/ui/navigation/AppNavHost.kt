@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.mustafacan.android_chat_app.ui.splash.SplashRoute
 import com.mustafacan.android_chat_app.ui.splash.SplashViewModel
+import com.mustafacan.core.ui.animation.transition.Transition
 import com.mustafacan.feature.auth.ui.navigation.AuthNavHost
 import com.mustafacan.core.ui.navigation.NavDestinationItem
 
@@ -21,17 +22,25 @@ fun AppNavHost(navController: NavHostController) {
         navController = navController,
         startDestination = NavDestinationItem.Splash
     ) {
-        composable<NavDestinationItem.Splash> {
+        composable<NavDestinationItem.Splash>(
+            enterTransition = { Transition.enterFromLeft() },
+            exitTransition = { Transition.exitToLeft() },
+            popEnterTransition = { Transition.enterFromLeft() },
+            popExitTransition = { Transition.exitToLeft() }) {
             val viewModel = hiltViewModel<SplashViewModel>()
             SplashRoute(viewModel, parentNavController =  navController)
         }
 
-        composable<NavDestinationItem.Login> {
+        composable<NavDestinationItem.Login>{
             //login/register
             AuthNavHost(parentNavController = navController)
         }
 
-        composable<NavDestinationItem.Home> {
+        composable<NavDestinationItem.Home>(
+            enterTransition = { Transition.enterFromRight() },
+            exitTransition = { Transition.exitToRight() },
+            popEnterTransition = { Transition.enterFromRight() },
+            popExitTransition = { Transition.exitToRight() }) {
             Text("Home Page", Modifier.padding(16.dp, 40.dp))
         }
     }
