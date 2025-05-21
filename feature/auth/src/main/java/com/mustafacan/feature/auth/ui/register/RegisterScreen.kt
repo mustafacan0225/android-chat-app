@@ -62,7 +62,11 @@ fun RegisterRoute(viewModel: RegisterViewModel = hiltViewModel(), navController:
                 }
 
                 is RegisterUiEffect.NavigateToHome -> {
-                    parentNavController.navigate(NavDestinationItem.Home)
+                    parentNavController.navigate(NavDestinationItem.Home) {
+                        popUpTo(0) {
+                            inclusive = true
+                        }
+                    }
                 }
             }
         }

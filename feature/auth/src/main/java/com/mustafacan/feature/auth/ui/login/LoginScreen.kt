@@ -42,7 +42,11 @@ fun LoginRoute(viewModel: LoginViewModel = hiltViewModel(), navController: NavCo
                     navController.navigate(NavDestinationItem.Register)
                 }
                 is LoginUiEffect.NavigateToHome -> {
-                    parentNavController.navigate(NavDestinationItem.Home)
+                    parentNavController.navigate(NavDestinationItem.Home) {
+                        popUpTo(0) {
+                            inclusive = true
+                        }
+                    }
                 }
             }
         }

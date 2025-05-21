@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="bottom_menu_chatroom">Odalar</string>
+    <string name="bottom_menu_messages">Mesajlar</string>
+    <string name="bottom_menu_support">Destek</string>
+    <string name="bottom_menu_users">Kullanıcılar</string>
     <string name="popup_title_default">Uyarı</string>
     <string name="error_default">İşlem gerçekleştirilemedi.</string>
     <string name="error_network_default">Şuan sunucudan yanıt alınamıyor, daha sonra tekrar deneyiniz.</string>

@@ -24,3 +24,4 @@ val OnSecondaryDark = Color(0xFFF8F5F5)
 val OnTertiaryDark = Color(0xFFF8F5F5)
 val OnBackgroundDark = Color(0xFFF8F5F5)
 val OnSurfaceDark = Color(0xFFF8F5F5)
+
