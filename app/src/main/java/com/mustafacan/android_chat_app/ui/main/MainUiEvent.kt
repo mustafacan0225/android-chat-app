@@ -1,8 +1,8 @@
 package com.mustafacan.android_chat_app.ui.main
 
-import com.mustafacan.core.common.app_event.AppEvent
+import com.mustafacan.core.ui.component.dialog.DialogModel
 
 sealed class MainUiEvent {
-    data class ShowPopup(val showPopupEvent: AppEvent.ShowPopup) : MainUiEvent()
-    object DismissPopup : MainUiEvent()
+    data class ShowDialog(val dialogModel: DialogModel) : MainUiEvent()
+    object DismissDialog : MainUiEvent()
 }

@@ -10,11 +10,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.mustafacan.core.common.app_event.AppEvent
-import com.mustafacan.core.common.app_event.AppEventManager
-import com.mustafacan.core.common.model.PopupType
-import com.mustafacan.core.domain.model.auth.User
-import com.mustafacan.core.domain.usecase.datastore.SaveLocalUserUseCase
+import com.mustafacan.core.ui.component.dialog.DialogModel
+import com.mustafacan.core.ui.component.dialog.DialogType
 import com.mustafacan.core.ui.util.ErrorHandler
 
 @HiltViewModel
@@ -45,7 +42,7 @@ class LoginViewModel @Inject constructor(
                 }
             }
 
-            is LoginUiEvent.TogglePasswordVisibility -> {
+            LoginUiEvent.TogglePasswordVisibility -> {
                 setState {
                     copy(
                         isPasswordVisible = !uiState.value.isPasswordVisible
@@ -60,6 +57,14 @@ class LoginViewModel @Inject constructor(
 
             LoginUiEvent.RegisterClicked -> {
                 sendEffect(LoginUiEffect.NavigateToRegister)
+            }
+
+            LoginUiEvent.DismissDialog -> {
+                setState { copy(dialogModel = null) }
+            }
+
+            is LoginUiEvent.ShowDialog -> {
+                setState { copy(dialogModel = event.dialogModel) }
             }
         }
     }
@@ -87,12 +92,7 @@ class LoginViewModel @Inject constructor(
                 }
                 .onFailure { throwable ->
                     val errorMessage = ErrorHandler.resolveErrorMessage(context, throwable)
-                    AppEventManager.emit(
-                        AppEvent.ShowPopup(
-                            message = errorMessage,
-                            popupType = PopupType.Info
-                        )
-                    )
+                    sendEvent(LoginUiEvent.ShowDialog(DialogModel(message = errorMessage, dialogType = DialogType.Info)))
                 }
 
         }

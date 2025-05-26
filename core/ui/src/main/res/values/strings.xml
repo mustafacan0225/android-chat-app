@@ -4,11 +4,15 @@
     <string name="bottom_menu_messages">Messages</string>
     <string name="bottom_menu_support">Support</string>
     <string name="bottom_menu_users">Users</string>
-    <string name="popup_title_default">Warning</string>
+    <string name="dialog_title_default">Warning</string>
     <string name="error_default">Your action could not be completed!</string>
     <string name="error_network_default">There is currently no response from the server, try again later.</string>
 
     <string name="error_invalid_email">Please enter a valid email address.</string>
     <string name="error_invalid_password">Password must be at least 6 characters long.</string>
     <string name="error_invalid_username">Username is invalid.</string>
+    <string name="socket_connecting">Connecting</string>
+    <string name="error_socket_connection">The connection failed. Would you like to try again?</string>
+    <string name="try_again">Try Again</string>
+
 </resources>

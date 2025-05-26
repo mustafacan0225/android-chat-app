@@ -16,7 +16,7 @@ fun HomeNavHost(navController: NavHostController) {
 
     NavHost(
         navController = navController,
-        startDestination = NavDestinationItem.Messages
+        startDestination = NavDestinationItem.Users
     ) {
         composable<NavDestinationItem.Messages>(
             enterTransition = { Transition.enterFromLeft() },

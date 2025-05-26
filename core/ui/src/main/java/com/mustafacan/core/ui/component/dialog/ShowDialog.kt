@@ -20,20 +20,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.mustafacan.core.common.model.PopupType
+import androidx.compose.ui.window.DialogProperties
 import com.mustafacan.core.ui.R
 
 @Composable
-fun BaseDialog(
+fun ShowDialog(
     message: String,
-    popupType: PopupType = PopupType.Info,
+    dialogType: DialogType = DialogType.Info,
     onConfirm: (() -> Unit)? = null,
     onCancel: (() -> Unit)? = null,
     onDismiss: () -> Unit,
     confirmText: String = stringResource(android.R.string.ok),
-    cancelText: String = stringResource(android.R.string.cancel)
+    cancelText: String = stringResource(android.R.string.cancel),
+    isCancelable: Boolean = true
 ) {
-    Dialog(onDismissRequest = onDismiss) {
+    Dialog(
+        onDismissRequest = { if (isCancelable) onDismiss },
+        properties = DialogProperties(
+            dismissOnBackPress = isCancelable,
+            dismissOnClickOutside = isCancelable
+        )
+    ) {
         Surface(
             shape = RoundedCornerShape(20.dp),
             color = MaterialTheme.colorScheme.surface,
@@ -49,7 +56,7 @@ fun BaseDialog(
             ) {
                 // Başlık
                 Text(
-                    text = stringResource(R.string.popup_title_default),
+                    text = stringResource(R.string.dialog_title_default),
                     style = MaterialTheme.typography.headlineSmall,
                     color = Color.Black,
                 )
@@ -71,9 +78,10 @@ fun BaseDialog(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    when (popupType) {
-                        PopupType.Info -> {
-                            Button(onClick = { onConfirm?.invoke() },
+                    when (dialogType) {
+                        DialogType.Info -> {
+                            Button(
+                                onClick = { onConfirm?.invoke() },
                                 colors = ButtonDefaults.buttonColors(
                                     contentColor = MaterialTheme.colorScheme.surface,
                                     containerColor = MaterialTheme.colorScheme.primary
@@ -83,7 +91,7 @@ fun BaseDialog(
                             }
                         }
 
-                        PopupType.Confirm -> {
+                        DialogType.Confirm -> {
                             Button(
                                 onClick = { onCancel?.invoke() },
                                 colors = ButtonDefaults.buttonColors(

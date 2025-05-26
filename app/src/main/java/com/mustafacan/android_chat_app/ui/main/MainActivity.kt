@@ -1,6 +1,7 @@
 package com.mustafacan.android_chat_app.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +30,11 @@ class MainActivity : ComponentActivity() {
 
             }
         }
+    }
+
+    override fun onDestroy() {
+        Log.d("onDestroy", "onDestroy")
+        super.onDestroy()
     }
 
 }

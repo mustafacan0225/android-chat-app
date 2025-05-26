@@ -71,6 +71,9 @@ dependencies {
     //data:datastore module is not used in app module, it is added only for hilt dependencies
     implementation(project(":data:datastore"))
 
+    //data:datastore module is not used in app module, it is added only for hilt dependencies
+    implementation(project(":data:socketio"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

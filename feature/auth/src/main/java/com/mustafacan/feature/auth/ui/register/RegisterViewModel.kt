@@ -2,11 +2,10 @@ package com.mustafacan.feature.auth.ui.register
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
-import com.mustafacan.core.common.app_event.AppEvent
-import com.mustafacan.core.common.app_event.AppEventManager
-import com.mustafacan.core.common.model.PopupType
 import com.mustafacan.core.domain.model.auth.RegisterRequest
 import com.mustafacan.core.domain.usecase.api.RegisterUseCase
+import com.mustafacan.core.ui.component.dialog.DialogModel
+import com.mustafacan.core.ui.component.dialog.DialogType
 import com.mustafacan.core.ui.util.ErrorHandler
 import com.mustafacan.core.ui.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -48,7 +47,7 @@ class RegisterViewModel @Inject constructor(@ApplicationContext private val cont
                 }
             }
 
-            is RegisterUiEvent.TogglePasswordVisibility -> {
+            RegisterUiEvent.TogglePasswordVisibility -> {
                 setState {
                     copy(
                         isPasswordVisible = !uiState.value.isPasswordVisible
@@ -59,11 +58,18 @@ class RegisterViewModel @Inject constructor(@ApplicationContext private val cont
 
             RegisterUiEvent.LoginClicked -> {
                 sendEffect(RegisterUiEffect.NavigateToLogin)
-
             }
 
             RegisterUiEvent.RegisterClicked -> {
                 register()
+            }
+
+            RegisterUiEvent.DismissDialog -> {
+                setState { copy(dialogModel = null) }
+            }
+
+            is RegisterUiEvent.ShowDialog -> {
+                setState { copy(dialogModel = event.dialogModel) }
             }
         }
     }
@@ -86,7 +92,7 @@ class RegisterViewModel @Inject constructor(@ApplicationContext private val cont
                 }
                 .onFailure { throwable ->
                     val errorMessage = ErrorHandler.resolveErrorMessage(context, throwable)
-                    AppEventManager.emit(AppEvent.ShowPopup(message = errorMessage, popupType = PopupType.Info))
+                    sendEvent(RegisterUiEvent.ShowDialog(DialogModel(message = errorMessage, dialogType = DialogType.Info)))
                 }
         }
     }

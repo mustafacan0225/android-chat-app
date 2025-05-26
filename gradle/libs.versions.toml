@@ -21,6 +21,7 @@ compose-icons = "1.6.5"
 datastore = "1.1.6"
 moshi = "1.15.2"
 lottie-compose = "6.6.0"
+socketio = "2.1.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -77,6 +78,10 @@ moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "mosh
 
 # Lottie
 lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie-compose" }
+
+# SocketIO
+socketio = { group = "io.socket", name = "socket.io-client", version.ref = "socketio" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

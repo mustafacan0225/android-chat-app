@@ -4,11 +4,14 @@
     <string name="bottom_menu_messages">Mesajlar</string>
     <string name="bottom_menu_support">Destek</string>
     <string name="bottom_menu_users">Kullanıcılar</string>
-    <string name="popup_title_default">Uyarı</string>
+    <string name="dialog_title_default">Uyarı</string>
     <string name="error_default">İşlem gerçekleştirilemedi.</string>
     <string name="error_network_default">Şuan sunucudan yanıt alınamıyor, daha sonra tekrar deneyiniz.</string>
 
     <string name="error_invalid_email">Geçerli bir e-posta adresi giriniz.</string>
     <string name="error_invalid_password">Şifre en az 6 karakter olmalıdır.</string>
     <string name="error_invalid_username">Kullanıcı adı geçersiz.</string>
+    <string name="socket_connecting">Bağlantı Kuruluyor</string>
+    <string name="error_socket_connection">Bağlantı kurulamadı. Tekrar denemek ister misin?</string>
+    <string name="try_again">Tekrar Dene</string>
 </resources>

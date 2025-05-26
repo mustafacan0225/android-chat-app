@@ -29,6 +29,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.ui.text.input.VisualTransformation
+import com.mustafacan.core.ui.component.dialog.ShowDialog
 
 @Composable
 fun LoginRoute(viewModel: LoginViewModel = hiltViewModel(), navController: NavController, parentNavController: NavController) {
@@ -145,6 +146,23 @@ fun LoginScreen(
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text(stringResource(R.string.navigate_to_register_text), color = MaterialTheme.colorScheme.primary)
+        }
+
+        uiState.dialogModel?.let { dialog ->
+            ShowDialog(
+                message = dialog.message,
+                dialogType = dialog.dialogType,
+                onDismiss = {
+                    onEvent(LoginUiEvent.DismissDialog)
+                    dialog.onDismiss?.invoke()
+                }, onConfirm = {
+                    onEvent(LoginUiEvent.DismissDialog)
+                    dialog.onConfirm?.invoke()
+                }, onCancel = {
+                    onEvent(LoginUiEvent.DismissDialog)
+                    dialog.onCancel?.invoke()
+                }
+            )
         }
     }
 }

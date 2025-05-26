@@ -4,6 +4,7 @@ import android.content.Context
 import com.mustafacan.core.domain.error.BackendError
 import com.mustafacan.core.domain.error.BusinessLogicError
 import com.mustafacan.core.domain.error.CustomNetworkError
+import com.mustafacan.core.domain.error.SocketError
 import com.mustafacan.core.ui.R
 
 object ErrorHandler {
@@ -28,6 +29,10 @@ object ErrorHandler {
 
             is BackendError -> {
                 error.message
+            }
+
+            is SocketError.ConnectionError -> {
+                context.getString(R.string.error_socket_connection)
             }
 
             else -> context.getString(R.string.error_default)

@@ -40,6 +40,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mustafacan.core.ui.component.button.DefaultButtonColors
+import com.mustafacan.core.ui.component.dialog.ShowDialog
 import com.mustafacan.core.ui.component.textfield.DefaultTextFieldColors
 import com.mustafacan.core.ui.navigation.NavDestinationItem
 import com.mustafacan.core.ui.util.rememberFlowWithLifecycle
@@ -174,6 +175,23 @@ fun RegisterScreen(
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text(stringResource(R.string.navigate_to_login_text), color = MaterialTheme.colorScheme.primary)
+        }
+
+        uiState.dialogModel?.let { dialog ->
+            ShowDialog(
+                message = dialog.message,
+                dialogType = dialog.dialogType,
+                onDismiss = {
+                    onEvent(RegisterUiEvent.DismissDialog)
+                    dialog.onDismiss?.invoke()
+                }, onConfirm = {
+                    onEvent(RegisterUiEvent.DismissDialog)
+                    dialog.onConfirm?.invoke()
+                }, onCancel = {
+                    onEvent(RegisterUiEvent.DismissDialog)
+                    dialog.onCancel?.invoke()
+                }
+            )
         }
     }
 }

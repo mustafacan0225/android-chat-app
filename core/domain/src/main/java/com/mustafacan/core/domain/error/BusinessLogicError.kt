@@ -3,8 +3,8 @@ package com.mustafacan.core.domain.error
 sealed class BusinessLogicError(message: String) : Exception(message) {
 
     // Auth-related
-    object InvalidEmail : BusinessLogicError("Invalid email")
-    object InvalidPassword : BusinessLogicError("Invalid password")
-    object InvalidUsername : BusinessLogicError("Invalid username")
+    object InvalidEmail : BusinessLogicError("")
+    object InvalidPassword : BusinessLogicError("")
+    object InvalidUsername : BusinessLogicError("")
 
 }
