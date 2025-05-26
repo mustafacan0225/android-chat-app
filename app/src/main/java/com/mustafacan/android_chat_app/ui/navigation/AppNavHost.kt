@@ -6,7 +6,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.mustafacan.android_chat_app.ui.home.HomeRoute
-import com.mustafacan.android_chat_app.ui.home.HomeScreen
 import com.mustafacan.android_chat_app.ui.home.HomeViewModel
 import com.mustafacan.android_chat_app.ui.splash.SplashRoute
 import com.mustafacan.android_chat_app.ui.splash.SplashViewModel
