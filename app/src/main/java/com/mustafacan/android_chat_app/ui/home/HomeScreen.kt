@@ -5,26 +5,17 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -35,10 +26,8 @@ import com.mustafacan.core.ui.R
 import com.mustafacan.android_chat_app.ui.bottommenu.BottomMenu
 import com.mustafacan.android_chat_app.ui.navigation.HomeNavHost
 import com.mustafacan.core.domain.model.socket.SocketConnectionState
-import com.mustafacan.core.ui.animation.lottie.LottieAnimation
 import com.mustafacan.core.ui.component.dialog.ShowDialog
 import com.mustafacan.core.ui.component.overlay.FullScreenLoadingOverlay
-import com.mustafacan.core.ui.theme.PrimaryDark
 
 @Composable
 fun HomeRoute(viewModel: HomeViewModel) {
