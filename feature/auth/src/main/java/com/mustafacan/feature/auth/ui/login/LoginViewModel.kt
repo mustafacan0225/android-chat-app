@@ -92,7 +92,19 @@ class LoginViewModel @Inject constructor(
                 }
                 .onFailure { throwable ->
                     val errorMessage = ErrorHandler.resolveErrorMessage(context, throwable)
-                    sendEvent(LoginUiEvent.ShowDialog(DialogModel(message = errorMessage, dialogType = DialogType.Info)))
+                    sendEvent(
+                        LoginUiEvent.ShowDialog(
+                            DialogModel(
+                                message = errorMessage,
+                                dialogType = DialogType.Info,
+                                onDismiss = {
+                                    sendEvent(LoginUiEvent.DismissDialog)
+                                }, onConfirm = {
+                                    sendEvent(LoginUiEvent.DismissDialog)
+                                }
+                            )
+                        )
+                    )
                 }
 
         }

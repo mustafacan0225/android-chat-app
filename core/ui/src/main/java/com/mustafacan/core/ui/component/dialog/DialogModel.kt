@@ -7,5 +7,6 @@ data class DialogModel(
     val onCancel: (() -> Unit)? = null,
     val onConfirm: (() -> Unit)? = null,
     val cancelText: String? = null,
-    val confirmText: String? = null
+    val confirmText: String? = null,
+    val isCancelable: Boolean = true
 )

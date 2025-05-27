@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -36,6 +37,7 @@ import com.mustafacan.android_chat_app.ui.navigation.HomeNavHost
 import com.mustafacan.core.domain.model.socket.SocketConnectionState
 import com.mustafacan.core.ui.animation.lottie.LottieAnimation
 import com.mustafacan.core.ui.component.dialog.ShowDialog
+import com.mustafacan.core.ui.component.overlay.FullScreenLoadingOverlay
 import com.mustafacan.core.ui.theme.PrimaryDark
 
 @Composable
@@ -47,15 +49,17 @@ fun HomeRoute(viewModel: HomeViewModel) {
     DisposableEffect(Unit) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
-                Lifecycle.Event.ON_START ->  {
+                Lifecycle.Event.ON_START -> {
                     Log.d("LifecycleObserver", "ON_START -> ConnectSocket event sent")
                     viewModel.sendEvent(HomeUiEvent.DismissDialog)
                     viewModel.sendEvent(HomeUiEvent.ConnectSocket)
                 }
+
                 Lifecycle.Event.ON_STOP -> {
                     Log.d("LifecycleObserver", "ON_STOP -> DisconnectSocket event sent")
                     viewModel.sendEvent(HomeUiEvent.DisconnectSocket)
                 }
+
                 else -> {
                     Log.d("LifecycleObserver", "Unhandled lifecycle event: $event")
                 }
@@ -73,9 +77,11 @@ fun HomeRoute(viewModel: HomeViewModel) {
 }
 
 @Composable
-fun HomeScreen(uiState: HomeUiState, onEvent: (HomeUiEvent) -> Unit, navController: NavHostController) {
-
-
+fun HomeScreen(
+    uiState: HomeUiState,
+    onEvent: (HomeUiEvent) -> Unit,
+    navController: NavHostController
+) {
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(bottomBar = {
             AnimatedVisibility(
@@ -96,34 +102,14 @@ fun HomeScreen(uiState: HomeUiState, onEvent: (HomeUiEvent) -> Unit, navControll
         }
 
         if (uiState.connectionState == SocketConnectionState.CONNECTING) {
-            Column(
-                modifier = Modifier.fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.5f))
-                    .zIndex(1f),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                LottieAnimation(R.raw.lottie_splash, Modifier.width(50.dp).height(50.dp))
-                Text(stringResource(R.string.socket_connecting), color = PrimaryDark)
-            }
+            FullScreenLoadingOverlay(
+                message = stringResource(R.string.socket_connecting),
+                animationOrIconModifier = Modifier.size(75.dp)
+            )
         }
 
-        uiState.dialogModel?.let { dialog ->
-            ShowDialog(
-                message = dialog.message,
-                dialogType = dialog.dialogType,
-                onDismiss = {
-                    onEvent(HomeUiEvent.DismissDialog)
-                    dialog.onDismiss?.invoke()
-                }, onConfirm = {
-                    onEvent(HomeUiEvent.DismissDialog)
-                    dialog.onConfirm?.invoke()
-                }, onCancel = {
-                    onEvent(HomeUiEvent.DismissDialog)
-                    dialog.onCancel?.invoke()
-                }, confirmText = dialog.confirmText?: stringResource(android.R.string.ok),
-                isCancelable = false
-            )
+        uiState.dialogModel?.let { dialogModel ->
+            ShowDialog(dialogModel)
         }
     }
 

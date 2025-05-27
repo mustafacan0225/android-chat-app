@@ -15,7 +15,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RegisterViewModel @Inject constructor(@ApplicationContext private val context: Context, private val registerUseCase: RegisterUseCase) :
+class RegisterViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val registerUseCase: RegisterUseCase
+) :
     BaseViewModel<RegisterUiState, RegisterUiEvent, RegisterUiEffect>(initialState = RegisterUiState()) {
 
     override fun handleEvent(event: RegisterUiEvent) {
@@ -82,7 +85,13 @@ class RegisterViewModel @Inject constructor(@ApplicationContext private val cont
         viewModelScope.launch {
             setState { copy(isLoading = true) }
             delay(2000)
-            val result = registerUseCase(RegisterRequest(uiState.value.username, uiState.value.email, uiState.value.password))
+            val result = registerUseCase(
+                RegisterRequest(
+                    uiState.value.username,
+                    uiState.value.email,
+                    uiState.value.password
+                )
+            )
             setState { copy(isLoading = false) }
 
             result
@@ -92,7 +101,19 @@ class RegisterViewModel @Inject constructor(@ApplicationContext private val cont
                 }
                 .onFailure { throwable ->
                     val errorMessage = ErrorHandler.resolveErrorMessage(context, throwable)
-                    sendEvent(RegisterUiEvent.ShowDialog(DialogModel(message = errorMessage, dialogType = DialogType.Info)))
+                    sendEvent(
+                        RegisterUiEvent.ShowDialog(
+                            DialogModel(
+                                message = errorMessage,
+                                dialogType = DialogType.Info,
+                                onDismiss = {
+                                    sendEvent(RegisterUiEvent.DismissDialog)
+                                }, onConfirm = {
+                                    sendEvent(RegisterUiEvent.DismissDialog)
+                                }
+                            )
+                        )
+                    )
                 }
         }
     }

@@ -25,20 +25,13 @@ import com.mustafacan.core.ui.R
 
 @Composable
 fun ShowDialog(
-    message: String,
-    dialogType: DialogType = DialogType.Info,
-    onConfirm: (() -> Unit)? = null,
-    onCancel: (() -> Unit)? = null,
-    onDismiss: () -> Unit,
-    confirmText: String = stringResource(android.R.string.ok),
-    cancelText: String = stringResource(android.R.string.cancel),
-    isCancelable: Boolean = true
+    dialogModel: DialogModel
 ) {
     Dialog(
-        onDismissRequest = { if (isCancelable) onDismiss },
+        onDismissRequest = { if (dialogModel.isCancelable) dialogModel.onDismiss },
         properties = DialogProperties(
-            dismissOnBackPress = isCancelable,
-            dismissOnClickOutside = isCancelable
+            dismissOnBackPress = dialogModel.isCancelable,
+            dismissOnClickOutside = dialogModel.isCancelable
         )
     ) {
         Surface(
@@ -65,7 +58,7 @@ fun ShowDialog(
 
                 // Mesaj
                 Text(
-                    text = message,
+                    text = dialogModel.message,
                     style = MaterialTheme.typography.bodyLarge,
                     color = Color.Black,
                     modifier = Modifier.padding(bottom = 24.dp)
@@ -78,41 +71,42 @@ fun ShowDialog(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    when (dialogType) {
+                    when (dialogModel.dialogType) {
                         DialogType.Info -> {
                             Button(
-                                onClick = { onConfirm?.invoke() },
+                                onClick = { dialogModel.onConfirm?.invoke() },
                                 colors = ButtonDefaults.buttonColors(
                                     contentColor = MaterialTheme.colorScheme.surface,
                                     containerColor = MaterialTheme.colorScheme.primary
                                 )
                             ) {
-                                Text(text = confirmText)
+                                Text(text = dialogModel.confirmText ?: stringResource(android.R.string.ok))
+
                             }
                         }
 
                         DialogType.Confirm -> {
                             Button(
-                                onClick = { onCancel?.invoke() },
+                                onClick = { dialogModel.onCancel?.invoke() },
                                 colors = ButtonDefaults.buttonColors(
                                     contentColor = MaterialTheme.colorScheme.surface,
                                     containerColor = MaterialTheme.colorScheme.primary
                                 )
                             ) {
-                                Text(text = cancelText)
+                                Text(text = dialogModel.cancelText ?: stringResource(android.R.string.cancel))
                             }
 
                             Spacer(modifier = Modifier.width(12.dp))
 
                             Button(
-                                onClick = { onConfirm?.invoke() },
+                                onClick = { dialogModel.onConfirm?.invoke() },
                                 colors = ButtonDefaults.buttonColors(
                                     contentColor = MaterialTheme.colorScheme.surface,
                                     containerColor = MaterialTheme.colorScheme.primary
                                 )
                             ) {
                                 Text(
-                                    text = confirmText
+                                    text = dialogModel.confirmText ?: stringResource(android.R.string.ok)
                                 )
                             }
                         }

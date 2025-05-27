@@ -62,11 +62,17 @@ class HomeViewModel @Inject constructor(
                                 dialogType = DialogType.Confirm,
                                 confirmText = context.getString(R.string.try_again),
                                 onConfirm = {
+                                    sendEvent(HomeUiEvent.DismissDialog)
                                     sendEvent(HomeUiEvent.ConnectSocket)
-                                })
+                                },
+                                onCancel = {
+                                    sendEvent(HomeUiEvent.DismissDialog)
+                                },
+                                isCancelable = false
+                            )
                         )
                     )
-                } else  {
+                } else {
                     sendEvent(HomeUiEvent.DismissDialog)
                 }
 

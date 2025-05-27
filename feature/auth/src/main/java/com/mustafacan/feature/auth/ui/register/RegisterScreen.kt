@@ -177,21 +177,8 @@ fun RegisterScreen(
             Text(stringResource(R.string.navigate_to_login_text), color = MaterialTheme.colorScheme.primary)
         }
 
-        uiState.dialogModel?.let { dialog ->
-            ShowDialog(
-                message = dialog.message,
-                dialogType = dialog.dialogType,
-                onDismiss = {
-                    onEvent(RegisterUiEvent.DismissDialog)
-                    dialog.onDismiss?.invoke()
-                }, onConfirm = {
-                    onEvent(RegisterUiEvent.DismissDialog)
-                    dialog.onConfirm?.invoke()
-                }, onCancel = {
-                    onEvent(RegisterUiEvent.DismissDialog)
-                    dialog.onCancel?.invoke()
-                }
-            )
+        uiState.dialogModel?.let { dialogModel ->
+            ShowDialog(dialogModel)
         }
     }
 }
