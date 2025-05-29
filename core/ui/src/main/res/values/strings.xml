@@ -14,5 +14,11 @@
     <string name="socket_connecting">Connecting</string>
     <string name="error_socket_connection">The connection failed. Would you like to try again?</string>
     <string name="try_again">Try Again</string>
+    <string name="welcome">Welcome</string>
+    <string name="connection_state_online">Online</string>
+    <string name="connection_state_connecting">Connecting...</string>
+    <string name="connection_state_disconnected">Disconnected</string>
+    <string name="connection_state_error">Not Connected</string>
+    Welcome
 
 </resources>

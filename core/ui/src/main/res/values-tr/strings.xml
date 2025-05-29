@@ -14,4 +14,9 @@
     <string name="socket_connecting">Bağlantı Kuruluyor</string>
     <string name="error_socket_connection">Bağlantı kurulamadı. Tekrar denemek ister misin?</string>
     <string name="try_again">Tekrar Dene</string>
+    <string name="welcome">Hoşgeldin</string>
+    <string name="connection_state_online">Çevrimiçi</string>
+    <string name="connection_state_connecting">Bağlanıyor...</string>
+    <string name="connection_state_disconnected">Bağlantı Koptu</string>
+    <string name="connection_state_error">Bağlantı Kurulamadı</string>
 </resources>

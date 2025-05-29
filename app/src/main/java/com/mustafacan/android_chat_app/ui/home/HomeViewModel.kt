@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.mustafacan.core.domain.model.socket.SocketConnectionState
+import com.mustafacan.core.domain.usecase.datastore.GetLocalUserUseCase
 import com.mustafacan.core.domain.usecase.socket.ObserveSocketConnectionUseCase
 import com.mustafacan.core.domain.usecase.socket.SocketConnectUseCase
 import com.mustafacan.core.domain.usecase.socket.SocketDisconnectUseCase
@@ -16,17 +17,22 @@ import javax.inject.Inject
 import com.mustafacan.core.ui.R
 import com.mustafacan.core.ui.component.dialog.DialogModel
 import com.mustafacan.core.ui.component.dialog.DialogType
+import com.mustafacan.core.ui.component.scaffold.RootScaffoldController
+import com.mustafacan.core.ui.component.scaffold.ScaffoldEvent
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val socketConnectUseCase: SocketConnectUseCase,
     private val socketDisconnectUseCase: SocketDisconnectUseCase,
-    private val observeSocketConnectionUseCase: ObserveSocketConnectionUseCase
+    private val observeSocketConnectionUseCase: ObserveSocketConnectionUseCase,
+    private val getLocalUserUseCase: GetLocalUserUseCase
 ) : BaseViewModel<HomeUiState, HomeUiEvent, HomeUiEffect>(initialState = HomeUiState()) {
 
     init {
         observeConnectionState()
+        getUserName()
+        observerScaffoldController()
     }
 
     override fun handleEvent(event: HomeUiEvent) {
@@ -46,6 +52,11 @@ class HomeViewModel @Inject constructor(
             is HomeUiEvent.ShowDialog -> {
                 setState { copy(dialogModel = event.dialogModel) }
             }
+
+            is HomeUiEvent.SetTopAppBarContent -> {
+                setState { copy(topBarContent = event.content) }
+            }
+
         }
     }
 
@@ -80,6 +91,23 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun observerScaffoldController() {
+        viewModelScope.launch {
+            RootScaffoldController.events.collect { event ->
+                when (event) {
+                    is ScaffoldEvent.SetTopBar -> {
+                        setState { copy(topBarContent = event.content) }
+                    }
+
+                    is ScaffoldEvent.SetBottomBarVisibility -> {
+                        setState { copy(bottomBarVisibility = event.visible) }
+                    }
+                }
+
+            }
+        }
+    }
+
     fun connect() {
         viewModelScope.launch {
             setState { copy(connectionState = SocketConnectionState.CONNECTING) }
@@ -95,6 +123,14 @@ class HomeViewModel @Inject constructor(
     fun disconnect() {
         viewModelScope.launch {
             socketDisconnectUseCase()
+        }
+    }
+
+    fun getUserName() {
+        viewModelScope.launch {
+            getLocalUserUseCase()?.let {
+                setState { copy(username = it.username) }
+            }
         }
     }
 }

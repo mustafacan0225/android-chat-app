@@ -5,6 +5,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.mustafacan.android_chat_app.ui.home.HomeRoute
 import com.mustafacan.android_chat_app.ui.home.HomeViewModel
 import com.mustafacan.android_chat_app.ui.splash.SplashRoute
@@ -40,7 +41,8 @@ fun AppNavHost(navController: NavHostController) {
             popEnterTransition = { Transition.enterFromRight() },
             popExitTransition = { Transition.exitToRight() }) {
             val viewModel = hiltViewModel<HomeViewModel>()
-            HomeRoute(viewModel)
+            val navController = rememberNavController()
+            HomeRoute(viewModel, navController)
         }
     }
 }

@@ -39,7 +39,7 @@ fun HomeNavHost(navController: NavHostController) {
             exitTransition = { Transition.exitToRight() },
             popEnterTransition = { Transition.enterFromRight() },
             popExitTransition = { Transition.exitToRight() }) {
-            Text("Users Page", Modifier.padding(16.dp, 40.dp))
+            Text("Users Page", Modifier.padding(16.dp, 0.dp))
         }
 
         composable<NavDestinationItem.Support>(
@@ -51,3 +51,4 @@ fun HomeNavHost(navController: NavHostController) {
         }
     }
 }
+
