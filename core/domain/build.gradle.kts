@@ -54,4 +54,8 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(libs.kotlinx.serialization.json)
+
+    //paging
+    implementation(libs.paging.runtime)
+    implementation(libs.paging.common.ktx)
 }

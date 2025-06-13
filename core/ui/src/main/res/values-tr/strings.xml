@@ -5,6 +5,8 @@
     <string name="bottom_menu_support">Destek</string>
     <string name="bottom_menu_users">Kullanıcılar</string>
     <string name="dialog_title_default">Uyarı</string>
+    <string name="error_title">Hata</string>
+    <string name="retry">Yeniden Yükle</string>
     <string name="error_default">İşlem gerçekleştirilemedi.</string>
     <string name="error_network_default">Şuan sunucudan yanıt alınamıyor, daha sonra tekrar deneyiniz.</string>
 
@@ -19,4 +21,10 @@
     <string name="connection_state_connecting">Bağlanıyor...</string>
     <string name="connection_state_disconnected">Bağlantı Koptu</string>
     <string name="connection_state_error">Bağlantı Kurulamadı</string>
+    <string name="online_users">Çevrimiçi Kullanıcılar</string>
+    <string name="chat">Mesaj</string>
+    <string name="all_users">Tüm Kullanıcılar</string>
+    <string name="default_error">Bir hata oluștu, tekrar denemek için tıklayın</string>
+    <string name="all">Tümünü göster</string>
+
 </resources>

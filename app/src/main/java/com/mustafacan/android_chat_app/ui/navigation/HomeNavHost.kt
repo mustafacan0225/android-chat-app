@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.mustafacan.core.ui.animation.transition.Transition
 import com.mustafacan.core.ui.navigation.NavDestinationItem
+import com.mustafacan.feature.users.ui.navigation.UsersNavHost
 
 @Composable
 fun HomeNavHost(navController: NavHostController) {
@@ -39,7 +40,7 @@ fun HomeNavHost(navController: NavHostController) {
             exitTransition = { Transition.exitToRight() },
             popEnterTransition = { Transition.enterFromRight() },
             popExitTransition = { Transition.exitToRight() }) {
-            Text("Users Page", Modifier.padding(16.dp, 0.dp))
+            UsersNavHost(parentNavController = navController)
         }
 
         composable<NavDestinationItem.Support>(

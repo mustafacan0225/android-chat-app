@@ -115,7 +115,7 @@ fun HomeScreen(
 
         }
 
-        if (uiState.connectionState == SocketConnectionState.CONNECTING) {
+        if (uiState.socketConnectionState == SocketConnectionState.CONNECTING) {
             FullScreenLoadingOverlay(
                 message = stringResource(R.string.socket_connecting),
                 animationOrIconModifier = Modifier.size(75.dp)
@@ -142,7 +142,7 @@ fun HomeScreenTopAppBar(uiState: HomeUiState) {
         Spacer(modifier = Modifier.height(4.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
 
-            val (statusText, statusColor) = when (uiState.connectionState) {
+            val (statusText, statusColor) = when (uiState.socketConnectionState) {
                 SocketConnectionState.CONNECTING -> stringResource(R.string.connection_state_connecting) to Color.Yellow
                 SocketConnectionState.CONNECTED -> stringResource(R.string.connection_state_online) to Color.Green
                 SocketConnectionState.DISCONNECTED -> stringResource(R.string.connection_state_disconnected) to Color.Red

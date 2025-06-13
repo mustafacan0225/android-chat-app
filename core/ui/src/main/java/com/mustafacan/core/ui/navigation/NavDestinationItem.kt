@@ -25,6 +25,12 @@ sealed class NavDestinationItem(var titleResource: Int, var icon: Int? = null) {
     object Users: NavDestinationItem(R.string.bottom_menu_users, R.drawable.bottom_menu_users)
 
     @Serializable
+    object OnlineUsers
+
+    @Serializable
+    object AllUsers
+
+    @Serializable
     object Messages: NavDestinationItem(R.string.bottom_menu_messages, R.drawable.bottom_menu_messages)
 
     @Serializable

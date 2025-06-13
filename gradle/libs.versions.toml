@@ -22,6 +22,7 @@ datastore = "1.1.6"
 moshi = "1.15.2"
 lottie-compose = "6.6.0"
 socketio = "2.1.2"
+paging = "3.3.6"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -82,6 +83,10 @@ lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", versio
 # SocketIO
 socketio = { group = "io.socket", name = "socket.io-client", version.ref = "socketio" }
 
+# Paging
+paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
+paging-common-ktx = { group = "androidx.paging", name = "paging-common-ktx", version.ref = "paging" }
+paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

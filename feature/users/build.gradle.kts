@@ -1,12 +1,13 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kapt)
     alias(libs.plugins.dagger.hilt)
+    alias(libs.plugins.kapt)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
-    namespace = "com.mustafacan.data.socketio"
+    namespace = "com.mustafacan.feature.users"
     compileSdk = 35
 
     defaultConfig {
@@ -34,44 +35,40 @@ android {
     }
 
     buildFeatures {
-        buildConfig = true
+        compose = true
     }
 
     flavorDimensions += "default"
 
     productFlavors {
         create("dev") {
-            buildConfigField("String", "SOCKET_URL", "\"http://192.168.1.122:5000\"")
-            //buildConfigField("String", "SOCKET_URL", "\"http://192.168.43.55:5000\"")
-
-
         }
 
         create("prod") {
-            buildConfigField("String", "SOCKET_URL", "\"http://10.0.2.2:5000\"")
         }
     }
 }
 
 dependencies {
+    implementation(project(":core:ui"))
     implementation(project(":core:domain"))
+    implementation(project(":core:common"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.material3)
+    implementation(libs.lifecycle.runtime.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    //hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
 
-    //moshi
-    implementation(libs.moshi)
-    implementation(libs.moshi.kotlin)
-
-    // socketio
-    implementation(libs.socketio) {
-        exclude(group = "org.json", module = "json")
-    }
+    implementation(libs.navigation.compose)
+    implementation(libs.lifecycle.viewmodel.compose)
+    implementation(libs.paging.compose)
 }

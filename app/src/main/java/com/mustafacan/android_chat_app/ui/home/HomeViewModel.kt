@@ -30,7 +30,7 @@ class HomeViewModel @Inject constructor(
 ) : BaseViewModel<HomeUiState, HomeUiEvent, HomeUiEffect>(initialState = HomeUiState()) {
 
     init {
-        observeConnectionState()
+        observeSocketConnectionState()
         getUserName()
         observerScaffoldController()
     }
@@ -60,11 +60,18 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun observeConnectionState() {
+    private fun observeSocketConnectionState() {
         viewModelScope.launch {
             observeSocketConnectionUseCase().collect { state ->
-                setState { copy(connectionState = state) }
-                Log.d("SocketConnection", state.name)
+                Log.d("SocketConnection", "${state.name} on app module")
+                if (uiState.value.socketConnectionState == SocketConnectionState.CONNECTING
+                    && state != SocketConnectionState.CONNECTING) {
+
+                    //optional(for loading anim)
+                    delay(2000)
+                }
+                setState { copy(socketConnectionState = state) }
+
                 if (state == SocketConnectionState.ERROR) {
                     sendEvent(
                         HomeUiEvent.ShowDialog(
@@ -110,13 +117,8 @@ class HomeViewModel @Inject constructor(
 
     fun connect() {
         viewModelScope.launch {
-            setState { copy(connectionState = SocketConnectionState.CONNECTING) }
-            delay(3000)
+            setState { copy(socketConnectionState = SocketConnectionState.CONNECTING) }
             socketConnectUseCase()
-                .onSuccess {
-                    setState { copy(connectionState = SocketConnectionState.CONNECTED) }
-                }
-
         }
     }
 

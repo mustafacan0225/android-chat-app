@@ -10,6 +10,7 @@ import com.mustafacan.core.domain.service.SocketService
 import com.mustafacan.data.socketio.factory.SocketFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -25,7 +26,11 @@ class SocketServiceImpl @Inject constructor(
 
     private var socket: Socket? = null
 
-    private val _incomingEvents = MutableSharedFlow<SocketMessage>()
+    private val _incomingEvents = MutableSharedFlow<SocketMessage>(
+        replay = 1,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
     override val incomingEvents: SharedFlow<SocketMessage> = _incomingEvents.asSharedFlow()
 
     private val _connectionState = MutableStateFlow(SocketConnectionState.CONNECTING)
@@ -83,6 +88,5 @@ class SocketServiceImpl @Inject constructor(
 
             }
         }
-        // diğer event'ler tek tek eklenir (emit edilenler dinlenmez burada)
     }
 }

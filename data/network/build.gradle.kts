@@ -42,6 +42,7 @@ android {
     productFlavors {
         create("dev") {
             buildConfigField("String", "BASE_API_URL", "\"http://192.168.1.122:5000/api/\"")
+            //buildConfigField("String", "BASE_API_URL", "\"http://192.168.43.55:5000/api/\"")
         }
 
         create("prod") {
@@ -66,6 +67,10 @@ dependencies {
 
     //logging-interceptor
     implementation(libs.logging.interceptor)
+
+    //paging
+    implementation(libs.paging.runtime)
+    implementation(libs.paging.common.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -1,12 +1,11 @@
 package com.mustafacan.data.network.di
 
-import android.content.Context
 import com.mustafacan.data.network.BuildConfig
 import com.mustafacan.data.network.api.service.AuthService
+import com.mustafacan.data.network.api.service.UserService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -59,6 +58,12 @@ object ApiModule {
     @Singleton
     fun provideAuthService(retrofit: Retrofit): AuthService {
         return retrofit.create(AuthService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserService(retrofit: Retrofit): UserService {
+        return retrofit.create(UserService::class.java)
     }
 
 }
