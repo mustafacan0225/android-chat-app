@@ -1,4 +1,4 @@
-package com.mustafacan.android_chat_app.ui.home
+package com.mustafacan.android_chat_app.ui.dashboard
 
 import android.content.Context
 import android.util.Log
@@ -21,13 +21,13 @@ import com.mustafacan.core.ui.component.scaffold.RootScaffoldController
 import com.mustafacan.core.ui.component.scaffold.ScaffoldEvent
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class DashboardViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val socketConnectUseCase: SocketConnectUseCase,
     private val socketDisconnectUseCase: SocketDisconnectUseCase,
     private val observeSocketConnectionUseCase: ObserveSocketConnectionUseCase,
     private val getLocalUserUseCase: GetLocalUserUseCase
-) : BaseViewModel<HomeUiState, HomeUiEvent, HomeUiEffect>(initialState = HomeUiState()) {
+) : BaseViewModel<DashboardUiState, DashboardUiEvent, DashboardUiEffect>(initialState = DashboardUiState()) {
 
     init {
         observeSocketConnectionState()
@@ -35,25 +35,25 @@ class HomeViewModel @Inject constructor(
         observerScaffoldController()
     }
 
-    override fun handleEvent(event: HomeUiEvent) {
+    override fun handleEvent(event: DashboardUiEvent) {
         when (event) {
-            is HomeUiEvent.ConnectSocket -> {
+            is DashboardUiEvent.ConnectSocket -> {
                 connect()
             }
 
-            is HomeUiEvent.DisconnectSocket -> {
+            is DashboardUiEvent.DisconnectSocket -> {
                 disconnect()
             }
 
-            is HomeUiEvent.DismissDialog -> {
+            is DashboardUiEvent.DismissDialog -> {
                 setState { copy(dialogModel = null) }
             }
 
-            is HomeUiEvent.ShowDialog -> {
+            is DashboardUiEvent.ShowDialog -> {
                 setState { copy(dialogModel = event.dialogModel) }
             }
 
-            is HomeUiEvent.SetTopAppBarContent -> {
+            is DashboardUiEvent.SetTopAppBarContent -> {
                 setState { copy(topBarContent = event.content) }
             }
 
@@ -74,24 +74,24 @@ class HomeViewModel @Inject constructor(
 
                 if (state == SocketConnectionState.ERROR) {
                     sendEvent(
-                        HomeUiEvent.ShowDialog(
+                        DashboardUiEvent.ShowDialog(
                             dialogModel = DialogModel(
                                 message = context.getString(R.string.error_socket_connection),
                                 dialogType = DialogType.Confirm,
                                 confirmText = context.getString(R.string.try_again),
                                 onConfirm = {
-                                    sendEvent(HomeUiEvent.DismissDialog)
-                                    sendEvent(HomeUiEvent.ConnectSocket)
+                                    sendEvent(DashboardUiEvent.DismissDialog)
+                                    sendEvent(DashboardUiEvent.ConnectSocket)
                                 },
                                 onCancel = {
-                                    sendEvent(HomeUiEvent.DismissDialog)
+                                    sendEvent(DashboardUiEvent.DismissDialog)
                                 },
                                 isCancelable = false
                             )
                         )
                     )
                 } else {
-                    sendEvent(HomeUiEvent.DismissDialog)
+                    sendEvent(DashboardUiEvent.DismissDialog)
                 }
 
             }

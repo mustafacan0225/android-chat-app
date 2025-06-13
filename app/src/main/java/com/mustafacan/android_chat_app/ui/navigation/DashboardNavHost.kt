@@ -13,7 +13,7 @@ import com.mustafacan.core.ui.navigation.NavDestinationItem
 import com.mustafacan.feature.users.ui.navigation.UsersNavHost
 
 @Composable
-fun HomeNavHost(navController: NavHostController) {
+fun DashboardNavHost(navController: NavHostController) {
 
     NavHost(
         navController = navController,

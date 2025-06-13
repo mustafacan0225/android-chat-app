@@ -1,4 +1,4 @@
-package com.mustafacan.android_chat_app.ui.home
+package com.mustafacan.android_chat_app.ui.dashboard
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
@@ -37,14 +37,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mustafacan.core.ui.R
 import com.mustafacan.android_chat_app.ui.bottommenu.BottomMenu
-import com.mustafacan.android_chat_app.ui.navigation.HomeNavHost
+import com.mustafacan.android_chat_app.ui.navigation.DashboardNavHost
 import com.mustafacan.core.domain.model.socket.SocketConnectionState
 import com.mustafacan.core.ui.component.dialog.ShowDialog
 import com.mustafacan.core.ui.component.overlay.FullScreenLoadingOverlay
 import com.mustafacan.core.ui.theme.PrimaryLight
 
 @Composable
-fun HomeRoute(viewModel: HomeViewModel, navController: NavHostController) {
+fun DashboardRoute(viewModel: DashboardViewModel, navController: NavHostController) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -54,21 +54,21 @@ fun HomeRoute(viewModel: HomeViewModel, navController: NavHostController) {
             when (event) {
                 Lifecycle.Event.ON_START -> {
                     Log.d("LifecycleObserver", "ON_START -> ConnectSocket event sent")
-                    viewModel.sendEvent(HomeUiEvent.DismissDialog)
-                    viewModel.sendEvent(HomeUiEvent.ConnectSocket)
+                    viewModel.sendEvent(DashboardUiEvent.DismissDialog)
+                    viewModel.sendEvent(DashboardUiEvent.ConnectSocket)
                 }
 
                 Lifecycle.Event.ON_RESUME -> {
                     Log.d("LifecycleObserver", "ON_RESUME ->")
                     if (uiState.topBarContent == null) {
-                        viewModel.sendEvent(HomeUiEvent.SetTopAppBarContent(content = { HomeScreenTopAppBar(uiState) }))
+                        viewModel.sendEvent(DashboardUiEvent.SetTopAppBarContent(content = { DashboardScreenTopAppBar(uiState) }))
                     }
 
                 }
 
                 Lifecycle.Event.ON_STOP -> {
                     Log.d("LifecycleObserver", "ON_STOP -> DisconnectSocket event sent")
-                    viewModel.sendEvent(HomeUiEvent.DisconnectSocket)
+                    viewModel.sendEvent(DashboardUiEvent.DisconnectSocket)
                 }
 
                 else -> {
@@ -80,17 +80,17 @@ fun HomeRoute(viewModel: HomeViewModel, navController: NavHostController) {
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
             Log.d("LifecycleObserver", "Observer removed -> DisconnectSocket event sent")
-            viewModel.sendEvent(HomeUiEvent.DisconnectSocket)
+            viewModel.sendEvent(DashboardUiEvent.DisconnectSocket)
         }
     }
 
-    HomeScreen(uiState = uiState, onEvent = { viewModel.sendEvent(it) }, navController)
+    DashboardScreen(uiState = uiState, onEvent = { viewModel.sendEvent(it) }, navController)
 }
 
 @Composable
-fun HomeScreen(
-    uiState: HomeUiState,
-    onEvent: (HomeUiEvent) -> Unit,
+fun DashboardScreen(
+    uiState: DashboardUiState,
+    onEvent: (DashboardUiEvent) -> Unit,
     navController: NavHostController
 ) {
 
@@ -110,7 +110,7 @@ fun HomeScreen(
             )
         }) {
             Box(modifier = Modifier.padding(it)) {
-                HomeNavHost(navController = navController)
+                DashboardNavHost(navController = navController)
             }
 
         }
@@ -130,7 +130,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun HomeScreenTopAppBar(uiState: HomeUiState) {
+fun DashboardScreenTopAppBar(uiState: DashboardUiState) {
     Column(Modifier.fillMaxWidth().background(PrimaryLight).padding(horizontal = 16.dp, vertical = 12.dp)) {
         Row (Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically) {

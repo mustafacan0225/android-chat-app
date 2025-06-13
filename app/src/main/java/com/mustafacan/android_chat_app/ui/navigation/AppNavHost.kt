@@ -6,8 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.mustafacan.android_chat_app.ui.home.HomeRoute
-import com.mustafacan.android_chat_app.ui.home.HomeViewModel
+import com.mustafacan.android_chat_app.ui.dashboard.DashboardRoute
+import com.mustafacan.android_chat_app.ui.dashboard.DashboardViewModel
 import com.mustafacan.android_chat_app.ui.splash.SplashRoute
 import com.mustafacan.android_chat_app.ui.splash.SplashViewModel
 import com.mustafacan.core.ui.animation.transition.Transition
@@ -40,9 +40,9 @@ fun AppNavHost(navController: NavHostController) {
             exitTransition = { Transition.exitToRight() },
             popEnterTransition = { Transition.enterFromRight() },
             popExitTransition = { Transition.exitToRight() }) {
-            val viewModel = hiltViewModel<HomeViewModel>()
+            val viewModel = hiltViewModel<DashboardViewModel>()
             val navController = rememberNavController()
-            HomeRoute(viewModel, navController)
+            DashboardRoute(viewModel, navController)
         }
     }
 }

@@ -13,11 +13,11 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 class PreferencesDataStoreManager(
-    private val context: Context,
-    private val moshi: Moshi
+    val context: Context,
+    val moshi: Moshi
 ) {
 
-    private val Context.dataStore by preferencesDataStore(name = "chat_app_preferences")
+    val Context.dataStore by preferencesDataStore(name = "chat_app_preferences")
 
     suspend fun <T> saveData(key: String, value: T, type: Class<T>) {
         val preferencesKey = stringPreferencesKey(key)
@@ -48,7 +48,7 @@ class PreferencesDataStoreManager(
         }
     }
 
-    fun <T> getDataFlow(key: String, type: Class<T>): Flow<T?> {
+    inline fun <reified T> getDataFlow(key: String, type: Class<T>): Flow<T?> {
         val preferencesKey = stringPreferencesKey(key)
         val adapter = moshi.adapter(type)
 
@@ -70,7 +70,7 @@ class PreferencesDataStoreManager(
             }
     }
 
-    suspend fun <T> getData(key: String, type: Class<T>): T? {
+    suspend inline fun <reified T> getData(key: String, type: Class<T>): T? {
         return try {
             getDataFlow(key, type).first()
         } catch (e: Exception) {
@@ -121,7 +121,7 @@ class PreferencesDataStoreManager(
         }
     }
 
-    private fun <T> parseStringToType(value: String, type: Class<T>, adapter: com.squareup.moshi.JsonAdapter<T>): T? {
+    inline fun <reified T> parseStringToType(value: String, type: Class<T>, adapter: com.squareup.moshi.JsonAdapter<T>): T? {
         return try {
             when (type) {
                 String::class.java -> value as T
