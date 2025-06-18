@@ -1,4 +1,4 @@
-package com.mustafacan.feature.users.home
+package com.mustafacan.feature.users.ui.home
 
 import androidx.paging.compose.LazyPagingItems
 import com.mustafacan.core.domain.model.users.User

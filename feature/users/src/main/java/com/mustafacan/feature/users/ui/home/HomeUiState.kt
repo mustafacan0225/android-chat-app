@@ -1,4 +1,4 @@
-package com.mustafacan.feature.users.home
+package com.mustafacan.feature.users.ui.home
 
 import com.mustafacan.core.domain.model.socket.OnlineUser
 import com.mustafacan.core.domain.model.socket.SocketConnectionState

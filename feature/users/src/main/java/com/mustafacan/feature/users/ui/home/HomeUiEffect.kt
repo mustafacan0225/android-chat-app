@@ -1,4 +1,4 @@
-package com.mustafacan.feature.users.home
+package com.mustafacan.feature.users.ui.home
 
 sealed class HomeUiEffect {
     object NavigateToMessage : HomeUiEffect()

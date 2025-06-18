@@ -6,10 +6,6 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.mustafacan.core.ui.theme.OnSurfaceDark
-import com.mustafacan.core.ui.theme.OnSurfaceLight
-import com.mustafacan.core.ui.theme.PrimaryDark
-import com.mustafacan.core.ui.theme.PrimaryLight
-import com.mustafacan.core.ui.theme.SecondaryLight
 
 @Composable
 fun getBottomBarItemColors(): NavigationBarItemColors {
@@ -17,7 +13,7 @@ fun getBottomBarItemColors(): NavigationBarItemColors {
         NavigationBarItemDefaults.colors(
             selectedIconColor = OnSurfaceDark,
             selectedTextColor = OnSurfaceDark,
-            indicatorColor = PrimaryDark,
+            indicatorColor = Color(0xFF006C94),
             unselectedIconColor = Color.LightGray,
             unselectedTextColor = Color.LightGray
         )
@@ -25,7 +21,7 @@ fun getBottomBarItemColors(): NavigationBarItemColors {
         NavigationBarItemDefaults.colors(
             selectedIconColor = Color.White,
             selectedTextColor = Color.White,
-            indicatorColor = PrimaryDark,
+            indicatorColor = Color(0xFF006C94),
             unselectedIconColor = Color.LightGray,
             unselectedTextColor = Color.LightGray
         )

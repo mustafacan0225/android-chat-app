@@ -26,7 +26,7 @@ class LoginUseCase @Inject constructor(
             try {
                 saveLocalUserUseCase(result.getOrThrow())
             } catch (e: Exception) {
-                println("Local user save error: ${e.message}")
+
             }
         }
         return result

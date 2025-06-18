@@ -12,5 +12,6 @@
     <string name="error_invalid_username">Kullanıcı adı geçersiz.</string>
     <string name="hide_password">Gizle</string>
     <string name="show_password">Göster</string>
-
+    <string name="incorrect_auth">Email veya şifre yanlış.</string>
+    <string name="invalid_email_or_username">Email veya şifre geçersiz.</string>
 </resources>

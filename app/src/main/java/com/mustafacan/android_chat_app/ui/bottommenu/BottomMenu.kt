@@ -3,7 +3,6 @@ package com.mustafacan.android_chat_app.ui.bottommenu
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +18,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.mustafacan.core.ui.navigation.NavDestinationItem
 import com.mustafacan.core.ui.navigation.getBottomBarItemColors
-import com.mustafacan.core.ui.theme.SurfaceDark
+import com.mustafacan.core.ui.theme.BackgroundDark
 
 @Composable
 fun BottomMenu(
@@ -32,7 +31,7 @@ fun BottomMenu(
         NavDestinationItem.Support)
 
     BottomAppBar(
-        containerColor = SurfaceDark,
+        containerColor = BackgroundDark,
         //cutoutShape = RoundedCornerShape(50)
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()

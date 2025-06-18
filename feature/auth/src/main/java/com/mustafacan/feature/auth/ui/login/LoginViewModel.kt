@@ -2,6 +2,7 @@ package com.mustafacan.feature.auth.ui.login
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
+import com.mustafacan.core.domain.error.BackendError
 import com.mustafacan.core.domain.model.auth.LoginRequest
 import com.mustafacan.core.domain.usecase.api.LoginUseCase
 import com.mustafacan.core.ui.viewmodel.BaseViewModel
@@ -13,6 +14,7 @@ import javax.inject.Inject
 import com.mustafacan.core.ui.component.dialog.DialogModel
 import com.mustafacan.core.ui.component.dialog.DialogType
 import com.mustafacan.core.ui.util.ErrorHandler
+import com.mustafacan.feature.auth.R
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
@@ -88,10 +90,10 @@ class LoginViewModel @Inject constructor(
             result
                 .onSuccess {
                     sendEffect(LoginUiEffect.NavigateToHome)
-                    println("login basarili ${it.id} - ${it.email} - ${it.username}")
+                    println("success ${it.id} - ${it.email} - ${it.username}")
                 }
                 .onFailure { throwable ->
-                    val errorMessage = ErrorHandler.resolveErrorMessage(context, throwable)
+                    val errorMessage = getErrorMessage(throwable)
                     sendEvent(
                         LoginUiEvent.ShowDialog(
                             DialogModel(
@@ -107,6 +109,19 @@ class LoginViewModel @Inject constructor(
                     )
                 }
 
+        }
+    }
+
+    fun getErrorMessage(throwable: Throwable) : String {
+        try {
+            val backendError = throwable as BackendError.Error
+            if (backendError.code == 400) {
+                return context.getString(R.string.incorrect_auth)
+            } else {
+                return ErrorHandler.resolveErrorMessage(context, throwable)
+            }
+        } catch (e: Exception) {
+            return ErrorHandler.resolveErrorMessage(context, throwable)
         }
     }
 

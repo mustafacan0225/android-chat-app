@@ -2,12 +2,14 @@ package com.mustafacan.feature.auth.ui.register
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
+import com.mustafacan.core.domain.error.BackendError
 import com.mustafacan.core.domain.model.auth.RegisterRequest
 import com.mustafacan.core.domain.usecase.api.RegisterUseCase
 import com.mustafacan.core.ui.component.dialog.DialogModel
 import com.mustafacan.core.ui.component.dialog.DialogType
 import com.mustafacan.core.ui.util.ErrorHandler
 import com.mustafacan.core.ui.viewmodel.BaseViewModel
+import com.mustafacan.feature.auth.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
@@ -97,10 +99,10 @@ class RegisterViewModel @Inject constructor(
             result
                 .onSuccess {
                     sendEffect(RegisterUiEffect.NavigateToHome)
-                    println("register basarili ${it.id} - ${it.email} - ${it.username}")
+                    println("success ${it.id} - ${it.email} - ${it.username}")
                 }
                 .onFailure { throwable ->
-                    val errorMessage = ErrorHandler.resolveErrorMessage(context, throwable)
+                    val errorMessage = getErrorMessage(throwable)
                     sendEvent(
                         RegisterUiEvent.ShowDialog(
                             DialogModel(
@@ -115,6 +117,19 @@ class RegisterViewModel @Inject constructor(
                         )
                     )
                 }
+        }
+    }
+
+    fun getErrorMessage(throwable: Throwable) : String {
+        try {
+            val backendError = throwable as BackendError.Error
+            if (backendError.code == 409) {
+                return context.getString(R.string.invalid_email_or_username)
+            } else {
+                return ErrorHandler.resolveErrorMessage(context, throwable)
+            }
+        } catch (e: Exception) {
+            return ErrorHandler.resolveErrorMessage(context, throwable)
         }
     }
 }

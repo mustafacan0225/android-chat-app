@@ -1,5 +1,6 @@
 package com.mustafacan.core.ui.component.dialog
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,12 +17,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.mustafacan.core.ui.R
+import com.mustafacan.core.ui.theme.BackgroundDark
+import com.mustafacan.core.ui.theme.CardButtonTextColor
+import com.mustafacan.core.ui.theme.CardItemBackgroundColor
+import com.mustafacan.core.ui.theme.TitleTextColor
 
 @Composable
 fun ShowDialog(
@@ -36,37 +40,34 @@ fun ShowDialog(
     ) {
         Surface(
             shape = RoundedCornerShape(20.dp),
-            color = MaterialTheme.colorScheme.surface,
+            color = CardItemBackgroundColor,
             tonalElevation = 6.dp,
             shadowElevation = 10.dp,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
         ) {
             Column(
-                modifier = Modifier
+                modifier = Modifier.background(CardItemBackgroundColor)
                     .padding(24.dp)
                     .fillMaxWidth()
             ) {
-                // Başlık
                 Text(
                     text = stringResource(R.string.dialog_title_default),
                     style = MaterialTheme.typography.headlineSmall,
-                    color = Color.Black,
+                    color = TitleTextColor,
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Mesaj
                 Text(
                     text = dialogModel.message,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Black,
+                    color = TitleTextColor,
                     modifier = Modifier.padding(bottom = 24.dp)
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Butonlar
                 Row(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()
@@ -76,8 +77,8 @@ fun ShowDialog(
                             Button(
                                 onClick = { dialogModel.onConfirm?.invoke() },
                                 colors = ButtonDefaults.buttonColors(
-                                    contentColor = MaterialTheme.colorScheme.surface,
-                                    containerColor = MaterialTheme.colorScheme.primary
+                                    contentColor = CardButtonTextColor,
+                                    containerColor = BackgroundDark
                                 )
                             ) {
                                 Text(text = dialogModel.confirmText ?: stringResource(android.R.string.ok))
@@ -89,8 +90,8 @@ fun ShowDialog(
                             Button(
                                 onClick = { dialogModel.onCancel?.invoke() },
                                 colors = ButtonDefaults.buttonColors(
-                                    contentColor = MaterialTheme.colorScheme.surface,
-                                    containerColor = MaterialTheme.colorScheme.primary
+                                    contentColor = CardButtonTextColor,
+                                    containerColor = BackgroundDark
                                 )
                             ) {
                                 Text(text = dialogModel.cancelText ?: stringResource(android.R.string.cancel))
@@ -101,8 +102,8 @@ fun ShowDialog(
                             Button(
                                 onClick = { dialogModel.onConfirm?.invoke() },
                                 colors = ButtonDefaults.buttonColors(
-                                    contentColor = MaterialTheme.colorScheme.surface,
-                                    containerColor = MaterialTheme.colorScheme.primary
+                                    contentColor = CardButtonTextColor,
+                                    containerColor = BackgroundDark
                                 )
                             ) {
                                 Text(

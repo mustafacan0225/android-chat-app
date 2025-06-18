@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.navigation.compose)
 
     implementation(libs.lottie.compose)
+    implementation(libs.constraintlayout)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

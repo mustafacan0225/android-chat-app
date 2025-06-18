@@ -8,8 +8,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mustafacan.core.ui.animation.transition.Transition
 import com.mustafacan.core.ui.navigation.NavDestinationItem
-import com.mustafacan.feature.users.home.HomeRoute
-import com.mustafacan.feature.users.home.HomeViewModel
+import com.mustafacan.feature.users.ui.home.HomeRoute
+import com.mustafacan.feature.users.ui.home.HomeViewModel
+import com.mustafacan.feature.users.ui.onlineusers.OnlineUsersRoute
+import com.mustafacan.feature.users.ui.onlineusers.OnlineUsersViewModel
 
 @Composable
 fun UsersNavHost(parentNavController: NavHostController) {
@@ -33,6 +35,8 @@ fun UsersNavHost(parentNavController: NavHostController) {
             exitTransition = { Transition.exitToRight() },
             popEnterTransition = { Transition.enterFromRight() },
             popExitTransition = { Transition.exitToRight() }) {
+            val viewModel = hiltViewModel<OnlineUsersViewModel>()
+            OnlineUsersRoute(viewModel, navController, parentNavController)
         }
 
         composable<NavDestinationItem.AllUsers>(
@@ -40,8 +44,6 @@ fun UsersNavHost(parentNavController: NavHostController) {
             exitTransition = { Transition.exitToLeft() },
             popEnterTransition = { Transition.enterFromLeft() },
             popExitTransition = { Transition.exitToLeft() }) {
-            //val viewModel = hiltViewModel<LoginViewModel>()
-            //LoginRoute(viewModel, navController, parentNavController)
         }
 
     }

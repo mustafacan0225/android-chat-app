@@ -12,4 +12,6 @@
     <string name="error_invalid_username">Username is invalid.</string>
     <string name="hide_password">Hide</string>
     <string name="show_password">Show</string>
+    <string name="incorrect_auth">Email or password is incorrect.</string>
+    <string name="invalid_email_or_username">Invalid email or username.</string>
 </resources>

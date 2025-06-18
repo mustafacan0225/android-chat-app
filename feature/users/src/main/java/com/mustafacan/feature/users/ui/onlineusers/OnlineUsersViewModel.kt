@@ -1,79 +1,62 @@
-package com.mustafacan.feature.users.home
+package com.mustafacan.feature.users.ui.onlineusers
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.viewModelScope
-import androidx.paging.LoadState
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import androidx.paging.compose.LazyPagingItems
+import com.mustafacan.core.domain.model.socket.OnlineUser
 import com.mustafacan.core.domain.model.socket.SocketConnectionState
-import com.mustafacan.core.domain.model.users.User
-import com.mustafacan.core.domain.usecase.api.GetAllUserPaginatedUseCase
 import com.mustafacan.core.domain.usecase.datastore.GetLocalUserUseCase
 import com.mustafacan.core.domain.usecase.socket.GetOnlineUsersUseCase
 import com.mustafacan.core.domain.usecase.socket.ObserveSocketConnectionUseCase
 import com.mustafacan.core.domain.usecase.socket.SocketConnectUseCase
 import com.mustafacan.core.ui.R
+import com.mustafacan.core.ui.component.scaffold.RootScaffoldController
+import com.mustafacan.core.ui.component.scaffold.ScaffoldEvent
 import com.mustafacan.core.ui.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
-    private val getOnlineUsersUseCase: GetOnlineUsersUseCase,
-    private val getLocalUserUseCase: GetLocalUserUseCase,
-    private val getAllUserPaginatedUseCase: GetAllUserPaginatedUseCase,
-    private val observeSocketConnectionUseCase: ObserveSocketConnectionUseCase,
-    private val socketConnectUseCase: SocketConnectUseCase,
-) : BaseViewModel<HomeUiState, HomeUiEvent, HomeUiEffect>(initialState = HomeUiState()) {
-
-    val allUsersPagingDataFlow: Flow<PagingData<User>> =
-        getAllUserPaginatedUseCase().cachedIn(viewModelScope)
+class OnlineUsersViewModel @Inject constructor(@ApplicationContext private val context: Context,
+                                               private val getOnlineUsersUseCase: GetOnlineUsersUseCase,
+                                               private val getLocalUserUseCase: GetLocalUserUseCase,
+                                               private val observeSocketConnectionUseCase: ObserveSocketConnectionUseCase,
+                                               private val socketConnectUseCase: SocketConnectUseCase,) :
+    BaseViewModel<OnlineUsersUiState, OnlineUsersUiEvent, OnlineUsersUiEffect>(initialState = OnlineUsersUiState()) {
 
     init {
         observeSocketConnectionState()
         getUserInfo()
         observeOnlineUsers()
+
+        viewModelScope.launch {
+            RootScaffoldController.emit(ScaffoldEvent.SetBottomBarVisibility(false))
+        }
     }
 
-    override fun handleEvent(event: HomeUiEvent) {
+    override fun handleEvent(event: OnlineUsersUiEvent) {
         when (event) {
-            HomeUiEvent.DismissDialog -> {
+            OnlineUsersUiEvent.DismissDialog -> {
                 setState { copy(dialogModel = null) }
             }
 
-            is HomeUiEvent.ShowDialog -> {
+            is OnlineUsersUiEvent.ShowDialog -> {
                 setState { copy(dialogModel = event.dialogModel) }
             }
 
-            is HomeUiEvent.AllUsersLoadStateChanged -> {
-                allUsersLoadStateChanged(event.users)
-            }
-
-            HomeUiEvent.ConnectSocket -> {
+            OnlineUsersUiEvent.ConnectSocket -> {
                 setState { copy(socketConnectionState = SocketConnectionState.CONNECTING) }
                 socketConnect()
             }
 
-            is HomeUiEvent.RetryAllUsers -> {
-                event.users.retry()
-            }
-
-            HomeUiEvent.NavigateToOnlineUsersPage -> {
-                sendEffect(HomeUiEffect.NavigateToOnlineUsersPage)
-            }
-
-            HomeUiEvent.NavigateToAllUsersPage -> {
-                sendEffect(HomeUiEffect.NavigateToAllUsersPage)
-
+            is OnlineUsersUiEvent.Search -> {
+                search(event.query)
             }
         }
+
     }
 
     fun socketConnect() {
@@ -87,6 +70,9 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             getOnlineUsersUseCase().collect { onlineUsers ->
                 setState { copy(onlineUsers = onlineUsers, titleOnlineUsers = "${context.getString(R.string.online_users)} (${onlineUsers.size})") }
+                if (uiState.value.searchedText.isNotBlank()) {
+                    search(query = uiState.value.searchedText)
+                }
             }
         }
     }
@@ -102,7 +88,6 @@ class HomeViewModel @Inject constructor(
     private fun observeSocketConnectionState() {
         viewModelScope.launch {
             observeSocketConnectionUseCase().collect { state ->
-                Log.d("SocketConnection", "${state.name} on users module")
 
                 if (uiState.value.socketConnectionState == SocketConnectionState.CONNECTING
                     && state != SocketConnectionState.CONNECTING) {
@@ -124,20 +109,25 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun search(query: String) {
+        viewModelScope.launch {
+            var result: List<OnlineUser> = listOf()
+            if (query.isEmpty()) {
+                result = uiState.value.onlineUsers
+            } else {
+                result = uiState.value.onlineUsers!!.filter {
+                    it.name?.lowercase()?.contains(query.lowercase()) ?: false
+                }
+            }
 
-    fun allUsersLoadStateChanged(users: LazyPagingItems<User>) {
-        val refresh = users.loadState.refresh
-        val append = users.loadState.append
-
-        setState {
-            copy(
-                isAllUsersLoading = refresh is LoadState.Loading && users.itemCount == 0,
-                isAllUsersAppending = append is LoadState.Loading,
-                allUsersLoadingError = (refresh as? LoadState.Error)?.error?.localizedMessage,
-                allUsersAppendError = (append as? LoadState.Error)?.error?.localizedMessage,
-                isAllUsersListEmpty = refresh is LoadState.NotLoading && users.itemCount == 0
-            )
+            setState { copy(searchedOnlineUsers = result, searchedText = query) }
         }
     }
 
+    override fun onCleared() {
+        runBlocking {
+            RootScaffoldController.emit(ScaffoldEvent.SetBottomBarVisibility(true))
+        }
+        super.onCleared()
+    }
 }

@@ -26,5 +26,6 @@
     <string name="all_users">Tüm Kullanıcılar</string>
     <string name="default_error">Bir hata oluștu, tekrar denemek için tıklayın</string>
     <string name="all">Tümünü göster</string>
-
+    <string name="search_by_username">kullanıcı adı ile ara</string>
+    <string name="not_found">Sonuç Bulunamadı</string>
 </resources>

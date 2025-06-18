@@ -26,5 +26,7 @@
     <string name="chat">Chat</string>
     <string name="default_error">An error occurred, click to try again</string>
     <string name="all">Show all</string>
+    <string name="search_by_username">search by username</string>
+    <string name="not_found">No Results Found</string>
 
 </resources>

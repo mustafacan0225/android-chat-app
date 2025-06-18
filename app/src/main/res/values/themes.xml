@@ -2,6 +2,6 @@
 <resources>
 
     <style name="Theme.Androidchatapp" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">#006C94</item>
+        <item name="android:statusBarColor">#004F6C</item>
     </style>
 </resources>

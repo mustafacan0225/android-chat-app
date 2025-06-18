@@ -23,6 +23,7 @@ moshi = "1.15.2"
 lottie-compose = "6.6.0"
 socketio = "2.1.2"
 paging = "3.3.6"
+constraintlayout = "1.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -87,6 +88,10 @@ socketio = { group = "io.socket", name = "socket.io-client", version.ref = "sock
 paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
 paging-common-ktx = { group = "androidx.paging", name = "paging-common-ktx", version.ref = "paging" }
 paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
+
+# Constraintlayout compose
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayout" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
