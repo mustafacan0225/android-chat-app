@@ -9,7 +9,7 @@ import androidx.paging.cachedIn
 import androidx.paging.compose.LazyPagingItems
 import com.mustafacan.core.domain.model.socket.SocketConnectionState
 import com.mustafacan.core.domain.model.users.User
-import com.mustafacan.core.domain.usecase.api.GetAllUserPaginatedUseCase
+import com.mustafacan.core.domain.usecase.api.GetAllUsersPagingDataUseCase
 import com.mustafacan.core.domain.usecase.datastore.GetLocalUserUseCase
 import com.mustafacan.core.domain.usecase.socket.GetOnlineUsersUseCase
 import com.mustafacan.core.domain.usecase.socket.ObserveSocketConnectionUseCase
@@ -28,13 +28,13 @@ class HomeViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getOnlineUsersUseCase: GetOnlineUsersUseCase,
     private val getLocalUserUseCase: GetLocalUserUseCase,
-    private val getAllUserPaginatedUseCase: GetAllUserPaginatedUseCase,
+    private val getAllUsersPagingDataUseCase: GetAllUsersPagingDataUseCase,
     private val observeSocketConnectionUseCase: ObserveSocketConnectionUseCase,
     private val socketConnectUseCase: SocketConnectUseCase,
 ) : BaseViewModel<HomeUiState, HomeUiEvent, HomeUiEffect>(initialState = HomeUiState()) {
 
     val allUsersPagingDataFlow: Flow<PagingData<User>> =
-        getAllUserPaginatedUseCase().cachedIn(viewModelScope)
+        getAllUsersPagingDataUseCase().cachedIn(viewModelScope)
 
     init {
         observeSocketConnectionState()
@@ -131,8 +131,8 @@ class HomeViewModel @Inject constructor(
 
         setState {
             copy(
-                isAllUsersLoading = refresh is LoadState.Loading && users.itemCount == 0,
-                isAllUsersAppending = append is LoadState.Loading,
+                isLoadingAllUsers = refresh is LoadState.Loading && users.itemCount == 0,
+                isAppendingAllUsers = append is LoadState.Loading,
                 allUsersLoadingError = (refresh as? LoadState.Error)?.error?.localizedMessage,
                 allUsersAppendError = (append as? LoadState.Error)?.error?.localizedMessage,
                 isAllUsersListEmpty = refresh is LoadState.NotLoading && users.itemCount == 0

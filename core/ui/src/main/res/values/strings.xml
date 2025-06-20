@@ -28,5 +28,6 @@
     <string name="all">Show all</string>
     <string name="search_by_username">search by username</string>
     <string name="not_found">No Results Found</string>
+    <string name="searchbar_clear">cancel</string>
 
 </resources>

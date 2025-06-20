@@ -41,12 +41,13 @@ android {
 
     productFlavors {
         create("dev") {
-            buildConfigField("String", "BASE_API_URL", "\"http://192.168.1.122:5000/api/\"")
-            //buildConfigField("String", "BASE_API_URL", "\"http://192.168.43.55:5000/api/\"")
+            //buildConfigField("String", "BASE_API_URL", "\"http://192.168.1.122:5000/api/\"")
+            buildConfigField("String", "BASE_API_URL", "\"http://192.168.43.55:5000/api/\"")
         }
 
         create("prod") {
-            buildConfigField("String", "BASE_API_URL", "\"http://10.0.2.2:5000/api/\"")
+            //buildConfigField("String", "BASE_API_URL", "\"http://192.168.1.122:5000/api/\"")
+            buildConfigField("String", "BASE_API_URL", "\"http://192.168.43.55:5000/api/\"")
         }
     }
 }

@@ -22,6 +22,7 @@ import com.mustafacan.core.ui.component.loading.VerticalRectangleShimmer
 import com.mustafacan.core.ui.component.notfound.NotFoundScreenForSearch
 import com.mustafacan.core.ui.component.searchbar.SearchBar
 import com.mustafacan.core.ui.R
+import com.mustafacan.core.ui.util.rememberFlowWithLifecycle
 import com.mustafacan.feature.users.ui.common.UserItemForOnlineUsers
 
 @Composable
@@ -31,7 +32,7 @@ fun OnlineUsersRoute(
     parentNavController: NavHostController
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    //val uiEffect = rememberFlowWithLifecycle(viewModel.uiEffect)
+    val uiEffect = rememberFlowWithLifecycle(viewModel.uiEffect)
 
     OnlineUsersScreen(uiState = uiState, onEvent = { viewModel.sendEvent(it) })
 }

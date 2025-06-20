@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 
-class GetAllUserPaginatedUseCase  @Inject constructor(private val repository: UserRepository) {
+class GetAllUsersPagingDataUseCase  @Inject constructor(private val repository: UserRepository) {
     operator fun invoke(): Flow<PagingData<User>> {
-        return repository.getAllUsersPagination()
+        return repository.getPaginatedAllUsers()
     }
 }

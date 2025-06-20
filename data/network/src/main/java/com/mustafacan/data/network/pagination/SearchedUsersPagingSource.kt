@@ -2,12 +2,14 @@ package com.mustafacan.data.network.pagination
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.mustafacan.core.domain.model.users.SearchRequest
 import com.mustafacan.core.domain.model.users.User
 import com.mustafacan.data.network.datasource.UsersRemoteDataSource
 import kotlinx.coroutines.delay
 
-class UsersPagingSource (
-    private val remoteDataSource: UsersRemoteDataSource
+class SearchedUsersPagingSource(
+    private val remoteDataSource: UsersRemoteDataSource,
+    private val searchRequest: SearchRequest
 ) : PagingSource<Int, User>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, User> {
@@ -18,14 +20,17 @@ class UsersPagingSource (
             delay(2000)
         }
 
-        val result = remoteDataSource.getPaginatedAllUsers(currentPage, pageSize)
+        val result = remoteDataSource.getPaginatedSearchedUsers(currentPage, pageSize, searchRequest)
         return if (result.isSuccess) {
             val data = result.getOrNull()
             if (data != null) {
+                // nextKey hesaplaması güncellendi
+                val isLastPage = data.users.isEmpty() || data.totalPages == 0 || currentPage >= data.totalPages
+
                 LoadResult.Page(
                     data = data.users,
                     prevKey = if (currentPage == 1) null else currentPage - 1,
-                    nextKey = if (currentPage == data.totalPages) null else currentPage + 1
+                    nextKey = if (isLastPage) null else currentPage + 1
                 )
             } else {
                 LoadResult.Error(Throwable("Empty Data"))

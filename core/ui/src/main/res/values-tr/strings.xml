@@ -28,4 +28,5 @@
     <string name="all">Tümünü göster</string>
     <string name="search_by_username">kullanıcı adı ile ara</string>
     <string name="not_found">Sonuç Bulunamadı</string>
+    <string name="searchbar_clear">iptal</string>
 </resources>

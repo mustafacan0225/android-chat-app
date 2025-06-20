@@ -51,7 +51,7 @@ fun HomeRoute(
                 }
 
                 HomeUiEffect.NavigateToAllUsersPage -> {
-
+                    navController.navigate(NavDestinationItem.AllUsers)
                 }
 
                 HomeUiEffect.NavigateToOnlineUsersPage -> {
@@ -133,7 +133,7 @@ fun AllUsers(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (uiState.isAllUsersLoading) {
+        if (uiState.isLoadingAllUsers) {
             VerticalRectangleShimmer()
         } else if (uiState.allUsersLoadingError != null) {
             ErrorView(message = stringResource(R.string.default_error),
@@ -157,7 +157,7 @@ fun AllUsers(
 
         }
 
-        MoreItemsLoading(uiState.isAllUsersAppending)
+        MoreItemsLoading(uiState.isAppendingAllUsers)
 
         if (uiState.allUsersAppendError != null) {
             ErrorView(message = stringResource(R.string.default_error),

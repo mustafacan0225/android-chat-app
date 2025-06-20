@@ -8,6 +8,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mustafacan.core.ui.animation.transition.Transition
 import com.mustafacan.core.ui.navigation.NavDestinationItem
+import com.mustafacan.feature.users.ui.allusers.AllUsersRoute
+import com.mustafacan.feature.users.ui.allusers.AllUsersViewModel
 import com.mustafacan.feature.users.ui.home.HomeRoute
 import com.mustafacan.feature.users.ui.home.HomeViewModel
 import com.mustafacan.feature.users.ui.onlineusers.OnlineUsersRoute
@@ -44,6 +46,8 @@ fun UsersNavHost(parentNavController: NavHostController) {
             exitTransition = { Transition.exitToLeft() },
             popEnterTransition = { Transition.enterFromLeft() },
             popExitTransition = { Transition.exitToLeft() }) {
+            val viewModel = hiltViewModel<AllUsersViewModel>()
+            AllUsersRoute(viewModel, navController, parentNavController)
         }
 
     }
