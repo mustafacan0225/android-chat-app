@@ -99,7 +99,7 @@ fun OnlineUsers(uiState: HomeUiState, onEvent: (HomeUiEvent) -> Unit) {
                 HorizontalUserItem(user,
                     buttonClicked = {
 
-                })
+                }, isSelf = user.id.equals(uiState.userId))
             }
 
         }
@@ -150,7 +150,8 @@ fun AllUsers(
                         UserItem(user,
                             buttonClicked = {
 
-                            })
+                            }, isSelf = user.id?.equals(uiState.userId) == true
+                        )
                     }
                 }
             }

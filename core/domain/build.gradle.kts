@@ -58,4 +58,6 @@ dependencies {
     //paging
     implementation(libs.paging.runtime)
     implementation(libs.paging.common.ktx)
+
+    implementation(libs.gson)
 }

@@ -37,8 +37,8 @@ class HomeViewModel @Inject constructor(
         getAllUsersPagingDataUseCase().cachedIn(viewModelScope)
 
     init {
-        observeSocketConnectionState()
         getUserInfo()
+        observeSocketConnectionState()
         observeOnlineUsers()
     }
 

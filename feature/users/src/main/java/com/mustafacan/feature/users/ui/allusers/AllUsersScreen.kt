@@ -109,7 +109,7 @@ fun AllUsers(uiState: AllUsersUiState,
                         UserItem(user,
                             buttonClicked = {
 
-                            })
+                            }, isSelf = user.id.equals(uiState.userId))
                     }
                 }
             }
@@ -156,7 +156,7 @@ fun SearchedUsers(uiState: AllUsersUiState,
                             UserItem(user,
                                 buttonClicked = {
 
-                                })
+                                }, isSelf = user.id.equals(uiState.userId))
                         }
                     }
                 }

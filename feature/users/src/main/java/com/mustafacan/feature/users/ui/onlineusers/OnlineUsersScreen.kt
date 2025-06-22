@@ -58,9 +58,9 @@ fun OnlineUsersScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             if (uiState.searchedText.isNullOrEmpty()) {
-                UserList(uiState.onlineUsers, onEvent)
+                UserList(uiState.onlineUsers, onEvent, uiState.userId)
             } else if (uiState.searchedText.isNotBlank() && uiState.searchedOnlineUsers.size > 0) {
-                UserList(uiState.searchedOnlineUsers, onEvent)
+                UserList(uiState.searchedOnlineUsers, onEvent, uiState.userId)
             }  else if (uiState.searchedText.isNotBlank() && uiState.searchedOnlineUsers.size == 0) {
                 NotFoundScreenForSearch()
             }
@@ -79,13 +79,13 @@ fun OnlineUsersScreen(
 }
 
 @Composable
-fun UserList(users: List<OnlineUser>, onEvent: (OnlineUsersUiEvent) -> Unit) {
+fun UserList(users: List<OnlineUser>, onEvent: (OnlineUsersUiEvent) -> Unit, selfUserId: String) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(users) { user ->
             UserItemForOnlineUsers(user,
                 buttonClicked = {
 
-                })
+                }, isSelf = user.id.equals(selfUserId))
         }
 
     }

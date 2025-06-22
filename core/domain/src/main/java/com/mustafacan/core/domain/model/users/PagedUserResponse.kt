@@ -1,6 +1,6 @@
 package com.mustafacan.core.domain.model.users
 
-import kotlinx.serialization.SerialName
+import com.google.gson.annotations.SerializedName
 
 data class PagedUserResponse(
     val users: List<User>,
@@ -9,7 +9,7 @@ data class PagedUserResponse(
 )
 
 data class User (
-    @SerialName("_id")
+    @SerializedName("_id")
     val id: String,
     val username: String
 )

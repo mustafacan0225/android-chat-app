@@ -1,5 +1,6 @@
 package com.mustafacan.feature.users.ui.common
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,13 +39,14 @@ import com.mustafacan.core.ui.theme.CardItemBackgroundColor
 import com.mustafacan.core.ui.theme.CardItemTextColor
 
 @Composable
-fun UserItem(user: User, buttonClicked: () -> Unit) {
+fun UserItem(user: User, buttonClicked: () -> Unit, isSelf: Boolean) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        border = if (isSelf) BorderStroke(2.dp, Color.Green) else null,
         colors = CardDefaults.cardColors(containerColor = CardItemBackgroundColor)
     ) {
         Row(
@@ -80,17 +82,18 @@ fun UserItem(user: User, buttonClicked: () -> Unit) {
 
             Spacer(modifier = Modifier.width(8.dp))
 
+
             Button(
                 onClick = {
-                    buttonClicked()
+                    if (!isSelf) buttonClicked()
                 },
                 modifier = Modifier.height(32.dp),
                 shape = RoundedCornerShape(8.dp),
                 contentPadding = PaddingValues(horizontal = 12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = BackgroundDark)
+                colors = ButtonDefaults.buttonColors(containerColor =  BackgroundDark)
             ) {
                 Text(
-                    text = stringResource(R.string.chat),
+                    text = if (isSelf) stringResource(R.string.you) else stringResource(R.string.chat),
                     style = TextStyle(fontSize = 12.sp),
                     color = CardButtonTextColor,
                     maxLines = 1
@@ -101,13 +104,14 @@ fun UserItem(user: User, buttonClicked: () -> Unit) {
 }
 
 @Composable
-fun UserItemForOnlineUsers(user: OnlineUser, buttonClicked: () -> Unit) {
+fun UserItemForOnlineUsers(user: OnlineUser, buttonClicked: () -> Unit, isSelf: Boolean) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        border = if (isSelf) BorderStroke(2.dp, Color.Green) else null,
         colors = CardDefaults.cardColors(containerColor = CardItemBackgroundColor)
     ) {
         Row(
@@ -145,7 +149,7 @@ fun UserItemForOnlineUsers(user: OnlineUser, buttonClicked: () -> Unit) {
 
             Button(
                 onClick = {
-                    buttonClicked()
+                    if (!isSelf) buttonClicked()
                 },
                 modifier = Modifier.height(32.dp),
                 shape = RoundedCornerShape(8.dp),
@@ -153,7 +157,7 @@ fun UserItemForOnlineUsers(user: OnlineUser, buttonClicked: () -> Unit) {
                 colors = ButtonDefaults.buttonColors(containerColor = BackgroundDark)
             ) {
                 Text(
-                    text = stringResource(R.string.chat),
+                    text = if (isSelf) stringResource(R.string.you) else stringResource(R.string.chat),
                     style = TextStyle(fontSize = 12.sp),
                     color = CardButtonTextColor,
                     maxLines = 1
@@ -164,12 +168,13 @@ fun UserItemForOnlineUsers(user: OnlineUser, buttonClicked: () -> Unit) {
 }
 
 @Composable
-fun HorizontalUserItem(user: OnlineUser, buttonClicked: () -> Unit) {
+fun HorizontalUserItem(user: OnlineUser, buttonClicked: () -> Unit, isSelf: Boolean) {
     Card(
         modifier = Modifier
             .width(100.dp),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        border = if (isSelf) BorderStroke(2.dp, Color.Green) else null,
         colors = CardDefaults.cardColors(containerColor = CardItemBackgroundColor)
     ) {
         Column(
@@ -223,7 +228,7 @@ fun HorizontalUserItem(user: OnlineUser, buttonClicked: () -> Unit) {
 
             Button(
                 onClick = {
-                    buttonClicked()
+                    if (!isSelf) buttonClicked()
                 },
                 modifier = Modifier.height(32.dp),
                 shape = RoundedCornerShape(8.dp),
@@ -231,7 +236,7 @@ fun HorizontalUserItem(user: OnlineUser, buttonClicked: () -> Unit) {
                 colors = ButtonDefaults.buttonColors(containerColor = BackgroundDark)
             ) {
                 Text(
-                    text = stringResource(R.string.chat),
+                    text = if (isSelf) stringResource(R.string.you) else stringResource(R.string.chat),
                     style = TextStyle(fontSize = 12.sp),
                     color = CardButtonTextColor,
                     maxLines = 1,

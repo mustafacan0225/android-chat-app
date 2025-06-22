@@ -24,6 +24,7 @@ lottie-compose = "6.6.0"
 socketio = "2.1.2"
 paging = "3.3.6"
 constraintlayout = "1.1.1"
+google-code-gson = "2.10.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -91,6 +92,10 @@ paging-compose = { group = "androidx.paging", name = "paging-compose", version.r
 
 # Constraintlayout compose
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayout" }
+
+
+# Gson
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "google-code-gson" }
 
 
 [plugins]
