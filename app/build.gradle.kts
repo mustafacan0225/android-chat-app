@@ -61,8 +61,9 @@ android {
 
 dependencies {
     implementation(project(":core:ui"))
-    implementation(project(":core:common"))
+    implementation(project(":core:appevent"))
     implementation(project(":core:domain"))
+    implementation(project(":core:model"))
     implementation(project(":feature:auth"))
     implementation(project(":feature:users"))
 

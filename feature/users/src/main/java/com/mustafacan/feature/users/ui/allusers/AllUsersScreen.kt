@@ -18,7 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.mustafacan.core.domain.model.users.User
+import com.mustafacan.core.model.users.User
 import com.mustafacan.core.ui.component.header.ListHeaderItem
 import com.mustafacan.core.ui.component.searchbar.RemoteSearchBar
 import com.mustafacan.core.ui.util.rememberFlowWithLifecycle

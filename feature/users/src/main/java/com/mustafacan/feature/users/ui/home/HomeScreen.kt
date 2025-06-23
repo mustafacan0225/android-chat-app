@@ -20,8 +20,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.mustafacan.core.domain.model.socket.SocketConnectionState
-import com.mustafacan.core.domain.model.users.User
+import com.mustafacan.core.model.socket.SocketConnectionState
+import com.mustafacan.core.model.users.User
 import com.mustafacan.core.ui.R
 import com.mustafacan.core.ui.component.error.ErrorView
 import com.mustafacan.core.ui.component.header.ListHeaderItem

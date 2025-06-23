@@ -38,7 +38,7 @@ import androidx.navigation.NavHostController
 import com.mustafacan.core.ui.R
 import com.mustafacan.android_chat_app.ui.bottommenu.BottomMenu
 import com.mustafacan.android_chat_app.ui.navigation.DashboardNavHost
-import com.mustafacan.core.domain.model.socket.SocketConnectionState
+import com.mustafacan.core.model.socket.SocketConnectionState
 import com.mustafacan.core.ui.component.dialog.ShowDialog
 import com.mustafacan.core.ui.component.overlay.FullScreenLoadingOverlay
 import com.mustafacan.core.ui.theme.PrimaryLight

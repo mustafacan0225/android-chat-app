@@ -3,7 +3,7 @@ package com.mustafacan.android_chat_app.ui.dashboard
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.mustafacan.core.domain.model.socket.SocketConnectionState
+import com.mustafacan.core.model.socket.SocketConnectionState
 import com.mustafacan.core.domain.usecase.datastore.GetLocalUserUseCase
 import com.mustafacan.core.domain.usecase.socket.ObserveSocketConnectionUseCase
 import com.mustafacan.core.domain.usecase.socket.SocketConnectUseCase

@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
 import com.mustafacan.android_chat_app.ui.navigation.AppNavHost
-import com.mustafacan.core.common.app_event.AppEvent
-import com.mustafacan.core.common.app_event.AppEventManager
+import com.mustafacan.core.appevent.AppEvent
+import com.mustafacan.core.appevent.AppEventManager
 import com.mustafacan.core.ui.navigation.NavDestinationItem
 
 @Composable

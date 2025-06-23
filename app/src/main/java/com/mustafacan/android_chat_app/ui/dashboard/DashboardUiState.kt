@@ -1,7 +1,7 @@
 package com.mustafacan.android_chat_app.ui.dashboard
 
 import androidx.compose.runtime.Composable
-import com.mustafacan.core.domain.model.socket.SocketConnectionState
+import com.mustafacan.core.model.socket.SocketConnectionState
 import com.mustafacan.core.ui.component.dialog.DialogModel
 
 data class DashboardUiState(

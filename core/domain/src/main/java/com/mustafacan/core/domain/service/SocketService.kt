@@ -1,8 +1,8 @@
 package com.mustafacan.core.domain.service
 
-import com.mustafacan.core.domain.model.socket.SocketConnectionState
-import com.mustafacan.core.domain.model.socket.SocketEvent
-import com.mustafacan.core.domain.model.socket.SocketMessage
+import com.mustafacan.core.model.socket.SocketConnectionState
+import com.mustafacan.core.model.socket.SocketEvent
+import com.mustafacan.core.model.socket.SocketMessage
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 

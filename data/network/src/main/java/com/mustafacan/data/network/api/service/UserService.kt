@@ -1,7 +1,7 @@
 package com.mustafacan.data.network.api.service
 
-import com.mustafacan.core.domain.model.users.PagedUserResponse
-import com.mustafacan.core.domain.model.users.SearchRequest
+import com.mustafacan.core.model.users.PagedUserResponse
+import com.mustafacan.core.model.users.UserSearchRequest
 import com.mustafacan.data.network.api.model.ApiResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -21,8 +21,7 @@ interface UserService {
     suspend fun getPaginatedSearchedUsers(
         @Query("page") page: Int,
         @Query("limit") limit: Int,
-        @Body body: SearchRequest
+        @Body body: UserSearchRequest
     ): Response<ApiResponse<PagedUserResponse>>
-
 
 }

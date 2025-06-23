@@ -14,8 +14,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.mustafacan.core.domain.model.socket.OnlineUser
-import com.mustafacan.core.domain.model.socket.SocketConnectionState
+import com.mustafacan.core.model.socket.SocketConnectionState
+import com.mustafacan.core.model.users.User
 import com.mustafacan.core.ui.component.error.ErrorView
 import com.mustafacan.core.ui.component.header.ListHeaderItem
 import com.mustafacan.core.ui.component.loading.VerticalRectangleShimmer
@@ -23,7 +23,7 @@ import com.mustafacan.core.ui.component.notfound.NotFoundScreenForSearch
 import com.mustafacan.core.ui.component.searchbar.SearchBar
 import com.mustafacan.core.ui.R
 import com.mustafacan.core.ui.util.rememberFlowWithLifecycle
-import com.mustafacan.feature.users.ui.common.UserItemForOnlineUsers
+import com.mustafacan.feature.users.ui.common.UserItem
 
 @Composable
 fun OnlineUsersRoute(
@@ -79,10 +79,10 @@ fun OnlineUsersScreen(
 }
 
 @Composable
-fun UserList(users: List<OnlineUser>, onEvent: (OnlineUsersUiEvent) -> Unit, selfUserId: String) {
+fun UserList(users: List<User>, onEvent: (OnlineUsersUiEvent) -> Unit, selfUserId: String) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(users) { user ->
-            UserItemForOnlineUsers(user,
+            UserItem(user,
                 buttonClicked = {
 
                 }, isSelf = user.id.equals(selfUserId))

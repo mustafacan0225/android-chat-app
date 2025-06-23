@@ -1,18 +1,18 @@
 package com.mustafacan.core.domain.usecase.api
 
 import com.mustafacan.core.domain.constant.AuthConstants
-import com.mustafacan.core.domain.error.BusinessLogicError
-import com.mustafacan.core.domain.model.auth.RegisterRequest
-import com.mustafacan.core.domain.model.auth.User
 import com.mustafacan.core.domain.repository.api.AuthRepository
 import com.mustafacan.core.domain.usecase.datastore.SaveLocalUserUseCase
+import com.mustafacan.core.model.auth.AuthUser
+import com.mustafacan.core.model.auth.RegisterRequest
+import com.mustafacan.core.model.error.BusinessLogicError
 import javax.inject.Inject
 
 class RegisterUseCase @Inject constructor(
     private val repository: AuthRepository,
     private val saveLocalUserUseCase: SaveLocalUserUseCase
 ) {
-    suspend operator fun invoke(request: RegisterRequest): Result<User> {
+    suspend operator fun invoke(request: RegisterRequest): Result<AuthUser> {
 
         if (request.username.length < AuthConstants.MIN_USERNAME_LENGTH) {
             return Result.failure(BusinessLogicError.InvalidUsername)

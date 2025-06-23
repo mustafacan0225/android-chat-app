@@ -2,8 +2,8 @@ package com.mustafacan.feature.users.ui.onlineusers
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
-import com.mustafacan.core.domain.model.socket.OnlineUser
-import com.mustafacan.core.domain.model.socket.SocketConnectionState
+import com.mustafacan.core.model.socket.SocketConnectionState
+import com.mustafacan.core.model.users.User
 import com.mustafacan.core.domain.usecase.datastore.GetLocalUserUseCase
 import com.mustafacan.core.domain.usecase.socket.GetOnlineUsersUseCase
 import com.mustafacan.core.domain.usecase.socket.ObserveSocketConnectionUseCase
@@ -111,12 +111,12 @@ class OnlineUsersViewModel @Inject constructor(@ApplicationContext private val c
 
     fun search(query: String) {
         viewModelScope.launch {
-            var result: List<OnlineUser> = listOf()
+            var result: List<User> = listOf()
             if (query.isEmpty()) {
                 result = uiState.value.onlineUsers
             } else {
                 result = uiState.value.onlineUsers!!.filter {
-                    it.name?.lowercase()?.contains(query.lowercase()) ?: false
+                    it.username?.lowercase()?.contains(query.lowercase()) ?: false
                 }
             }
 

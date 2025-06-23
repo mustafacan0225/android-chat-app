@@ -2,7 +2,7 @@ package com.mustafacan.data.network.pagination
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.mustafacan.core.domain.model.users.User
+import com.mustafacan.core.model.users.User
 import com.mustafacan.data.network.datasource.UsersRemoteDataSource
 import kotlinx.coroutines.delay
 

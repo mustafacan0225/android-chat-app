@@ -7,8 +7,8 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.compose.LazyPagingItems
-import com.mustafacan.core.domain.model.socket.SocketConnectionState
-import com.mustafacan.core.domain.model.users.User
+import com.mustafacan.core.model.socket.SocketConnectionState
+import com.mustafacan.core.model.users.User
 import com.mustafacan.core.domain.usecase.api.GetAllUsersPagingDataUseCase
 import com.mustafacan.core.domain.usecase.datastore.GetLocalUserUseCase
 import com.mustafacan.core.domain.usecase.socket.GetOnlineUsersUseCase

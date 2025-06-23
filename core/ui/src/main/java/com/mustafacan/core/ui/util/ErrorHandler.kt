@@ -1,10 +1,10 @@
 package com.mustafacan.core.ui.util
 
 import android.content.Context
-import com.mustafacan.core.domain.error.BackendError
-import com.mustafacan.core.domain.error.BusinessLogicError
-import com.mustafacan.core.domain.error.CustomNetworkError
-import com.mustafacan.core.domain.error.SocketError
+import com.mustafacan.core.model.error.BackendError
+import com.mustafacan.core.model.error.BusinessLogicError
+import com.mustafacan.core.model.error.CustomNetworkError
+import com.mustafacan.core.model.error.SocketError
 import com.mustafacan.core.ui.R
 
 object ErrorHandler {

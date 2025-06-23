@@ -2,14 +2,14 @@ package com.mustafacan.data.network.pagination
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.mustafacan.core.domain.model.users.SearchRequest
-import com.mustafacan.core.domain.model.users.User
+import com.mustafacan.core.model.users.UserSearchRequest
+import com.mustafacan.core.model.users.User
 import com.mustafacan.data.network.datasource.UsersRemoteDataSource
 import kotlinx.coroutines.delay
 
 class SearchedUsersPagingSource(
     private val remoteDataSource: UsersRemoteDataSource,
-    private val searchRequest: SearchRequest
+    private val userSearchRequest: UserSearchRequest
 ) : PagingSource<Int, User>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, User> {
@@ -20,7 +20,7 @@ class SearchedUsersPagingSource(
             delay(2000)
         }
 
-        val result = remoteDataSource.getPaginatedSearchedUsers(currentPage, pageSize, searchRequest)
+        val result = remoteDataSource.getPaginatedSearchedUsers(currentPage, pageSize, userSearchRequest)
         return if (result.isSuccess) {
             val data = result.getOrNull()
             if (data != null) {

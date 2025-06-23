@@ -1,7 +1,7 @@
 package com.mustafacan.data.network.datasource
 
-import com.mustafacan.core.domain.model.auth.LoginRequest
-import com.mustafacan.core.domain.model.auth.RegisterRequest
+import com.mustafacan.core.model.auth.LoginRequest
+import com.mustafacan.core.model.auth.RegisterRequest
 import com.mustafacan.data.network.api.service.AuthService
 import com.mustafacan.data.network.util.ApiCallHandler
 import javax.inject.Inject

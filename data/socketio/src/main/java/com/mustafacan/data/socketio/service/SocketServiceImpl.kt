@@ -1,11 +1,11 @@
 package com.mustafacan.data.socketio.service
 
-import com.mustafacan.core.domain.error.SocketError
-import com.mustafacan.core.domain.model.socket.OnlineUser
-import com.mustafacan.core.domain.model.socket.SocketConnectionState
+import com.mustafacan.core.model.error.SocketError
+import com.mustafacan.core.model.socket.SocketConnectionState
 import io.socket.client.Socket
-import com.mustafacan.core.domain.model.socket.SocketEvent
-import com.mustafacan.core.domain.model.socket.SocketMessage
+import com.mustafacan.core.model.socket.SocketEvent
+import com.mustafacan.core.model.socket.SocketMessage
+import com.mustafacan.core.model.users.User
 import com.mustafacan.core.domain.service.SocketService
 import com.mustafacan.data.socketio.factory.SocketFactory
 import com.squareup.moshi.Moshi
@@ -77,7 +77,7 @@ class SocketServiceImpl @Inject constructor(
         socket?.on(SocketEvent.ONLINE_USERS.eventName) { args ->
             args.firstOrNull()?.let { rawData ->
                 try {
-                    val result = moshi.adapter<List<OnlineUser>>(Types.newParameterizedType(List::class.java, OnlineUser::class.java))
+                    val result = moshi.adapter<List<User>>(Types.newParameterizedType(List::class.java, User::class.java))
                         .fromJson(rawData.toString()) ?: listOf()
                     result?.let {
                         _incomingEvents.tryEmit(SocketMessage.OnlineUsers(it))

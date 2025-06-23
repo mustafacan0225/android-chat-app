@@ -1,6 +1,6 @@
 package com.mustafacan.core.domain.usecase.socket
 
-import com.mustafacan.core.domain.model.socket.SocketEvent
+import com.mustafacan.core.model.socket.SocketEvent
 import com.mustafacan.core.domain.service.SocketService
 import javax.inject.Inject
 

@@ -6,8 +6,8 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.compose.LazyPagingItems
-import com.mustafacan.core.domain.model.users.SearchRequest
-import com.mustafacan.core.domain.model.users.User
+import com.mustafacan.core.model.users.UserSearchRequest
+import com.mustafacan.core.model.users.User
 import com.mustafacan.core.domain.usecase.api.GetAllUsersPagingDataUseCase
 import com.mustafacan.core.domain.usecase.api.GetSearchedUsersPagingDataUseCase
 import com.mustafacan.core.domain.usecase.datastore.GetLocalUserUseCase
@@ -94,7 +94,11 @@ class AllUsersViewModel @Inject constructor(@ApplicationContext private val cont
     }
 
     fun search() {
-        _searchedUsersPagingDataFlow.value = getSearchedUsersPagingDataUseCase(SearchRequest(uiState.value.searchedText)).cachedIn(viewModelScope)
+        _searchedUsersPagingDataFlow.value = getSearchedUsersPagingDataUseCase(
+            UserSearchRequest(
+                uiState.value.searchedText
+            )
+        ).cachedIn(viewModelScope)
     }
 
     fun allUsersLoadStateChanged(users: LazyPagingItems<User>) {

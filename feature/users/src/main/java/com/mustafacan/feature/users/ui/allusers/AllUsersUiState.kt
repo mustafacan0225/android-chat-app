@@ -1,6 +1,6 @@
 package com.mustafacan.feature.users.ui.allusers
 
-import com.mustafacan.core.domain.model.socket.SocketConnectionState
+import com.mustafacan.core.model.socket.SocketConnectionState
 import com.mustafacan.core.ui.component.dialog.DialogModel
 
 data class AllUsersUiState(val userId: String = "",

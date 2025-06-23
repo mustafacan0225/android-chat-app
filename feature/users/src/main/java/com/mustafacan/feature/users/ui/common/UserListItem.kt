@@ -30,8 +30,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mustafacan.core.domain.model.socket.OnlineUser
-import com.mustafacan.core.domain.model.users.User
+import com.mustafacan.core.model.users.User
 import com.mustafacan.core.ui.R
 import com.mustafacan.core.ui.theme.BackgroundDark
 import com.mustafacan.core.ui.theme.CardButtonTextColor
@@ -104,71 +103,7 @@ fun UserItem(user: User, buttonClicked: () -> Unit, isSelf: Boolean) {
 }
 
 @Composable
-fun UserItemForOnlineUsers(user: OnlineUser, buttonClicked: () -> Unit, isSelf: Boolean) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(4.dp),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        border = if (isSelf) BorderStroke(2.dp, Color.Green) else null,
-        colors = CardDefaults.cardColors(containerColor = CardItemBackgroundColor)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
-            Box(
-                modifier = Modifier
-                    .size(32.dp)
-                    .clip(CircleShape)
-                    .background(BackgroundDark),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = user.name.first().uppercase(),
-                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
-                    color = CardButtonTextColor
-                )
-            }
-
-            Spacer(modifier = Modifier.width(12.dp))
-
-            Text(
-                text = user.name,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.weight(1f),
-                maxLines = 1,
-                color = CardItemTextColor
-            )
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Button(
-                onClick = {
-                    if (!isSelf) buttonClicked()
-                },
-                modifier = Modifier.height(32.dp),
-                shape = RoundedCornerShape(8.dp),
-                contentPadding = PaddingValues(horizontal = 12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = BackgroundDark)
-            ) {
-                Text(
-                    text = if (isSelf) stringResource(R.string.you) else stringResource(R.string.chat),
-                    style = TextStyle(fontSize = 12.sp),
-                    color = CardButtonTextColor,
-                    maxLines = 1
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun HorizontalUserItem(user: OnlineUser, buttonClicked: () -> Unit, isSelf: Boolean) {
+fun HorizontalUserItem(user: User, buttonClicked: () -> Unit, isSelf: Boolean) {
     Card(
         modifier = Modifier
             .width(100.dp),
@@ -192,7 +127,7 @@ fun HorizontalUserItem(user: OnlineUser, buttonClicked: () -> Unit, isSelf: Bool
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = user.name.first().uppercase(),
+                    text = user.username.first().uppercase(),
                     style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold),
                     color = CardButtonTextColor
                 )
@@ -201,7 +136,7 @@ fun HorizontalUserItem(user: OnlineUser, buttonClicked: () -> Unit, isSelf: Bool
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = user.name,
+                text = user.username,
                 style = MaterialTheme.typography.bodySmall,
                 maxLines = 1,
                 color = CardItemTextColor

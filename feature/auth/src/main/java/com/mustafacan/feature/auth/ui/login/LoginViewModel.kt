@@ -2,8 +2,8 @@ package com.mustafacan.feature.auth.ui.login
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
-import com.mustafacan.core.domain.error.BackendError
-import com.mustafacan.core.domain.model.auth.LoginRequest
+import com.mustafacan.core.model.error.BackendError
+import com.mustafacan.core.model.auth.LoginRequest
 import com.mustafacan.core.domain.usecase.api.LoginUseCase
 import com.mustafacan.core.ui.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -1,8 +1,8 @@
 package com.mustafacan.data.network.util
 
 import com.google.gson.Gson
-import com.mustafacan.core.domain.error.BackendError
-import com.mustafacan.core.domain.error.CustomNetworkError
+import com.mustafacan.core.model.error.BackendError
+import com.mustafacan.core.model.error.CustomNetworkError
 import com.mustafacan.data.network.api.model.ApiResponse
 import retrofit2.Response
 import java.net.ConnectException

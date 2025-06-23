@@ -2,8 +2,8 @@ package com.mustafacan.feature.auth.ui.register
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
-import com.mustafacan.core.domain.error.BackendError
-import com.mustafacan.core.domain.model.auth.RegisterRequest
+import com.mustafacan.core.model.error.BackendError
+import com.mustafacan.core.model.auth.RegisterRequest
 import com.mustafacan.core.domain.usecase.api.RegisterUseCase
 import com.mustafacan.core.ui.component.dialog.DialogModel
 import com.mustafacan.core.ui.component.dialog.DialogType

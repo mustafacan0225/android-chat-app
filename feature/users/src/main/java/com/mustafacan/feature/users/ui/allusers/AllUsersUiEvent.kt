@@ -1,7 +1,7 @@
 package com.mustafacan.feature.users.ui.allusers
 
 import androidx.paging.compose.LazyPagingItems
-import com.mustafacan.core.domain.model.users.User
+import com.mustafacan.core.model.users.User
 import com.mustafacan.core.ui.component.dialog.DialogModel
 
 sealed class AllUsersUiEvent {

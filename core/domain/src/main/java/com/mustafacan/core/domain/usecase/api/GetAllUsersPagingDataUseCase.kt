@@ -1,7 +1,7 @@
 package com.mustafacan.core.domain.usecase.api
 
 import androidx.paging.PagingData
-import com.mustafacan.core.domain.model.users.User
+import com.mustafacan.core.model.users.User
 import com.mustafacan.core.domain.repository.api.UserRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
