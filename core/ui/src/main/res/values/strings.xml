@@ -18,6 +18,8 @@
     <string name="try_again">Try Again</string>
     <string name="welcome">Welcome</string>
     <string name="connection_state_online">Online</string>
+    <string name="connection_state_offline">Offline</string>
+
     <string name="connection_state_connecting">Connecting...</string>
     <string name="connection_state_disconnected">Disconnected</string>
     <string name="connection_state_error">Not Connected</string>

@@ -15,6 +15,8 @@ import com.mustafacan.core.domain.usecase.socket.GetOnlineUsersUseCase
 import com.mustafacan.core.domain.usecase.socket.ObserveSocketConnectionUseCase
 import com.mustafacan.core.domain.usecase.socket.SocketConnectUseCase
 import com.mustafacan.core.ui.R
+import com.mustafacan.core.ui.component.scaffold.RootScaffoldController
+import com.mustafacan.core.ui.component.scaffold.ScaffoldEvent
 import com.mustafacan.core.ui.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -71,7 +73,22 @@ class HomeViewModel @Inject constructor(
 
             HomeUiEvent.NavigateToAllUsersPage -> {
                 sendEffect(HomeUiEffect.NavigateToAllUsersPage)
+            }
 
+            is HomeUiEvent.NavigateToDirectMessage -> {
+                sendEffect(HomeUiEffect.NavigateToDirectMessage(event.user))
+            }
+
+            is HomeUiEvent.SetBottomBarVisibility -> {
+                viewModelScope.launch {
+                    RootScaffoldController.emit(ScaffoldEvent.SetBottomBarVisibility(event.visible))
+                }
+            }
+
+            is HomeUiEvent.SetTopAppBarVisibility -> {
+                viewModelScope.launch {
+                    RootScaffoldController.emit(ScaffoldEvent.SetTopAppBarVisibility(event.visible))
+                }
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.mustafacan.core.ui.navigation
 
 import com.mustafacan.core.ui.R
+import com.mustafacan.core.ui.model.UserUiModel
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -36,6 +37,10 @@ sealed class NavDestinationItem(var titleResource: Int, var icon: Int? = null) {
     @Serializable
     object Support: NavDestinationItem(R.string.bottom_menu_support, R.drawable.bottom_menu_support)
 
+    @Serializable
+    data class DirectMessage(
+        val user: UserUiModel, val previousPage: String
+    )
 
 
 

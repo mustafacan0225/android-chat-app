@@ -27,6 +27,8 @@ import com.mustafacan.core.ui.component.error.ErrorView
 import com.mustafacan.core.ui.component.loading.MoreItemsLoading
 import com.mustafacan.core.ui.component.loading.VerticalRectangleShimmer
 import com.mustafacan.core.ui.component.notfound.NotFoundScreenForSearch
+import com.mustafacan.core.ui.model.UserUiModel
+import com.mustafacan.core.ui.navigation.NavDestinationItem
 import com.mustafacan.feature.users.ui.common.UserItem
 
 @Composable
@@ -41,6 +43,17 @@ fun AllUsersRoute(
     val allUsersLazyListState = rememberLazyListState()
     val searchedPagingData = viewModel.searchedUsersPagingDataFlow.collectAsStateWithLifecycle().value
     val searchedUsers = searchedPagingData?.collectAsLazyPagingItems()
+
+    LaunchedEffect(Unit) {
+        uiEffect.collect { effect ->
+
+            when (effect) {
+                is AllUsersUiEffect.NavigateToDirectMessage -> {
+                    parentNavController.navigate(NavDestinationItem.DirectMessage(effect.user, NavDestinationItem.AllUsers::class.qualifiedName?: "NavDestinationItem.AllUsers"))
+                }
+            }
+        }
+    }
 
     AllUsersScreen(uiState = uiState, onEvent = { viewModel.sendEvent(it) }, allUsers, searchedUsers, allUsersLazyListState)
 }
@@ -108,7 +121,7 @@ fun AllUsers(uiState: AllUsersUiState,
                     if (user != null) {
                         UserItem(user,
                             buttonClicked = {
-
+                                onEvent(AllUsersUiEvent.NavigateToDirectMessage(user = UserUiModel(id = user.id, username = user.username)))
                             }, isSelf = user.id.equals(uiState.userId))
                     }
                 }
@@ -155,7 +168,7 @@ fun SearchedUsers(uiState: AllUsersUiState,
                         if (user != null) {
                             UserItem(user,
                                 buttonClicked = {
-
+                                    onEvent(AllUsersUiEvent.NavigateToDirectMessage(user = UserUiModel(id = user.id, username = user.username)))
                                 }, isSelf = user.id.equals(uiState.userId))
                         }
                     }

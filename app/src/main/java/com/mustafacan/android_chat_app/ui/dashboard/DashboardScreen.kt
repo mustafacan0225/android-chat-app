@@ -22,7 +22,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,14 +36,18 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.mustafacan.core.ui.R
 import com.mustafacan.android_chat_app.ui.bottommenu.BottomMenu
 import com.mustafacan.android_chat_app.ui.navigation.DashboardNavHost
 import com.mustafacan.core.model.socket.SocketConnectionState
 import com.mustafacan.core.ui.component.dialog.ShowDialog
 import com.mustafacan.core.ui.component.overlay.FullScreenLoadingOverlay
+import com.mustafacan.core.ui.navigation.NavDestinationItem
 import com.mustafacan.core.ui.theme.PrimaryLight
+import kotlinx.serialization.json.Json
 
 @Composable
 fun DashboardRoute(viewModel: DashboardViewModel, navController: NavHostController) {
@@ -60,10 +66,6 @@ fun DashboardRoute(viewModel: DashboardViewModel, navController: NavHostControll
 
                 Lifecycle.Event.ON_RESUME -> {
                     Log.d("LifecycleObserver", "ON_RESUME ->")
-                    if (uiState.topBarContent == null) {
-                        viewModel.sendEvent(DashboardUiEvent.SetTopAppBarContent(content = { DashboardScreenTopAppBar(uiState) }))
-                    }
-
                 }
 
                 Lifecycle.Event.ON_STOP -> {
@@ -96,7 +98,7 @@ fun DashboardScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(topBar = {
-            uiState.topBarContent?.invoke()
+            DashboardScreenTopAppBar(uiState)
         }, bottomBar = {
             AnimatedVisibility(
                 visible = uiState.bottomBarVisibility,
@@ -110,6 +112,7 @@ fun DashboardScreen(
             )
         }) {
             Box(modifier = Modifier.padding(it)) {
+                //NavigationWatcher(navController)
                 DashboardNavHost(navController = navController)
             }
 
@@ -131,39 +134,91 @@ fun DashboardScreen(
 
 @Composable
 fun DashboardScreenTopAppBar(uiState: DashboardUiState) {
-    Column(Modifier.fillMaxWidth().background(PrimaryLight).padding(horizontal = 16.dp, vertical = 12.dp)) {
-        Row (Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically) {
-            Text(text = uiState.username, style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold, color = Color.White))
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = stringResource(R.string.welcome), style = MaterialTheme.typography.bodyMedium.copy(color = Color.White.copy(alpha = 0.7f)))
-        }
+    AnimatedVisibility(
+        visible = uiState.topAppBarVisibility,
+        //enter = slideInVertically(animationSpec = tween(1000), initialOffsetY = { -it }),
+        //exit = slideOutVertically(animationSpec = tween(1000), targetOffsetY = { -it }),
+        content = {
+            Column(Modifier.fillMaxWidth().background(PrimaryLight).padding(horizontal = 16.dp, vertical = 12.dp)) {
+                Row (Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = uiState.username, style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold, color = Color.White))
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = stringResource(R.string.welcome), style = MaterialTheme.typography.bodyMedium.copy(color = Color.White.copy(alpha = 0.7f)))
+                }
 
-        Spacer(modifier = Modifier.height(4.dp))
-        Row(verticalAlignment = Alignment.CenterVertically) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
 
-            val (statusText, statusColor) = when (uiState.socketConnectionState) {
-                SocketConnectionState.CONNECTING -> stringResource(R.string.connection_state_connecting) to Color.Yellow
-                SocketConnectionState.CONNECTED -> stringResource(R.string.connection_state_online) to Color.Green
-                SocketConnectionState.DISCONNECTED -> stringResource(R.string.connection_state_disconnected) to Color.Red
-                SocketConnectionState.ERROR -> stringResource(R.string.connection_state_error) to Color.Red
+                    val (statusText, statusColor) = when (uiState.socketConnectionState) {
+                        SocketConnectionState.CONNECTING -> stringResource(R.string.connection_state_connecting) to Color.Yellow
+                        SocketConnectionState.CONNECTED -> stringResource(R.string.connection_state_online) to Color.Green
+                        SocketConnectionState.DISCONNECTED -> stringResource(R.string.connection_state_disconnected) to Color.Red
+                        SocketConnectionState.ERROR -> stringResource(R.string.connection_state_error) to Color.Red
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .size(16.dp)
+                            .clip(CircleShape)
+                            .background(statusColor)
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = statusText,
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            color = Color.White.copy(alpha = 0.7f)
+                        )
+                    )
+                }
             }
+       }
+    )
 
-            Box(
-                modifier = Modifier
-                    .size(16.dp)
-                    .clip(CircleShape)
-                    .background(statusColor)
-            )
-            Spacer(modifier = Modifier.width(6.dp))
-            Text(
-                text = statusText,
-                style = MaterialTheme.typography.bodySmall.copy(
-                    color = Color.White.copy(alpha = 0.7f)
-                )
-            )
-        }
-    }
 
 
 }
+
+/*@Composable
+fun NavigationWatcher(navController: NavHostController) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val json = remember { Json { ignoreUnknownKeys = true } }
+
+    LaunchedEffect(navBackStackEntry) {
+        val destination = navBackStackEntry?.destination
+
+        Log.d("dest:", destination?.route?: "route null")
+        Log.d("dest:",  destination?.javaClass?.name?: "javaclass name null")
+        Log.d("dest:",  destination?.javaClass?.simpleName?: "javaclass simpleName null")
+
+        val route = navBackStackEntry?.destination?.route
+
+        if (route != null) {
+            try {
+                val screen = json.decodeFromString<NavDestinationItem>(route)
+                when (screen) {
+                    is NavDestinationItem.ChatRooms -> {
+                        Log.d("Navigation", "Şu an ChatRooms ekranındasın")
+                    }
+
+                    is NavDestinationItem.Users -> {
+                        Log.d("Navigation", "Users ekranındasin")
+                    }
+
+                    is NavDestinationItem.Messages -> {
+                        Log.d("Navigation", "Şu an Messages ekranındasın")
+                    }
+
+                    is NavDestinationItem.Support -> {
+                        Log.d("Navigation", "Support ekranındasin")
+                    }
+                    else -> {
+                        Log.d("Navigation", "Diger Ekranlardan birindesin: ${screen::class.simpleName}")
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("Navigation", "Route çözümlemesi başarısız: ${e.message}")
+            }
+        }
+    }
+}*/

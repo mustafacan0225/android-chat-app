@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -22,6 +23,8 @@ import com.mustafacan.core.ui.component.loading.VerticalRectangleShimmer
 import com.mustafacan.core.ui.component.notfound.NotFoundScreenForSearch
 import com.mustafacan.core.ui.component.searchbar.SearchBar
 import com.mustafacan.core.ui.R
+import com.mustafacan.core.ui.model.UserUiModel
+import com.mustafacan.core.ui.navigation.NavDestinationItem
 import com.mustafacan.core.ui.util.rememberFlowWithLifecycle
 import com.mustafacan.feature.users.ui.common.UserItem
 
@@ -33,6 +36,17 @@ fun OnlineUsersRoute(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val uiEffect = rememberFlowWithLifecycle(viewModel.uiEffect)
+
+    LaunchedEffect(Unit) {
+        uiEffect.collect { effect ->
+
+            when (effect) {
+                is OnlineUsersUiEffect.NavigateToDirectMessage -> {
+                    parentNavController.navigate(NavDestinationItem.DirectMessage(effect.user, NavDestinationItem.OnlineUsers::class.qualifiedName?: "NavDestinationItem.OnlineUsers"))
+                }
+            }
+        }
+    }
 
     OnlineUsersScreen(uiState = uiState, onEvent = { viewModel.sendEvent(it) })
 }
@@ -84,7 +98,7 @@ fun UserList(users: List<User>, onEvent: (OnlineUsersUiEvent) -> Unit, selfUserI
         items(users) { user ->
             UserItem(user,
                 buttonClicked = {
-
+                    onEvent(OnlineUsersUiEvent.NavigateToDirectMessage(user = UserUiModel(id = user.id, username = user.username)))
                 }, isSelf = user.id.equals(selfUserId))
         }
 

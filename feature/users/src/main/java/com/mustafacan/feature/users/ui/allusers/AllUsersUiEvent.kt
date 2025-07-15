@@ -3,6 +3,7 @@ package com.mustafacan.feature.users.ui.allusers
 import androidx.paging.compose.LazyPagingItems
 import com.mustafacan.core.model.users.User
 import com.mustafacan.core.ui.component.dialog.DialogModel
+import com.mustafacan.core.ui.model.UserUiModel
 
 sealed class AllUsersUiEvent {
     data class ShowDialog(val dialogModel: DialogModel) : AllUsersUiEvent()
@@ -13,4 +14,5 @@ sealed class AllUsersUiEvent {
     data class UsersLoadStateChanged(val users: LazyPagingItems<User>) : AllUsersUiEvent()
     data class SearchedUsersLoadStateChanged(val users: LazyPagingItems<User>) : AllUsersUiEvent()
     data class RetrySearchedUsers(val users: LazyPagingItems<User>) : AllUsersUiEvent()
+    data class NavigateToDirectMessage(val user: UserUiModel): AllUsersUiEvent()
 }

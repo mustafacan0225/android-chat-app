@@ -5,12 +5,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.mustafacan.core.ui.animation.transition.Transition
+import com.mustafacan.core.ui.model.UserUiModel
 import com.mustafacan.core.ui.navigation.NavDestinationItem
+import com.mustafacan.core.ui.navigation.parcelableNavType
+import com.mustafacan.feature.chat.ui.directmessage.DirectMessageRoute
+import com.mustafacan.feature.chat.ui.directmessage.DirectMessageViewModel
 import com.mustafacan.feature.users.ui.navigation.UsersNavHost
+import kotlin.reflect.typeOf
 
 @Composable
 fun DashboardNavHost(navController: NavHostController) {
@@ -49,6 +56,11 @@ fun DashboardNavHost(navController: NavHostController) {
             popEnterTransition = { Transition.enterFromRight() },
             popExitTransition = { Transition.exitToRight() }) {
             Text("Support Page", Modifier.padding(16.dp, 40.dp))
+        }
+
+        composable<NavDestinationItem.DirectMessage>(typeMap = mapOf(typeOf<UserUiModel>() to NavType.parcelableNavType<UserUiModel>(), typeOf<String>() to NavType.StringType)) {
+            val viewModel = hiltViewModel<DirectMessageViewModel>()
+            DirectMessageRoute(viewModel, navController)
         }
     }
 }

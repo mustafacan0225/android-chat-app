@@ -1,5 +1,6 @@
 package com.mustafacan.data.socketio.service
 
+import android.util.Log
 import com.mustafacan.core.model.error.SocketError
 import com.mustafacan.core.model.socket.SocketConnectionState
 import io.socket.client.Socket
@@ -7,6 +8,7 @@ import com.mustafacan.core.model.socket.SocketEvent
 import com.mustafacan.core.model.socket.SocketMessage
 import com.mustafacan.core.model.users.User
 import com.mustafacan.core.domain.service.SocketService
+import com.mustafacan.core.model.users.UserStatus
 import com.mustafacan.data.socketio.factory.SocketFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
@@ -36,6 +38,9 @@ class SocketServiceImpl @Inject constructor(
     private val _connectionState = MutableStateFlow(SocketConnectionState.CONNECTING)
     override val connectionState: StateFlow<SocketConnectionState> = _connectionState.asStateFlow()
 
+    private val _onlineUsers: MutableStateFlow<List<User>> = MutableStateFlow(listOf())
+    override val onlineUsers: StateFlow<List<User>> = _onlineUsers.asStateFlow()
+
     override suspend fun connect() {
         try {
             socket?.off()
@@ -58,6 +63,7 @@ class SocketServiceImpl @Inject constructor(
     }
 
     override fun emitEvent(event: SocketEvent, data: Any) {
+        Log.d("SocketService", "send event ${event.eventName} ${data}")
         socket?.emit(event.eventName, data)
     }
 
@@ -75,12 +81,29 @@ class SocketServiceImpl @Inject constructor(
 
     private fun observeEvents() {
         socket?.on(SocketEvent.ONLINE_USERS.eventName) { args ->
+            Log.d("SocketService", "incoming ONLINE_USERS")
             args.firstOrNull()?.let { rawData ->
                 try {
                     val result = moshi.adapter<List<User>>(Types.newParameterizedType(List::class.java, User::class.java))
                         .fromJson(rawData.toString()) ?: listOf()
                     result?.let {
-                        _incomingEvents.tryEmit(SocketMessage.OnlineUsers(it))
+                        _onlineUsers.value = it
+                    }
+                } catch (e: Exception) {
+
+                }
+
+            }
+        }
+
+        socket?.on(SocketEvent.USER_STATUS_UPDATE.eventName) { args ->
+
+            args.firstOrNull()?.let { rawData ->
+                try {
+                    val result = moshi.adapter(UserStatus::class.java).fromJson(rawData.toString())
+                    result?.let {
+                        Log.d("SocketService", "incoming USER_STATUS_UPDATE ${it.userId} ${it.status}")
+                        _incomingEvents.tryEmit(SocketMessage.UserStatusUpdated(it))
                     }
                 } catch (e: Exception) {
 

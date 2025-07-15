@@ -53,8 +53,8 @@ class DashboardViewModel @Inject constructor(
                 setState { copy(dialogModel = event.dialogModel) }
             }
 
-            is DashboardUiEvent.SetTopAppBarContent -> {
-                setState { copy(topBarContent = event.content) }
+            is DashboardUiEvent.SetTopAppBarVisibility -> {
+                setState { copy(topAppBarVisibility = event.visible) }
             }
 
         }
@@ -102,8 +102,8 @@ class DashboardViewModel @Inject constructor(
         viewModelScope.launch {
             RootScaffoldController.events.collect { event ->
                 when (event) {
-                    is ScaffoldEvent.SetTopBar -> {
-                        setState { copy(topBarContent = event.content) }
+                    is ScaffoldEvent.SetTopAppBarVisibility -> {
+                        setState { copy(topAppBarVisibility = event.visible) }
                     }
 
                     is ScaffoldEvent.SetBottomBarVisibility -> {

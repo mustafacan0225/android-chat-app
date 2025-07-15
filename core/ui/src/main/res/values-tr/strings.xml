@@ -18,6 +18,7 @@
     <string name="try_again">Tekrar Dene</string>
     <string name="welcome">Hoşgeldin</string>
     <string name="connection_state_online">Çevrimiçi</string>
+    <string name="connection_state_offline">Çevrimdışı</string>
     <string name="connection_state_connecting">Bağlanıyor...</string>
     <string name="connection_state_disconnected">Bağlantı Koptu</string>
     <string name="connection_state_error">Bağlantı Kurulamadı</string>

@@ -8,5 +8,5 @@ sealed class DashboardUiEvent {
     object DisconnectSocket: DashboardUiEvent()
     data class ShowDialog(val dialogModel: DialogModel) : DashboardUiEvent()
     object DismissDialog : DashboardUiEvent()
-    data class SetTopAppBarContent(val content:(@Composable () -> Unit)?) : DashboardUiEvent()
+    data class SetTopAppBarVisibility(val visible: Boolean) : DashboardUiEvent()
 }

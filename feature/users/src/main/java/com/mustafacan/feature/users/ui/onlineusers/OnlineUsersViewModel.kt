@@ -55,6 +55,10 @@ class OnlineUsersViewModel @Inject constructor(@ApplicationContext private val c
             is OnlineUsersUiEvent.Search -> {
                 search(event.query)
             }
+
+            is OnlineUsersUiEvent.NavigateToDirectMessage -> {
+                sendEffect(OnlineUsersUiEffect.NavigateToDirectMessage(event.user))
+            }
         }
 
     }

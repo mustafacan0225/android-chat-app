@@ -66,6 +66,7 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":feature:auth"))
     implementation(project(":feature:users"))
+    implementation(project(":feature:chat"))
 
     //data:network module is not used in app module, it is added only for hilt dependencies
     implementation(project(":data:network"))

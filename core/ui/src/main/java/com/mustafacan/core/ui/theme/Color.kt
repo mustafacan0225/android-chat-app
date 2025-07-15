@@ -27,6 +27,17 @@ val OnTertiaryDark = Color(0xFFF8F5F5)
 val OnBackgroundDark = Color(0xFFF8F5F5)
 val OnSurfaceDark = Color(0xFFF8F5F5)
 
+val MessagePageHeaderColor: Color
+@Composable
+get() = if (isSystemInDarkTheme()) BackgroundDark else Color.White
+
+val MessagePageBackgroundColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) BackgroundDark else Color.White
+
+val ProgressColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color.White else BackgroundDark
 
 val CardItemBackgroundColor: Color
     @Composable
@@ -41,6 +52,10 @@ val CardButtonTextColor: Color
     get() = if (isSystemInDarkTheme()) Color.White.copy(alpha = 0.7f) else Color.White
 
 val TitleTextColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color.White.copy(alpha = 0.7f) else Color(0xFF004F6C)
+
+val SeperatorColor: Color
     @Composable
     get() = if (isSystemInDarkTheme()) Color.White.copy(alpha = 0.7f) else Color(0xFF004F6C)
 

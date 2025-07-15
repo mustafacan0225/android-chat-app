@@ -8,6 +8,6 @@ data class DashboardUiState(
     val socketConnectionState: SocketConnectionState = SocketConnectionState.CONNECTING,
     val dialogModel: DialogModel? = null,
     val bottomBarVisibility: Boolean = true,
+    val topAppBarVisibility: Boolean = true,
     val username: String = "",
-    val topBarContent: (@Composable () -> Unit)? = null
 )

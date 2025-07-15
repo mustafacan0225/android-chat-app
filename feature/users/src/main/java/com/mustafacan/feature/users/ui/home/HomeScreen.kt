@@ -1,5 +1,6 @@
 package com.mustafacan.feature.users.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,7 +17,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -28,6 +32,7 @@ import com.mustafacan.core.ui.component.header.ListHeaderItem
 import com.mustafacan.core.ui.component.loading.HorizontalCircleShimmer
 import com.mustafacan.core.ui.component.loading.MoreItemsLoading
 import com.mustafacan.core.ui.component.loading.VerticalRectangleShimmer
+import com.mustafacan.core.ui.model.UserUiModel
 import com.mustafacan.core.ui.navigation.NavDestinationItem
 import com.mustafacan.core.ui.util.rememberFlowWithLifecycle
 import com.mustafacan.feature.users.ui.common.HorizontalUserItem
@@ -56,6 +61,10 @@ fun HomeRoute(
 
                 HomeUiEffect.NavigateToOnlineUsersPage -> {
                     navController.navigate(NavDestinationItem.OnlineUsers)
+                }
+
+                is HomeUiEffect.NavigateToDirectMessage -> {
+                    parentNavController.navigate(NavDestinationItem.DirectMessage(effect.user, NavDestinationItem.Users::class.qualifiedName?: "NavDestinationItem.Users"))
                 }
             }
         }
@@ -98,6 +107,7 @@ fun OnlineUsers(uiState: HomeUiState, onEvent: (HomeUiEvent) -> Unit) {
             items(uiState.onlineUsers) { user ->
                 HorizontalUserItem(user,
                     buttonClicked = {
+                        onEvent(HomeUiEvent.NavigateToDirectMessage(user = UserUiModel(id = user.id, username = user.username)))
 
                 }, isSelf = user.id.equals(uiState.userId))
             }
@@ -149,6 +159,7 @@ fun AllUsers(
                     if (user != null) {
                         UserItem(user,
                             buttonClicked = {
+                                onEvent(HomeUiEvent.NavigateToDirectMessage(user = UserUiModel(id = user.id, username = user.username)))
 
                             }, isSelf = user.id?.equals(uiState.userId) == true
                         )
@@ -171,6 +182,38 @@ fun AllUsers(
 
 }
 
+@Composable
+fun UsersNavigationWatcher(
+    navController: NavHostController,
+    onEvent: (HomeUiEvent) -> Unit
+) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    LaunchedEffect(Unit) {
+        navController.currentBackStackEntryFlow
+            .flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+            .collect { backStackEntry ->
+                val screenName = backStackEntry.destination.javaClass.simpleName
+                Log.d("NavWatcher", "Ekran: $screenName")
+
+                when (screenName) {
+                    "Users" -> {
+                        onEvent(HomeUiEvent.SetBottomBarVisibility(true))
+                        onEvent(HomeUiEvent.SetTopAppBarVisibility(true))
+                    }
+
+                    "OnlineUsers", "AllUsers" -> {
+                        onEvent(HomeUiEvent.SetBottomBarVisibility(false))
+                        onEvent(HomeUiEvent.SetTopAppBarVisibility(true))
+                    }
+
+                    else -> {
+                        Log.d("NavWatcher", "Bilinmeyen ekran: $screenName")
+                    }
+                }
+            }
+    }
+}
 
 
 

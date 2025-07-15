@@ -81,6 +81,10 @@ class AllUsersViewModel @Inject constructor(@ApplicationContext private val cont
             is AllUsersUiEvent.RetrySearchedUsers -> {
                 event.users.retry()
             }
+
+            is AllUsersUiEvent.NavigateToDirectMessage -> {
+                sendEffect(AllUsersUiEffect.NavigateToDirectMessage(event.user))
+            }
         }
 
     }
