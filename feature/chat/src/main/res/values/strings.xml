@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="first_message_title">Message Now</string>
+    <string name="first_message">send your first message</string>
+    <string name="message_placeholder">message</string>
+</resources>

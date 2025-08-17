@@ -1,28 +1,44 @@
 package com.mustafacan.feature.chat.ui.directmessage
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,27 +46,69 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.mustafacan.core.model.chat.Message
 import com.mustafacan.core.ui.R
-import com.mustafacan.core.ui.theme.CardItemBackgroundColor
+import com.mustafacan.feature.chat.R as chatR
+
+import com.mustafacan.core.ui.animation.lottie.LottieAnimation
+import com.mustafacan.core.ui.component.error.ErrorView
+import com.mustafacan.core.ui.component.loading.MoreItemsLoading
+import com.mustafacan.core.ui.component.loading.VerticalRectangleShimmer
+import com.mustafacan.core.ui.component.textfield.MessageTextFieldColors
+import com.mustafacan.core.ui.extension.formatAsLocalDateTime
+import com.mustafacan.core.ui.theme.MessageCardBackgroundColorForReceiver
+import com.mustafacan.core.ui.theme.MessageCardBackgroundColorForSender
+import com.mustafacan.core.ui.theme.MessageCardDateColorForReceiver
+import com.mustafacan.core.ui.theme.MessageCardDateColorForSender
+import com.mustafacan.core.ui.theme.MessageCardTextColorForReceiver
+import com.mustafacan.core.ui.theme.MessageCardTextColorForSender
+import com.mustafacan.core.ui.theme.MessageCardUserNameTextColorForReceiver
 import com.mustafacan.core.ui.theme.MessagePageBackgroundColor
 import com.mustafacan.core.ui.theme.MessagePageHeaderColor
 import com.mustafacan.core.ui.theme.ProgressColor
 import com.mustafacan.core.ui.theme.SeperatorColor
 import com.mustafacan.core.ui.theme.TitleTextColor
+import com.mustafacan.core.ui.util.rememberFlowWithLifecycle
 
 @Composable
 fun DirectMessageRoute(viewModel: DirectMessageViewModel, navController: NavHostController) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    DirectMessageScreen(uiState, onEvent = { viewModel.sendEvent(it) })
+    val uiEffect = rememberFlowWithLifecycle(viewModel.uiEffect)
+    val pagedMessages : LazyPagingItems<Message> = viewModel.messagesPagingDataFlow.collectAsLazyPagingItems()
+    val messagesLazyListState = rememberLazyListState()
+
+    LaunchedEffect(uiState.isPrependingMessages) {
+        if (uiState.isPrependingMessages) {
+            messagesLazyListState.scrollToItem(5)
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        uiEffect.collect { effect ->
+            when (effect) {
+                DirectMessageUiEffect.ScrollToBottom -> {
+                    messagesLazyListState.scrollToItem(pagedMessages.itemCount + uiState.socketMessages.size - 1, scrollOffset = Int.MAX_VALUE)
+                }
+            }
+        }
+    }
+
+
+    DirectMessageScreen(uiState, pagedMessages, messagesLazyListState,onEvent = { viewModel.sendEvent(it) })
 }
 
 @Composable
-fun DirectMessageScreen(uiState: DirectMessageUiState, onEvent: (DirectMessageUiEvent) -> Unit) {
+fun DirectMessageScreen(uiState: DirectMessageUiState, pagedMessages: LazyPagingItems<Message>, messagesLazyListState: LazyListState, onEvent: (DirectMessageUiEvent) -> Unit) {
 
     if (uiState.initialProgressVisibility) {
         Column(modifier = Modifier.fillMaxSize().background(MessagePageBackgroundColor),
@@ -69,10 +127,37 @@ fun DirectMessageScreen(uiState: DirectMessageUiState, onEvent: (DirectMessageUi
                 modifier = Modifier.matchParentSize()
             )
 
-            Column(modifier = Modifier.fillMaxSize()) {
+            Column(modifier = Modifier.fillMaxSize().padding(WindowInsets.navigationBars.asPaddingValues())
+                .imePadding()) {
                 uiState.receiverUser?.let {
                     DirectMessageHeader(uiState)
-                    DirectMessageContent(uiState, onEvent)
+                    MoreItemsLoading(uiState.isPrependingMessages)
+                    DirectMessageContent(uiState, pagedMessages, messagesLazyListState, onEvent, modifier = Modifier.weight(1f).fillMaxWidth())
+
+
+
+                    OutlinedTextField(
+                        value = uiState.messageValue,
+                        onValueChange = { onEvent(DirectMessageUiEvent.MessageValueChanged(it)) },
+                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+                        trailingIcon = {
+                            val image = Icons.Filled.Send
+
+                            IconButton(onClick = { onEvent(DirectMessageUiEvent.SendMessage) }) {
+                                Icon(imageVector = image, contentDescription = "send", tint = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
+                            }
+                        },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(
+                            onDone = { onEvent(DirectMessageUiEvent.SendMessage) }
+                        ),
+                        shape = RoundedCornerShape(24.dp),
+                        colors = MessageTextFieldColors,
+                        placeholder = {
+                            Text(text = stringResource(id = chatR.string.message_placeholder))
+                        }
+                    )
                 }
 
             }
@@ -114,8 +199,251 @@ fun DirectMessageHeader(
 }
 
 @Composable
-fun DirectMessageContent(uiState: DirectMessageUiState, onEvent: (DirectMessageUiEvent) -> Unit) {
+fun DirectMessageContent(
+    uiState: DirectMessageUiState,
+    pagedMessages: LazyPagingItems<Message>,
+    messagesLazyListState: LazyListState,
+    onEvent: (DirectMessageUiEvent) -> Unit,
+    modifier: Modifier = Modifier
+) {
 
+    LaunchedEffect(pagedMessages.loadState) {
+        onEvent(DirectMessageUiEvent.MessagesLoadStateChanged(pagedMessages))
+    }
+
+    if (uiState.isLoadingMessages) {
+        Log.d("dmcompose", "isLoadingMessages")
+        VerticalRectangleShimmer()
+    }
+    // Hata durumu
+    else if (uiState.messagesLoadingError != null) {
+
+        ErrorView(
+            message = stringResource(R.string.default_error),
+            onRetry = {
+                // retry eventi buraya eklenebilir
+            }
+        )
+    }
+    // Liste boşsa
+    else if (uiState.isMessageListEmpty) {
+        EmptyMessageScreen()
+    }
+    // Mesajlar yüklendi
+    else {
+
+        LazyColumn(
+            modifier = modifier.fillMaxWidth().padding(top = 8.dp, bottom = 16.dp),
+            state = messagesLazyListState
+        ) {
+
+
+            // Paging’den gelen mesajlar
+            items(pagedMessages.itemCount) { index ->
+                val message = pagedMessages[index]
+                message?.let {
+                    MessageItem(uiState, message = it)
+                }
+            }
+
+
+            // Socket’ten gelen mesajlar (paging dışı)
+            items(uiState.socketMessages.size) { index ->
+                val message = uiState.socketMessages[index]
+                message?.let {
+                    MessageItem(uiState, message = it)
+                }
+            }
+
+        }
+
+
+
+    }
+
+    // Sayfa basinda prepend sırasında hata olduysa
+    if (uiState.messagesPrependError != null) {
+        ErrorView(
+            message = stringResource(R.string.default_error),
+            onRetry = {
+                // retry prepend eventi
+            }
+        )
+    }
 }
+
+@Composable
+fun EmptyMessageScreen() {
+    Column(modifier = Modifier.fillMaxSize().padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally) {
+
+        Text(
+            text = stringResource(com.mustafacan.feature.chat.R.string.first_message_title),
+            style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
+            color = TitleTextColor
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        LottieAnimation(R.raw.empty_message_anim, modifier = Modifier.width(250.dp).height(250.dp))
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = stringResource(com.mustafacan.feature.chat.R.string.first_message),
+            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold),
+            color = TitleTextColor
+        )
+
+    }
+}
+
+@Composable
+fun MessageItem(uiState: DirectMessageUiState, message: Message) {
+    val isOwnMessage = message.sender._id.equals(uiState.userId)
+
+    val backgroundColor = if (isOwnMessage) MessageCardBackgroundColorForSender else MessageCardBackgroundColorForReceiver
+    val horizontalPadding = if (isOwnMessage) PaddingValues(top = 8.dp, bottom = 8.dp, start = 100.dp, end = 16.dp)
+    else PaddingValues(top = 8.dp, bottom = 8.dp, start = 16.dp, end = 100.dp)
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontalPadding),
+        horizontalArrangement = if (isOwnMessage) Arrangement.End else Arrangement.Start
+    ) {
+        Column(
+            modifier = Modifier
+                .background(color = backgroundColor, shape = RoundedCornerShape(8.dp))
+                .padding(8.dp)
+        ) {
+            if (!isOwnMessage) {
+                Text(
+                    text = message.sender.username,
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.ExtraBold),
+                    color = MessageCardUserNameTextColorForReceiver
+                )
+            }
+
+            Text(
+                text = message.message,
+                style = MaterialTheme.typography.bodyLarge,
+                color = if (isOwnMessage) MessageCardTextColorForSender else MessageCardTextColorForReceiver
+            )
+            Text(
+                text = message.createdAt.formatAsLocalDateTime(),
+                style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+                color = if (isOwnMessage) MessageCardDateColorForSender else MessageCardDateColorForReceiver
+            )
+        }
+    }
+}
+
+/*@Composable
+fun MessageItem(uiState: DirectMessageUiState, message: Message) {
+    Column(modifier = Modifier.padding(8.dp)) {
+
+        Text(
+            text = message.sender.username,
+            style = MaterialTheme.typography.labelSmall,
+            color = Color.Gray
+        )
+        Text(
+            text = message.message,
+            style = MaterialTheme.typography.bodyLarge
+        )
+        Text(
+            text = message.createdAt.toString(), // Formatlama yapılabilir
+            style = MaterialTheme.typography.labelSmall,
+            color = Color.Gray
+        )
+    }
+}*/
+
+/*@Composable
+fun DirectMessageContent(uiState: DirectMessageUiState, combinedMessages: List<Message>, pagedMessages: LazyPagingItems<Message>, messagesLazyListState: LazyListState, onEvent: (DirectMessageUiEvent) -> Unit) {
+    LaunchedEffect(pagedMessages.loadState) {
+        onEvent(DirectMessageUiEvent.MessagesLoadStateChanged(pagedMessages))
+    }
+
+    /*LaunchedEffect(messages.itemCount) {
+        if (messages.itemCount > 10 && messages.itemCount < 16) {
+            messagesLazyListState.scrollToItem(messages.itemCount - 1)
+        }
+    }*/
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        if (uiState.isLoadingMessages) {
+            VerticalRectangleShimmer()
+        } else if (uiState.messagesLoadingError != null) {
+            ErrorView(message = stringResource(R.string.default_error),
+                onRetry = {
+                   // onEvent(AllUsersUiEvent.RetryAllUsers(allUsers))
+                })
+        } else if (uiState.isMessageListEmpty) {
+            // to do(optional)
+        } else {
+
+            MoreItemsLoading(uiState.isAppendingMessages)
+            LazyColumn(modifier = Modifier.weight(1f),
+                state = messagesLazyListState,
+                ) {
+                items(pagedMessages.itemCount) { index ->
+                    val message = pagedMessages[index]
+                    if (message != null) {
+                        Column(modifier = Modifier.padding(8.dp)) {
+                            Text(
+                                text = message.sender.username,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color.Gray
+                            )
+                            Text(
+                                text = message.message,
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                text = message.createdAt.toString(), // formatlayabilirsin
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color.Gray
+                            )
+                        }
+                    }
+
+                }
+
+                items(uiState.socketMessages.count()) { index ->
+                    val message = uiState.socketMessages[index]
+                    if (message != null) {
+                        Column(modifier = Modifier.padding(8.dp)) {
+                            Text(
+                                text = message.sender.username,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color.Gray
+                            )
+                            Text(
+                                text = message.message,
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                text = message.createdAt.toString(), // formatlayabilirsin
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color.Gray
+                            )
+                        }
+                    }
+                }
+            }
+
+        }
+
+
+
+        if (uiState.messagesAppendError != null) {
+            ErrorView(message = stringResource(R.string.default_error),
+                onRetry = {
+                    //onEvent(AllUsersUiEvent.RetryAllUsers(allUsers))
+                })
+        }
+
+
+    }
+} */
 
 

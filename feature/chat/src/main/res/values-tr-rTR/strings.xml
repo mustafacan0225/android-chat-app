@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="first_message_title">Şimdi Mesajlaş!</string>
+    <string name="first_message">ilk mesajını gönder ve sohbetin keyfini çıkart</string>
+    <string name="message_placeholder">mesaj</string>
+
+</resources>

@@ -8,4 +8,6 @@ enum class SocketEvent(val eventName: String) {
     USER_STATUS_UPDATE("user_status_update"),
     SUBSCRIBE_USER_STATUS("subscribe_user_status"),
     UNSUBSCRIBE_USER_STATUS("unsubscribe_user_status"),
+    SEND_MESSAGE("send_message"),
+    RECEIVE_MESSAGE("receive_message")
 }

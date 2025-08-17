@@ -63,3 +63,31 @@ val ShimmerEffectColor: Color
     @Composable
     get() = if (isSystemInDarkTheme()) BackgroundDark else Color.LightGray
 
+val MessageCardBackgroundColorForSender: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFF007A9F) else Color(0xFFE1F5FE)
+
+val MessageCardDateColorForSender: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFFB0DDE9) else Color(0xFF5F6B75)
+
+val MessageCardTextColorForSender: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFFE5F6FB) else Color(0xFF0D0D0D)
+
+val MessageCardBackgroundColorForReceiver: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFF1A2B32) else Color(0xFFF1F1F1)
+
+val MessageCardDateColorForReceiver: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFF8FBFCB) else Color(0xFF7A7A7A)
+
+val MessageCardTextColorForReceiver: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFFE5F6FB) else Color(0xFF1A1A1A)
+
+val MessageCardUserNameTextColorForReceiver: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFF5EC5F8) else Color(0xFF1976D2)
+

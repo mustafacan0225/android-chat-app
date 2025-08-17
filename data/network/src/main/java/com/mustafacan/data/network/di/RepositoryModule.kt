@@ -1,8 +1,10 @@
 package com.mustafacan.data.network.di
 
 import com.mustafacan.core.domain.repository.api.AuthRepository
+import com.mustafacan.core.domain.repository.api.MessageRepository
 import com.mustafacan.core.domain.repository.api.UserRepository
 import com.mustafacan.data.network.repository.AuthRepositoryImpl
+import com.mustafacan.data.network.repository.MessageRepositoryImpl
 import com.mustafacan.data.network.repository.UserRepositoryImpl
 import dagger.Module
 import dagger.Provides
@@ -23,6 +25,12 @@ object RepositoryModule {
     @Singleton
     @Provides
     fun provideUserRepository(repositoryImpl: UserRepositoryImpl): UserRepository {
+        return repositoryImpl
+    }
+
+    @Singleton
+    @Provides
+    fun provideMessageRepository(repositoryImpl: MessageRepositoryImpl): MessageRepository {
         return repositoryImpl
     }
 

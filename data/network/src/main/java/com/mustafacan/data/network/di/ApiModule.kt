@@ -2,6 +2,7 @@ package com.mustafacan.data.network.di
 
 import com.mustafacan.data.network.BuildConfig
 import com.mustafacan.data.network.api.service.AuthService
+import com.mustafacan.data.network.api.service.MessageService
 import com.mustafacan.data.network.api.service.UserService
 import dagger.Module
 import dagger.Provides
@@ -64,6 +65,12 @@ object ApiModule {
     @Singleton
     fun provideUserService(retrofit: Retrofit): UserService {
         return retrofit.create(UserService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMessageService(retrofit: Retrofit): MessageService {
+        return retrofit.create(MessageService::class.java)
     }
 
 }

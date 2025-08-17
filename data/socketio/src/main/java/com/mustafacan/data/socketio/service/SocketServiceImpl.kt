@@ -8,6 +8,7 @@ import com.mustafacan.core.model.socket.SocketEvent
 import com.mustafacan.core.model.socket.SocketMessage
 import com.mustafacan.core.model.users.User
 import com.mustafacan.core.domain.service.SocketService
+import com.mustafacan.core.model.chat.IncomingMessage
 import com.mustafacan.core.model.users.UserStatus
 import com.mustafacan.data.socketio.factory.SocketFactory
 import com.squareup.moshi.Moshi
@@ -107,6 +108,22 @@ class SocketServiceImpl @Inject constructor(
                     }
                 } catch (e: Exception) {
 
+                }
+
+            }
+        }
+
+        socket?.on(SocketEvent.RECEIVE_MESSAGE.eventName) { args ->
+
+            args.firstOrNull()?.let { rawData ->
+                try {
+                    val result = moshi.adapter(IncomingMessage::class.java).fromJson(rawData.toString())
+                    result?.let {
+                        Log.d("SocketService", "incoming RECEIVE_MESSAGE ${it.message}")
+                        _incomingEvents.tryEmit(SocketMessage.ReceivedMessage(it.message))
+                    }
+                } catch (e: Exception) {
+                    Log.d("SocketService", "error ${e.message}")
                 }
 
             }
