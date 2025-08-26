@@ -93,10 +93,12 @@ paging-compose = { group = "androidx.paging", name = "paging-compose", version.r
 # Constraintlayout compose
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayout" }
 
-
 # Gson
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "google-code-gson" }
 
+# Gradle Plugins
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -104,5 +106,13 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
-jetbrains-kotlin-serialization = { id ="org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinxSerialization"}
 android-library = { id = "com.android.library", version.ref = "agp" }
+jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+
+# Custom Plugins
+android-base-convention-plugin = { id = "mustafacan.android.base.convention.plugin" }
+android-app-convention-plugin = { id = "mustafacan.android.app.convention.plugin" }
+hilt-ui-plugin = { id = "mustafacan.hilt.ui.plugin" }
+hilt-core-plugin = { id = "mustafacan.hilt.core.plugin" }
+kotlin-serialization-plugin = { id = "mustafacan.kotlin.serialization.plugin" }

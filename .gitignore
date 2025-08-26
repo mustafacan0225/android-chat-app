@@ -19,5 +19,13 @@
 .externalNativeBuild
 .cxx
 local.properties
+/build/
+*/build/
 
+# Kotlin compiler cache
+.kotlin/
+
+# IDE
+.idea/
+*.iml
 
