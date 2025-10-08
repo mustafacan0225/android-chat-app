@@ -111,8 +111,16 @@ jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serializati
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 
 # Custom Plugins
-android-base-convention-plugin = { id = "mustafacan.android.base.convention.plugin" }
-android-app-convention-plugin = { id = "mustafacan.android.app.convention.plugin" }
-hilt-ui-plugin = { id = "mustafacan.hilt.ui.plugin" }
-hilt-core-plugin = { id = "mustafacan.hilt.core.plugin" }
-kotlin-serialization-plugin = { id = "mustafacan.kotlin.serialization.plugin" }
+mustafacan-android-base-plugin = { id = "mustafacan.android.base.convention.plugin" }
+mustafacan-android-app-plugin = { id = "mustafacan.android.app.convention.plugin" }
+mustafacan-hilt-ui-plugin = { id = "mustafacan.hilt.ui.plugin" }
+mustafacan-hilt-core-plugin = { id = "mustafacan.hilt.core.plugin" }
+mustafacan-kotlin-serialization-plugin = { id = "mustafacan.kotlin.serialization.plugin" }
+mustafacan-android-ui-plugin = { id = "mustafacan.android.ui.plugin" }
+mustafacan-android-lifecycle-plugin = { id = "mustafacan.android.lifecycle.plugin" }
+mustafacan-android-feature-plugin = { id = "mustafacan.android.feature.plugin" }
+mustafacan-android-data-plugin = { id = "mustafacan.android.data.plugin" }
+mustafacan-paging-compose-plugin = { id = "mustafacan.paging.compose.plugin" }
+mustafacan-paging-kotlin-plugin = { id = "mustafacan.paging.kotlin.plugin" }
+mustafacan-material-icon-compose-plugin = { id = "mustafacan.material.icon.compose.plugin" }
+mustafacan-moshi-plugin = { id = "mustafacan.moshi.plugin" }

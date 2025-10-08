@@ -3,15 +3,18 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import com.android.build.api.dsl.ApplicationExtension
 import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.project
 
-class AndroidAppConventionPlugin : Plugin<Project> {
+class AppConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             val libs = getLibs()
             pluginManager.apply("com.android.application")
-
-            //AndroidBaseConventionPlugin
             pluginManager.apply("mustafacan.android.base.convention.plugin")
+            pluginManager.apply("mustafacan.hilt.ui.plugin")
+            pluginManager.apply("mustafacan.kotlin.serialization.plugin")
+            pluginManager.apply("mustafacan.android.ui.plugin")
+            pluginManager.apply("mustafacan.android.lifecycle.plugin")
 
             extensions.configure<ApplicationExtension> {
                 namespace = "com.mustafacan.android_chat_app"
@@ -24,6 +27,24 @@ class AndroidAppConventionPlugin : Plugin<Project> {
 
                 buildFeatures {
                     compose = true
+                }
+
+                buildTypes {
+                    getByName("debug") {
+                        isMinifyEnabled = false
+                        proguardFiles(
+                            getDefaultProguardFile("proguard-android-optimize.txt"),
+                            "proguard-rules.pro"
+                        )
+                    }
+
+                    getByName("release") {
+                        isMinifyEnabled = true
+                        proguardFiles(
+                            getDefaultProguardFile("proguard-android-optimize.txt"),
+                            "proguard-rules.pro"
+                        )
+                    }
                 }
 
                 flavorDimensions += "default"
@@ -44,6 +65,23 @@ class AndroidAppConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
+                "implementation"(project(":core:ui"))
+                "implementation"(project(":core:appevent"))
+                "implementation"(project(":core:domain"))
+                "implementation"(project(":core:model"))
+                "implementation"(project(":feature:auth"))
+                "implementation"(project(":feature:users"))
+                "implementation"(project(":feature:chat"))
+
+                //data:network module is not used in app module, it is added only for hilt dependencies
+                "implementation"(project(":data:network"))
+
+                //data:datastore module is not used in app module, it is added only for hilt dependencies
+                "implementation"(project(":data:datastore"))
+
+                //data:datastore module is not used in app module, it is added only for hilt dependencies
+                "implementation"(project(":data:socketio"))
+
                 "implementation"(libs.findLibrary("androidx.activity.compose").get())
                 "implementation"(libs.findLibrary("androidx.ui").get())
                 "implementation"(libs.findLibrary("androidx.ui.graphics").get())
