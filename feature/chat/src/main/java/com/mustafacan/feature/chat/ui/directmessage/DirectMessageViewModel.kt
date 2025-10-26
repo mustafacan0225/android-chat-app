@@ -150,8 +150,8 @@ class DirectMessageViewModel @Inject constructor(
                     copy(socketMessages = socketMessages + messageItem, isMessageListEmpty = false)
                 }
 
-                if (messageItem.sender._id.equals(uiState.value.userId))
-                    sendEffect(DirectMessageUiEffect.ScrollToBottom)
+//                if (messageItem.sender._id.equals(uiState.value.userId))
+//                    sendEffect(DirectMessageUiEffect.ScrollToBottom)
             }
         }
     }
@@ -166,9 +166,6 @@ class DirectMessageViewModel @Inject constructor(
         Log.d("LoadState***", "prepend: $prepend")
         Log.d("LoadState***", "itemCount: ${messages.itemCount}")
 
-        /*if (messages.loadState.prepend is LoadState.Loading) {
-            sendEffect(DirectMessageUiEffect.ScrollToBottom)
-        }*/
         setState {
             copy(
                 isLoadingMessages = refresh is LoadState.Loading && messages.itemCount == 0,
@@ -181,12 +178,9 @@ class DirectMessageViewModel @Inject constructor(
             )
         }
 
-        if (messages.loadState.refresh is LoadState.NotLoading &&
-            messages.loadState.prepend is LoadState.NotLoading &&
-            messages.itemCount >= 10 && messages.itemCount < 25) {
-            sendEffect(DirectMessageUiEffect.ScrollToBottom)
-        }
-
+        //if (refresh is LoadState.NotLoading && messages.itemCount > 0) {
+        //    sendEffect(DirectMessageUiEffect.ScrollToBottom)
+        //}
     }
 
     fun setScaffoldBarsVisibility(visible: Boolean? = null) {
@@ -218,6 +212,15 @@ class DirectMessageViewModel @Inject constructor(
         }
     }
 
+    fun updateScrollPosition(index: Int, offset: Int) {
+        Log.d("messagedata:","first visible index: $index - offset: $offset")
+        setState {
+            copy(
+                previousFirstVisibleItem = index,
+                previousFirstVisibleItemOffset = offset
+            )
+        }
+    }
 
     override fun onCleared() {
         runBlocking {

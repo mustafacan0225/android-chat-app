@@ -79,6 +79,7 @@ import com.mustafacan.core.ui.theme.ProgressColor
 import com.mustafacan.core.ui.theme.SeperatorColor
 import com.mustafacan.core.ui.theme.TitleTextColor
 import com.mustafacan.core.ui.util.rememberFlowWithLifecycle
+import kotlinx.coroutines.delay
 
 @Composable
 fun DirectMessageRoute(viewModel: DirectMessageViewModel, navController: NavHostController) {
@@ -87,24 +88,41 @@ fun DirectMessageRoute(viewModel: DirectMessageViewModel, navController: NavHost
     val pagedMessages : LazyPagingItems<Message> = viewModel.messagesPagingDataFlow.collectAsLazyPagingItems()
     val messagesLazyListState = rememberLazyListState()
 
+    LaunchedEffect(messagesLazyListState.firstVisibleItemIndex, messagesLazyListState.firstVisibleItemScrollOffset) {
+        viewModel.updateScrollPosition(
+            index = messagesLazyListState.firstVisibleItemIndex,
+            offset = messagesLazyListState.firstVisibleItemScrollOffset
+        )
+    }
+
     LaunchedEffect(uiState.isPrependingMessages) {
-        if (uiState.isPrependingMessages) {
-            messagesLazyListState.scrollToItem(5)
+        if (!uiState.isPrependingMessages && uiState.previousFirstVisibleItem >= 0) {
+            messagesLazyListState.scrollToItem(
+                index = uiState.previousFirstVisibleItem + 5, // pageSize
+                scrollOffset = uiState.previousFirstVisibleItemOffset
+            )
+        }
+    }
+
+    LaunchedEffect(pagedMessages.itemCount, uiState.socketMessages.size) {
+        val lastIndex = pagedMessages.itemCount + uiState.socketMessages.size - 1
+        if (lastIndex >= 0) {
+            messagesLazyListState.scrollToItem(lastIndex)
         }
     }
 
     LaunchedEffect(Unit) {
         uiEffect.collect { effect ->
-            when (effect) {
-                DirectMessageUiEffect.ScrollToBottom -> {
-                    messagesLazyListState.scrollToItem(pagedMessages.itemCount + uiState.socketMessages.size - 1, scrollOffset = Int.MAX_VALUE)
-                }
-            }
+
         }
     }
 
-
-    DirectMessageScreen(uiState, pagedMessages, messagesLazyListState,onEvent = { viewModel.sendEvent(it) })
+    DirectMessageScreen(
+        uiState = uiState,
+        pagedMessages = pagedMessages,
+        messagesLazyListState = messagesLazyListState,
+        onEvent = { viewModel.sendEvent(it) }
+    )
 }
 
 @Composable

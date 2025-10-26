@@ -18,5 +18,7 @@ data class DirectMessageUiState(val socketConnectionState: SocketConnectionState
                                 val messagesPrependError: String? = null,
                                 val isMessageListEmpty: Boolean = false,
                                 val socketMessages: List<Message> = listOf(),
-                                val messageValue: String = ""
+                                val messageValue: String = "",
+                                val previousFirstVisibleItem: Int = 0,
+                                val previousFirstVisibleItemOffset: Int = 0
 )
