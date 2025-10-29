@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
@@ -28,6 +29,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
@@ -45,10 +49,8 @@ class DirectMessageViewModel @Inject constructor(
 
 ) : BaseViewModel<DirectMessageUiState, DirectMessageUiEvent, DirectMessageUiEffect>(initialState = DirectMessageUiState()) {
 
-    /*val messagesPagingDataFlow: Flow<PagingData<Message>> =
-        getDirectMessagePagingDataUseCase().cachedIn(viewModelScope)*/
     lateinit var messagesPagingDataFlow: Flow<PagingData<Message>>
-
+    private val _loadStatesFlow = MutableSharedFlow<CombinedLoadStates>(extraBufferCapacity = 1)
     init {
         val receiverUser: UserUiModel? = savedStateHandle["user"]
         val previousPage: String = savedStateHandle["previousPage"]!!
@@ -62,6 +64,7 @@ class DirectMessageViewModel @Inject constructor(
             subscribeUserStatus()
             observeUserStatus()
             observeReceivedMessage()
+            observeLoadStateStably()
         }
 
 
@@ -150,8 +153,8 @@ class DirectMessageViewModel @Inject constructor(
                     copy(socketMessages = socketMessages + messageItem, isMessageListEmpty = false)
                 }
 
-//                if (messageItem.sender._id.equals(uiState.value.userId))
-//                    sendEffect(DirectMessageUiEffect.ScrollToBottom)
+                if (messageItem.sender._id.equals(uiState.value.userId) || messageItem.sender._id.equals(uiState.value.receiverUser?.id) )
+                    sendEffect(DirectMessageUiEffect.ScrollToBottom)
             }
         }
     }
@@ -165,6 +168,10 @@ class DirectMessageViewModel @Inject constructor(
         Log.d("LoadState***", "append: $append")
         Log.d("LoadState***", "prepend: $prepend")
         Log.d("LoadState***", "itemCount: ${messages.itemCount}")
+        Log.d("LoadState***","first visible index: ${uiState.value.previousFirstVisibleItemIndex} - offset: ${uiState.value.previousFirstVisibleItemOffset}")
+        if (!uiState.value.isFirstLoadingCompleted && messages.itemCount >=10) {
+            sendEffect(DirectMessageUiEffect.ScrollToBottom)
+        }
 
         setState {
             copy(
@@ -178,9 +185,46 @@ class DirectMessageViewModel @Inject constructor(
             )
         }
 
-        //if (refresh is LoadState.NotLoading && messages.itemCount > 0) {
-        //    sendEffect(DirectMessageUiEffect.ScrollToBottom)
-        //}
+        if (prepend is LoadState.Loading) {
+            setState {
+                copy(isPrependLoading = true, previousFirstVisibleItemIndex = uiState.value.currentFirstVisibleItemIndex)
+            }
+        } else if (prepend is LoadState.NotLoading && uiState.value.isPrependLoading) {
+                sendEffect(DirectMessageUiEffect.ScrollToItem)
+        }
+        Log.d("LoadState***", "isPrependLoading: ${uiState.value.isPrependLoading} first visible index: ${uiState.value.previousFirstVisibleItemIndex}")
+
+        _loadStatesFlow.tryEmit(messages.loadState)
+
+    }
+
+    private fun observeLoadStateStably() {
+        viewModelScope.launch {
+            _loadStatesFlow
+                .debounce(500)
+                .collectLatest { loadStates ->
+                    val refresh = loadStates.refresh
+                    val append = loadStates.append
+                    val prepend = loadStates.prepend
+
+                    val allDone = refresh is LoadState.NotLoading &&
+                            append is LoadState.NotLoading &&
+                            prepend is LoadState.NotLoading
+
+                    if (allDone) {
+                        Log.d("LoadState***", "✅ Tüm yüklemeler tamamlandı (500ms sessizlik)")
+                        Log.d("LoadState***:","currentFirstVisibleItemIndex: ${uiState.value.currentFirstVisibleItemIndex} - offset: ${uiState.value.previousFirstVisibleItemOffset}")
+                        Log.d("LoadState***:","previousFirstVisibleItemIndex: ${uiState.value.previousFirstVisibleItemIndex} - offset: ${uiState.value.previousFirstVisibleItemOffset}")
+                        if (!uiState.value.isFirstLoadingCompleted) {
+                            sendEffect(DirectMessageUiEffect.ScrollToBottom)
+                        }
+
+                        setState {
+                            copy(isPrependLoading = false, isFirstLoadingCompleted = true, previousFirstVisibleItemIndex = uiState.value.currentFirstVisibleItemIndex)
+                        }
+                    }
+                }
+        }
     }
 
     fun setScaffoldBarsVisibility(visible: Boolean? = null) {
@@ -213,13 +257,13 @@ class DirectMessageViewModel @Inject constructor(
     }
 
     fun updateScrollPosition(index: Int, offset: Int) {
-        Log.d("messagedata:","first visible index: $index - offset: $offset")
         setState {
             copy(
-                previousFirstVisibleItem = index,
+                currentFirstVisibleItemIndex = index,
                 previousFirstVisibleItemOffset = offset
             )
         }
+
     }
 
     override fun onCleared() {

@@ -95,25 +95,25 @@ fun DirectMessageRoute(viewModel: DirectMessageViewModel, navController: NavHost
         )
     }
 
-    LaunchedEffect(uiState.isPrependingMessages) {
-        if (!uiState.isPrependingMessages && uiState.previousFirstVisibleItem >= 0) {
-            messagesLazyListState.scrollToItem(
-                index = uiState.previousFirstVisibleItem + 5, // pageSize
-                scrollOffset = uiState.previousFirstVisibleItemOffset
-            )
-        }
-    }
-
-    LaunchedEffect(pagedMessages.itemCount, uiState.socketMessages.size) {
-        val lastIndex = pagedMessages.itemCount + uiState.socketMessages.size - 1
-        if (lastIndex >= 0) {
-            messagesLazyListState.scrollToItem(lastIndex)
-        }
-    }
-
     LaunchedEffect(Unit) {
         uiEffect.collect { effect ->
+            when(effect) {
+                DirectMessageUiEffect.ScrollToBottom -> {
+                    val lastIndex = pagedMessages.itemCount + uiState.socketMessages.size - 1
+                    if (lastIndex >= 0) {
+                        delay(50)
+                        messagesLazyListState.scrollToItem(lastIndex)
+                    }
+                }
 
+                DirectMessageUiEffect.ScrollToItem -> {
+                    messagesLazyListState.scrollToItem(
+                        index = uiState.previousFirstVisibleItemIndex + 5, // pageSize
+                        scrollOffset = uiState.previousFirstVisibleItemOffset
+                    )
+
+                }
+            }
         }
     }
 
@@ -249,21 +249,17 @@ fun DirectMessageContent(
     }
     // Mesajlar yüklendi
     else {
-
         LazyColumn(
             modifier = modifier.fillMaxWidth().padding(top = 8.dp, bottom = 16.dp),
             state = messagesLazyListState
         ) {
 
-
-            // Paging’den gelen mesajlar
             items(pagedMessages.itemCount) { index ->
                 val message = pagedMessages[index]
                 message?.let {
                     MessageItem(uiState, message = it)
                 }
             }
-
 
             // Socket’ten gelen mesajlar (paging dışı)
             items(uiState.socketMessages.size) { index ->
@@ -354,114 +350,5 @@ fun MessageItem(uiState: DirectMessageUiState, message: Message) {
     }
 }
 
-/*@Composable
-fun MessageItem(uiState: DirectMessageUiState, message: Message) {
-    Column(modifier = Modifier.padding(8.dp)) {
-
-        Text(
-            text = message.sender.username,
-            style = MaterialTheme.typography.labelSmall,
-            color = Color.Gray
-        )
-        Text(
-            text = message.message,
-            style = MaterialTheme.typography.bodyLarge
-        )
-        Text(
-            text = message.createdAt.toString(), // Formatlama yapılabilir
-            style = MaterialTheme.typography.labelSmall,
-            color = Color.Gray
-        )
-    }
-}*/
-
-/*@Composable
-fun DirectMessageContent(uiState: DirectMessageUiState, combinedMessages: List<Message>, pagedMessages: LazyPagingItems<Message>, messagesLazyListState: LazyListState, onEvent: (DirectMessageUiEvent) -> Unit) {
-    LaunchedEffect(pagedMessages.loadState) {
-        onEvent(DirectMessageUiEvent.MessagesLoadStateChanged(pagedMessages))
-    }
-
-    /*LaunchedEffect(messages.itemCount) {
-        if (messages.itemCount > 10 && messages.itemCount < 16) {
-            messagesLazyListState.scrollToItem(messages.itemCount - 1)
-        }
-    }*/
-
-    Column(modifier = Modifier.fillMaxSize()) {
-        if (uiState.isLoadingMessages) {
-            VerticalRectangleShimmer()
-        } else if (uiState.messagesLoadingError != null) {
-            ErrorView(message = stringResource(R.string.default_error),
-                onRetry = {
-                   // onEvent(AllUsersUiEvent.RetryAllUsers(allUsers))
-                })
-        } else if (uiState.isMessageListEmpty) {
-            // to do(optional)
-        } else {
-
-            MoreItemsLoading(uiState.isAppendingMessages)
-            LazyColumn(modifier = Modifier.weight(1f),
-                state = messagesLazyListState,
-                ) {
-                items(pagedMessages.itemCount) { index ->
-                    val message = pagedMessages[index]
-                    if (message != null) {
-                        Column(modifier = Modifier.padding(8.dp)) {
-                            Text(
-                                text = message.sender.username,
-                                style = MaterialTheme.typography.labelSmall,
-                                color = Color.Gray
-                            )
-                            Text(
-                                text = message.message,
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                            Text(
-                                text = message.createdAt.toString(), // formatlayabilirsin
-                                style = MaterialTheme.typography.labelSmall,
-                                color = Color.Gray
-                            )
-                        }
-                    }
-
-                }
-
-                items(uiState.socketMessages.count()) { index ->
-                    val message = uiState.socketMessages[index]
-                    if (message != null) {
-                        Column(modifier = Modifier.padding(8.dp)) {
-                            Text(
-                                text = message.sender.username,
-                                style = MaterialTheme.typography.labelSmall,
-                                color = Color.Gray
-                            )
-                            Text(
-                                text = message.message,
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                            Text(
-                                text = message.createdAt.toString(), // formatlayabilirsin
-                                style = MaterialTheme.typography.labelSmall,
-                                color = Color.Gray
-                            )
-                        }
-                    }
-                }
-            }
-
-        }
-
-
-
-        if (uiState.messagesAppendError != null) {
-            ErrorView(message = stringResource(R.string.default_error),
-                onRetry = {
-                    //onEvent(AllUsersUiEvent.RetryAllUsers(allUsers))
-                })
-        }
-
-
-    }
-} */
 
 
