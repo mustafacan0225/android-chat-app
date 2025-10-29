@@ -13,14 +13,17 @@ import com.mustafacan.core.domain.usecase.api.GetSearchedUsersPagingDataUseCase
 import com.mustafacan.core.domain.usecase.datastore.GetLocalUserUseCase
 import com.mustafacan.core.ui.component.scaffold.RootScaffoldController
 import com.mustafacan.core.ui.component.scaffold.ScaffoldEvent
+import com.mustafacan.core.ui.model.UserUiModel
 import com.mustafacan.core.ui.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -132,6 +135,13 @@ class AllUsersViewModel @Inject constructor(@ApplicationContext private val cont
                 searchedUsersAppendError = (append as? LoadState.Error)?.error?.localizedMessage,
                 isSearchedUsersListEmpty = refresh is LoadState.NotLoading && users.itemCount == 0
             )
+        }
+    }
+
+    suspend fun getOwnInfo() : UserUiModel {
+        return withContext(Dispatchers.IO) {
+            val authUser = getLocalUserUseCase.invoke()
+            UserUiModel(authUser?.id?: "", authUser?.username?: "")
         }
     }
 

@@ -13,11 +13,16 @@ import androidx.paging.compose.LazyPagingItems
 import com.mustafacan.core.domain.usecase.api.GetDirectMessagePagingDataUseCase
 import com.mustafacan.core.domain.usecase.datastore.GetLocalUserUseCase
 import com.mustafacan.core.domain.usecase.socket.ObserveReceivedMessageUseCase
+import com.mustafacan.core.domain.usecase.socket.ObserveSocketConnectionUseCase
+import com.mustafacan.core.domain.usecase.socket.ObserveStopTypingUseCase
+import com.mustafacan.core.domain.usecase.socket.ObserveTypingUseCase
 import com.mustafacan.core.domain.usecase.socket.ObserveUserStatusUseCase
 import com.mustafacan.core.domain.usecase.socket.SocketEmitEventUseCase
+import com.mustafacan.core.model.auth.AuthUser
 import com.mustafacan.core.model.chat.Message
 import com.mustafacan.core.model.chat.MessageRequestModel
 import com.mustafacan.core.model.chat.MessageType
+import com.mustafacan.core.model.socket.SocketConnectionState
 import com.mustafacan.core.model.socket.SocketEvent
 import com.mustafacan.core.ui.R
 import com.mustafacan.core.ui.component.scaffold.RootScaffoldController
@@ -45,17 +50,22 @@ class DirectMessageViewModel @Inject constructor(
     private val observeReceivedMessageUseCase: ObserveReceivedMessageUseCase,
     private val getDirectMessagePagingDataUseCase: GetDirectMessagePagingDataUseCase,
     private val socketEmitEventUseCase: SocketEmitEventUseCase,
-    private val getLocalUserUseCase: GetLocalUserUseCase
+    private val getLocalUserUseCase: GetLocalUserUseCase,
+    private val observeSocketConnectionUseCase: ObserveSocketConnectionUseCase,
+    private val observeTypingUseCase: ObserveTypingUseCase,
+    private val observeStopTypingUseCase: ObserveStopTypingUseCase,
 
-) : BaseViewModel<DirectMessageUiState, DirectMessageUiEvent, DirectMessageUiEffect>(initialState = DirectMessageUiState()) {
+
+    ) : BaseViewModel<DirectMessageUiState, DirectMessageUiEvent, DirectMessageUiEffect>(initialState = DirectMessageUiState()) {
 
     lateinit var messagesPagingDataFlow: Flow<PagingData<Message>>
     private val _loadStatesFlow = MutableSharedFlow<CombinedLoadStates>(extraBufferCapacity = 1)
     init {
-        val receiverUser: UserUiModel? = savedStateHandle["user"]
+        val own: UserUiModel? = savedStateHandle["own"]
+        val receiverUser: UserUiModel? = savedStateHandle["receiverUser"]
         val previousPage: String = savedStateHandle["previousPage"]!!
         viewModelScope.launch {
-            setState { copy(userId = "681b6a5ba251c55db40ce432") }
+            setState { copy(userId = own?.id?: "") }
             messagesPagingDataFlow = getDirectMessagePagingDataUseCase(uiState.value.userId, receiverUser!!.id).cachedIn(viewModelScope)
             setState { copy(previousPage = previousPage) }
             setScaffoldBarsVisibility(false)
@@ -65,6 +75,9 @@ class DirectMessageViewModel @Inject constructor(
             observeUserStatus()
             observeReceivedMessage()
             observeLoadStateStably()
+            observeSocketConnectionState()
+            observeTyping()
+            observeStopTyping()
         }
 
 
@@ -87,6 +100,12 @@ class DirectMessageViewModel @Inject constructor(
 
             is DirectMessageUiEvent.MessageValueChanged -> {
                 setState { copy(messageValue = event.message) }
+                if (event.message.length == 0)
+                    stopTyping()
+                else if (event.message.length == 1)
+                    sendTyping()
+
+
             }
         }
     }
@@ -124,6 +143,36 @@ class DirectMessageViewModel @Inject constructor(
         }
     }
 
+    fun sendTyping() {
+        viewModelScope.launch {
+            val json = JSONObject().apply {
+                put("sender", uiState.value.userId)
+                put("receiver", uiState.value.receiverUser?.id)
+                //put("roomId", messageRequestModel.roomId) // null ise otomatik olarak JSONObject.NULL olur
+            }
+
+            socketEmitEventUseCase.invoke(
+                SocketEvent.TYPING,
+                json
+            )
+        }
+    }
+
+    fun stopTyping() {
+        viewModelScope.launch {
+            val json = JSONObject().apply {
+                put("sender", uiState.value.userId)
+                put("receiver", uiState.value.receiverUser?.id)
+                //put("roomId", messageRequestModel.roomId) // null ise otomatik olarak JSONObject.NULL olur
+            }
+
+            socketEmitEventUseCase.invoke(
+                SocketEvent.STOP_TYPING,
+                json
+            )
+        }
+    }
+
     fun observeUserStatus() {
         viewModelScope.launch {
             observeUserStatusUseCase().collect { userStatus ->
@@ -147,14 +196,53 @@ class DirectMessageViewModel @Inject constructor(
     fun observeReceivedMessage() {
         viewModelScope.launch {
             observeReceivedMessageUseCase().collect { messageItem ->
-                Log.d("SocketService*", "${messageItem.message} - ${messageItem.sender.username} in viewmodel")
 
-                setState {
-                    copy(socketMessages = socketMessages + messageItem, isMessageListEmpty = false)
+                if (messageItem.sender._id.equals(uiState.value.userId) || messageItem.sender._id.equals(uiState.value.receiverUser?.id)) {
+                    setState {
+                        copy(socketMessages = socketMessages + messageItem, isMessageListEmpty = false)
+                    }
+                    sendEffect(DirectMessageUiEffect.ScrollToBottom)
                 }
 
-                if (messageItem.sender._id.equals(uiState.value.userId) || messageItem.sender._id.equals(uiState.value.receiverUser?.id) )
-                    sendEffect(DirectMessageUiEffect.ScrollToBottom)
+            }
+        }
+    }
+
+    fun observeTyping() {
+        viewModelScope.launch {
+            observeTypingUseCase().collect { model ->
+                if (model.sender.equals(uiState.value.receiverUser?.id)) {
+                    setState {
+                        copy(showTyping = true)
+                    }
+                }
+            }
+        }
+    }
+
+    fun observeStopTyping() {
+        viewModelScope.launch {
+            observeStopTypingUseCase().collect { model ->
+                if (model.sender.equals(uiState.value.receiverUser?.id)) {
+                    setState {
+                        copy(showTyping = false)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeSocketConnectionState() {
+        viewModelScope.launch {
+            observeSocketConnectionUseCase().collect { state ->
+                Log.d("SocketConnection", "${state.name} on chat module DM")
+                setState {
+                    copy(socketConnectionState = state)
+                }
+
+                if (state == SocketConnectionState.CONNECTED
+                    && uiState.value.messageValue.length > 0)
+                    sendTyping()
             }
         }
     }

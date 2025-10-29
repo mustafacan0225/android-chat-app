@@ -32,5 +32,6 @@
     <string name="not_found">No Results Found</string>
     <string name="searchbar_clear">cancel</string>
     <string name="you">(You)</string>
+    <string name="typing">typing...</string>
 
 </resources>

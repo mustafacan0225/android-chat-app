@@ -42,7 +42,7 @@ fun OnlineUsersRoute(
 
             when (effect) {
                 is OnlineUsersUiEffect.NavigateToDirectMessage -> {
-                    parentNavController.navigate(NavDestinationItem.DirectMessage(effect.user, NavDestinationItem.OnlineUsers::class.qualifiedName?: "NavDestinationItem.OnlineUsers"))
+                    parentNavController.navigate(NavDestinationItem.DirectMessage(own = viewModel.getOwnInfo(),receiverUser = effect.user, NavDestinationItem.OnlineUsers::class.qualifiedName?: "NavDestinationItem.OnlineUsers"))
                 }
             }
         }

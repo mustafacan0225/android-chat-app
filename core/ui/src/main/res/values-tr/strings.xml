@@ -31,5 +31,5 @@
     <string name="not_found">Sonuç Bulunamadı</string>
     <string name="searchbar_clear">iptal</string>
     <string name="you">(Sen)</string>
-
+    <string name="typing">yazıyor...</string>
 </resources>

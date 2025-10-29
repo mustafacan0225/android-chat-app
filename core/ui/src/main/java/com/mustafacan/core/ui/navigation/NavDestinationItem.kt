@@ -39,7 +39,7 @@ sealed class NavDestinationItem(var titleResource: Int, var icon: Int? = null) {
 
     @Serializable
     data class DirectMessage(
-        val user: UserUiModel, val previousPage: String
+        val own: UserUiModel, val receiverUser: UserUiModel, val previousPage: String
     )
 
 

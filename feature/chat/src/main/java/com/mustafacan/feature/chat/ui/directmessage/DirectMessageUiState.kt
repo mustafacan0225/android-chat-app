@@ -24,5 +24,6 @@ data class DirectMessageUiState(val socketConnectionState: SocketConnectionState
                                 val previousFirstVisibleItemOffset: Int = 0,
                                 val isPrependLoading: Boolean = false,
                                 val isFirstLoadingCompleted: Boolean = false,
+                                val showTyping: Boolean = false,
 
 )

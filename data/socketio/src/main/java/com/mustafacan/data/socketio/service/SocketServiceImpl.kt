@@ -9,6 +9,7 @@ import com.mustafacan.core.model.socket.SocketMessage
 import com.mustafacan.core.model.users.User
 import com.mustafacan.core.domain.service.SocketService
 import com.mustafacan.core.model.chat.IncomingMessage
+import com.mustafacan.core.model.chat.TypingModel
 import com.mustafacan.core.model.users.UserStatus
 import com.mustafacan.data.socketio.factory.SocketFactory
 import com.squareup.moshi.Moshi
@@ -124,6 +125,37 @@ class SocketServiceImpl @Inject constructor(
                     }
                 } catch (e: Exception) {
                     Log.d("SocketService", "error ${e.message}")
+                }
+
+            }
+        }
+
+        socket?.on(SocketEvent.TYPING.eventName) { args ->
+
+            args.firstOrNull()?.let { rawData ->
+                try {
+                    Log.d("SocketService", "TYPING INCOMING $rawData")
+                    val result = moshi.adapter(TypingModel::class.java).fromJson(rawData.toString())
+                    result?.let {
+                        Log.d("SocketService", "TYPING INCOMING")
+                        _incomingEvents.tryEmit(SocketMessage.Typing(it))
+                    }
+
+                } catch (e: Exception) {
+                    Log.d("SocketService", "error ${e.message}")
+                }
+
+            }
+        }
+
+        socket?.on(SocketEvent.STOP_TYPING.eventName) { args ->
+
+            args.firstOrNull()?.let { rawData ->
+                Log.d("SocketService", "STOP TYPING INCOMING $rawData")
+                val result = moshi.adapter(TypingModel::class.java).fromJson(rawData.toString())
+                result?.let {
+                    Log.d("SocketService", "STOP TYPING INCOMING")
+                    _incomingEvents.tryEmit(SocketMessage.StopTyping(it))
                 }
 
             }

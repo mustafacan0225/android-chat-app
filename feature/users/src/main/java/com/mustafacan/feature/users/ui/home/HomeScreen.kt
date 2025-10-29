@@ -64,7 +64,7 @@ fun HomeRoute(
                 }
 
                 is HomeUiEffect.NavigateToDirectMessage -> {
-                    parentNavController.navigate(NavDestinationItem.DirectMessage(effect.user, NavDestinationItem.Users::class.qualifiedName?: "NavDestinationItem.Users"))
+                    parentNavController.navigate(NavDestinationItem.DirectMessage(own = viewModel.getOwnInfo(), receiverUser = effect.user, NavDestinationItem.Users::class.qualifiedName?: "NavDestinationItem.Users"))
                 }
             }
         }

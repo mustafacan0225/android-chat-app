@@ -49,7 +49,7 @@ fun AllUsersRoute(
 
             when (effect) {
                 is AllUsersUiEffect.NavigateToDirectMessage -> {
-                    parentNavController.navigate(NavDestinationItem.DirectMessage(effect.user, NavDestinationItem.AllUsers::class.qualifiedName?: "NavDestinationItem.AllUsers"))
+                    parentNavController.navigate(NavDestinationItem.DirectMessage(own = viewModel.getOwnInfo(), receiverUser = effect.user, NavDestinationItem.AllUsers::class.qualifiedName?: "NavDestinationItem.AllUsers"))
                 }
             }
         }

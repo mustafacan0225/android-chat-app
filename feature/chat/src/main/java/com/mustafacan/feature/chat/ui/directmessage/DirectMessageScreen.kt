@@ -38,6 +38,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -52,6 +53,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.paging.compose.LazyPagingItems
@@ -87,6 +91,7 @@ fun DirectMessageRoute(viewModel: DirectMessageViewModel, navController: NavHost
     val uiEffect = rememberFlowWithLifecycle(viewModel.uiEffect)
     val pagedMessages : LazyPagingItems<Message> = viewModel.messagesPagingDataFlow.collectAsLazyPagingItems()
     val messagesLazyListState = rememberLazyListState()
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(messagesLazyListState.firstVisibleItemIndex, messagesLazyListState.firstVisibleItemScrollOffset) {
         viewModel.updateScrollPosition(
@@ -114,6 +119,37 @@ fun DirectMessageRoute(viewModel: DirectMessageViewModel, navController: NavHost
 
                 }
             }
+        }
+    }
+
+    DisposableEffect(Unit) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_START -> {
+                    Log.d("LifecycleObserver", "ON_START DM-> ConnectSocket event sent")
+                }
+
+                Lifecycle.Event.ON_RESUME -> {
+                    Log.d("LifecycleObserver", "ON_RESUME DM->")
+
+                }
+
+                Lifecycle.Event.ON_STOP -> {
+                    Log.d("LifecycleObserver", "ON_STOP DM-> DisconnectSocket event sent")
+                    if (uiState.messageValue.length > 0)
+                        viewModel.stopTyping()
+                }
+
+                else -> {
+                    Log.d("LifecycleObserver", "DM Unhandled lifecycle event: $event")
+                }
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+            Log.d("LifecycleObserver", "Observer removed DM-> DisconnectSocket event sent")
+
         }
     }
 
@@ -187,34 +223,81 @@ fun DirectMessageScreen(uiState: DirectMessageUiState, pagedMessages: LazyPaging
 fun DirectMessageHeader(
     uiState: DirectMessageUiState
 ) {
-    Column(modifier = Modifier.fillMaxWidth().background(MessagePageHeaderColor),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center) {
-        Text(modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
-            text = uiState.receiverUser?.username?: "",
-            style = MaterialTheme.typography.bodyLarge.copy(fontSize = 18.sp),
-            color = TitleTextColor,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MessagePageHeaderColor)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                .wrapContentWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Text(
+                text = uiState.receiverUser?.username ?: "",
+                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 18.sp),
+                color = TitleTextColor,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
 
-        Card(modifier = Modifier.wrapContentWidth().padding(8.dp),
-            colors = CardDefaults.cardColors(containerColor = if (uiState.receiverUserStatus == stringResource(R.string.connection_state_online)) Color.Green else Color.Gray)) {
-            Column() {
-                Text(modifier = Modifier.wrapContentSize()
-                    .padding(start = 8.dp, end = 8.dp, top = 4.dp, bottom = 4.dp),
-                    text = uiState.receiverUserStatus,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
+            Spacer(modifier = Modifier.width(4.dp))
+
+            Card(
+                modifier = Modifier.wrapContentWidth().padding(start = 8.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (uiState.receiverUserStatus == stringResource(R.string.connection_state_online))
+                        Color(0xFF4CAF50)
+                    else
+                        Color.Gray
                 )
+            ) {
+                Column {
+                    Text(
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .padding(start = 8.dp, end = 8.dp, top = 4.dp, bottom = 4.dp),
+                        text = uiState.receiverUserStatus,
+                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp),
+                        color = Color.White
+                    )
+                }
             }
-
         }
 
-        Spacer(modifier = Modifier.fillMaxWidth().padding(top = 8.dp).height(1.dp).background(SeperatorColor))
-    }
+        if (uiState.showTyping) {
+            Row(
+                modifier = Modifier
+                    .padding(start = 8.dp, top = 4.dp)
+                    .wrapContentWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                LottieAnimation(
+                    R.raw.lottie_splash,
+                    Modifier
+                        .width(40.dp)
+                        .height(25.dp)
+                )
+                Text(
+                    text = stringResource(R.string.typing),
+                    style = MaterialTheme.typography.bodyMedium.copy(fontSize = 10.sp),
+                    color = TitleTextColor
+                )
+            }
+        }
 
+        Spacer(
+            modifier = Modifier.padding(top = 5.dp)
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(SeperatorColor)
+        )
+    }
 }
+
 
 @Composable
 fun DirectMessageContent(

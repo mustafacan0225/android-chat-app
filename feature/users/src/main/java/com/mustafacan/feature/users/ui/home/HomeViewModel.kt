@@ -17,12 +17,15 @@ import com.mustafacan.core.domain.usecase.socket.SocketConnectUseCase
 import com.mustafacan.core.ui.R
 import com.mustafacan.core.ui.component.scaffold.RootScaffoldController
 import com.mustafacan.core.ui.component.scaffold.ScaffoldEvent
+import com.mustafacan.core.ui.model.UserUiModel
 import com.mustafacan.core.ui.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -113,6 +116,13 @@ class HomeViewModel @Inject constructor(
             getLocalUserUseCase()?.let {
                 setState { copy(userId = it.id) }
             }
+        }
+    }
+
+    suspend fun getOwnInfo() : UserUiModel {
+        return withContext(Dispatchers.IO) {
+            val authUser = getLocalUserUseCase.invoke()
+            UserUiModel(authUser?.id?: "", authUser?.username?: "")
         }
     }
 
