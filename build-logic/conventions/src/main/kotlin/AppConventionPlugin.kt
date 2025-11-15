@@ -72,6 +72,7 @@ class AppConventionPlugin : Plugin<Project> {
                 "implementation"(project(":feature:auth"))
                 "implementation"(project(":feature:users"))
                 "implementation"(project(":feature:chat"))
+                "implementation"(project(":feature:messages"))
 
                 //data:network module is not used in app module, it is added only for hilt dependencies
                 "implementation"(project(":data:network"))
