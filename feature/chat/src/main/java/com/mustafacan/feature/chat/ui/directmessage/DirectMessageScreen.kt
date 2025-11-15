@@ -328,7 +328,7 @@ fun DirectMessageContent(
     }
     // Liste boşsa
     else if (uiState.isMessageListEmpty) {
-        EmptyMessageScreen()
+        EmptyMessageScreen(uiState, onEvent)
     }
     // Mesajlar yüklendi
     else {
@@ -370,26 +370,66 @@ fun DirectMessageContent(
 }
 
 @Composable
-fun EmptyMessageScreen() {
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally) {
+fun EmptyMessageScreen(uiState: DirectMessageUiState, onEvent: (DirectMessageUiEvent) -> Unit) {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Column(modifier = Modifier.fillMaxSize().padding(WindowInsets.navigationBars.asPaddingValues())
+            .imePadding()){
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(com.mustafacan.feature.chat.R.string.first_message_title),
+                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
+                    color = TitleTextColor
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                LottieAnimation(
+                    R.raw.empty_message_anim,
+                    modifier = Modifier
+                        .width(250.dp)
+                        .height(250.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = stringResource(com.mustafacan.feature.chat.R.string.first_message),
+                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold),
+                    color = TitleTextColor
+                )
+            }
 
-        Text(
-            text = stringResource(com.mustafacan.feature.chat.R.string.first_message_title),
-            style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
-            color = TitleTextColor
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        LottieAnimation(R.raw.empty_message_anim, modifier = Modifier.width(250.dp).height(250.dp))
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = stringResource(com.mustafacan.feature.chat.R.string.first_message),
-            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold),
-            color = TitleTextColor
-        )
+            OutlinedTextField(
+                value = uiState.messageValue,
+                onValueChange = { onEvent(DirectMessageUiEvent.MessageValueChanged(it)) },
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                trailingIcon = {
+                    val image = Icons.Filled.Send
+
+                    IconButton(onClick = { onEvent(DirectMessageUiEvent.SendMessage) }) {
+                        Icon(imageVector = image, contentDescription = "send", tint = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
+                    }
+                },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(
+                    onDone = { onEvent(DirectMessageUiEvent.SendMessage) }
+                ),
+                shape = RoundedCornerShape(24.dp),
+                colors = MessageTextFieldColors,
+                placeholder = {
+                    Text(text = stringResource(id = chatR.string.message_placeholder))
+                }
+            )
+        }
 
     }
+
 }
 
 @Composable

@@ -11,6 +11,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.compose.LazyPagingItems
 import com.mustafacan.core.domain.usecase.api.GetDirectMessagePagingDataUseCase
+import com.mustafacan.core.domain.usecase.api.GetDirectMessageRoomsUseCase
 import com.mustafacan.core.domain.usecase.datastore.GetLocalUserUseCase
 import com.mustafacan.core.domain.usecase.socket.ObserveReceivedMessageUseCase
 import com.mustafacan.core.domain.usecase.socket.ObserveSocketConnectionUseCase
@@ -22,6 +23,7 @@ import com.mustafacan.core.model.auth.AuthUser
 import com.mustafacan.core.model.chat.Message
 import com.mustafacan.core.model.chat.MessageRequestModel
 import com.mustafacan.core.model.chat.MessageType
+import com.mustafacan.core.model.room.DirectMessageRoomsRequestModel
 import com.mustafacan.core.model.socket.SocketConnectionState
 import com.mustafacan.core.model.socket.SocketEvent
 import com.mustafacan.core.ui.R
@@ -54,8 +56,7 @@ class DirectMessageViewModel @Inject constructor(
     private val observeSocketConnectionUseCase: ObserveSocketConnectionUseCase,
     private val observeTypingUseCase: ObserveTypingUseCase,
     private val observeStopTypingUseCase: ObserveStopTypingUseCase,
-
-
+    private val getDirectMessageRoomsUseCase: GetDirectMessageRoomsUseCase
     ) : BaseViewModel<DirectMessageUiState, DirectMessageUiEvent, DirectMessageUiEffect>(initialState = DirectMessageUiState()) {
 
     lateinit var messagesPagingDataFlow: Flow<PagingData<Message>>
@@ -78,6 +79,7 @@ class DirectMessageViewModel @Inject constructor(
             observeSocketConnectionState()
             observeTyping()
             observeStopTyping()
+            //getRooms()
         }
 
 
@@ -198,10 +200,16 @@ class DirectMessageViewModel @Inject constructor(
             observeReceivedMessageUseCase().collect { messageItem ->
 
                 if (messageItem.sender._id.equals(uiState.value.userId) || messageItem.sender._id.equals(uiState.value.receiverUser?.id)) {
-                    setState {
-                        copy(socketMessages = socketMessages + messageItem, isMessageListEmpty = false)
+                    val alreadyExists = uiState.value.socketMessages.any { it._id == messageItem._id }
+
+                    if (!alreadyExists) {
+                        setState {
+                            Log.d("incomingmsg", "${messageItem.message} - ${messageItem._id}")
+                            copy(socketMessages = socketMessages + messageItem, isMessageListEmpty = false)
+                        }
+                        sendEffect(DirectMessageUiEffect.ScrollToBottom)
+
                     }
-                    sendEffect(DirectMessageUiEffect.ScrollToBottom)
                 }
 
             }
@@ -352,6 +360,18 @@ class DirectMessageViewModel @Inject constructor(
             )
         }
 
+    }
+
+    suspend fun getRooms() {
+        viewModelScope.launch {
+            val result = getDirectMessageRoomsUseCase.invoke(request = DirectMessageRoomsRequestModel(userId = uiState.value.userId))
+            result.onSuccess {
+                Log.d("rooms***", "Direct Message Room Count: ${it.size}")
+                Log.d("rooms***", "First room info: ${it.get(0).lastMessage?.sender?.username}: ${it.get(0).lastMessage?.message}")
+            }.onFailure {
+                Log.d("rooms***", it.message?: "hata")
+            }
+        }
     }
 
     override fun onCleared() {
