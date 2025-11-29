@@ -12,13 +12,13 @@ android {
 
     productFlavors {
         getByName("dev") {
-            buildConfigField("String", "SOCKET_URL", "\"http://192.168.1.122:5000\"")
+            buildConfigField("String", "SOCKET_URL", "\"http://192.168.1.125:5000\"")
             //buildConfigField("String", "SOCKET_URL", "\"http://192.168.43.55:5000\"")
         }
 
         getByName("prod") {
             //buildConfigField("String", "SOCKET_URL", "\"http://10.0.2.2:5000\"")
-            buildConfigField("String", "SOCKET_URL", "\"http://192.168.1.122:5000\"")
+            buildConfigField("String", "SOCKET_URL", "\"http://192.168.1.125:5000\"")
             //buildConfigField("String", "SOCKET_URL", "\"http://192.168.43.55:5000\"")
         }
     }

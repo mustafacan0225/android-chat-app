@@ -10,4 +10,5 @@ data class DashboardUiState(
     val bottomBarVisibility: Boolean = true,
     val topAppBarVisibility: Boolean = true,
     val username: String = "",
+    val hasUnreadMessage: Boolean = false
 )

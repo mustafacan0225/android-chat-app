@@ -69,6 +69,7 @@ import com.mustafacan.core.ui.component.error.ErrorView
 import com.mustafacan.core.ui.component.loading.MoreItemsLoading
 import com.mustafacan.core.ui.component.loading.VerticalRectangleShimmer
 import com.mustafacan.core.ui.component.textfield.MessageTextFieldColors
+import com.mustafacan.core.ui.component.typing.TypingComponent
 import com.mustafacan.core.ui.extension.formatAsLocalDateTime
 import com.mustafacan.core.ui.theme.MessageCardBackgroundColorForReceiver
 import com.mustafacan.core.ui.theme.MessageCardBackgroundColorForSender
@@ -268,25 +269,9 @@ fun DirectMessageHeader(
         }
 
         if (uiState.showTyping) {
-            Row(
-                modifier = Modifier
-                    .padding(start = 8.dp, top = 4.dp)
-                    .wrapContentWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
-            ) {
-                LottieAnimation(
-                    R.raw.lottie_splash,
-                    Modifier
-                        .width(40.dp)
-                        .height(25.dp)
-                )
-                Text(
-                    text = stringResource(R.string.typing),
-                    style = MaterialTheme.typography.bodyMedium.copy(fontSize = 10.sp),
-                    color = TitleTextColor
-                )
-            }
+            TypingComponent(Modifier
+                .padding(start = 8.dp, top = 4.dp)
+                .wrapContentWidth())
         }
 
         Spacer(

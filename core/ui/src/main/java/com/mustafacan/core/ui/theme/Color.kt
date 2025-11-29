@@ -91,3 +91,11 @@ val MessageCardUserNameTextColorForReceiver: Color
     @Composable
     get() = if (isSystemInDarkTheme()) Color(0xFF5EC5F8) else Color(0xFF1976D2)
 
+val MessageItemDateBackground: Color
+    @Composable
+    get() = Color(0xFF5EC5F8)
+
+val MessageItemUnreadBadgeColor: Color
+    @Composable
+    get() = Color(0xFF5EC5F8)
+

@@ -12,5 +12,7 @@ enum class SocketEvent(val eventName: String) {
     RECEIVE_MESSAGE("receive_message"),
 
     TYPING("typing"),
-    STOP_TYPING("stop_typing")
+    STOP_TYPING("stop_typing"),
+
+    DIRECT_MESSAGE_ROOM_UPDATED("direct_message_room_updated")
 }

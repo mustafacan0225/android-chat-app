@@ -3,8 +3,12 @@ package com.mustafacan.android_chat_app.ui.dashboard
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.mustafacan.core.domain.usecase.datastore.GetHasNewDirectMessageUseCase
 import com.mustafacan.core.model.socket.SocketConnectionState
 import com.mustafacan.core.domain.usecase.datastore.GetLocalUserUseCase
+import com.mustafacan.core.domain.usecase.datastore.SaveHasNewDirectMessageUseCase
+import com.mustafacan.core.domain.usecase.datastore.SaveHasNewGroupMessageUseCase
+import com.mustafacan.core.domain.usecase.socket.ObserveDirectMessageRoomUpdatedUseCase
 import com.mustafacan.core.domain.usecase.socket.ObserveSocketConnectionUseCase
 import com.mustafacan.core.domain.usecase.socket.SocketConnectUseCase
 import com.mustafacan.core.domain.usecase.socket.SocketDisconnectUseCase
@@ -26,13 +30,17 @@ class DashboardViewModel @Inject constructor(
     private val socketConnectUseCase: SocketConnectUseCase,
     private val socketDisconnectUseCase: SocketDisconnectUseCase,
     private val observeSocketConnectionUseCase: ObserveSocketConnectionUseCase,
-    private val getLocalUserUseCase: GetLocalUserUseCase
-) : BaseViewModel<DashboardUiState, DashboardUiEvent, DashboardUiEffect>(initialState = DashboardUiState()) {
+    private val getLocalUserUseCase: GetLocalUserUseCase,
+    private val observeDirectMessageRoomUseCase: ObserveDirectMessageRoomUpdatedUseCase,
+    private val saveHasNewDirectMessageUseCase: SaveHasNewDirectMessageUseCase,
+    private val saveHasNewGroupMessageUseCase: SaveHasNewGroupMessageUseCase,
+    ) : BaseViewModel<DashboardUiState, DashboardUiEvent, DashboardUiEffect>(initialState = DashboardUiState()) {
 
     init {
         observeSocketConnectionState()
         getUserName()
         observerScaffoldController()
+        observeDirectMessageRoom()
     }
 
     override fun handleEvent(event: DashboardUiEvent) {
@@ -57,6 +65,9 @@ class DashboardViewModel @Inject constructor(
                 setState { copy(topAppBarVisibility = event.visible) }
             }
 
+            is DashboardUiEvent.SetUnReadMessage -> {
+                setState { copy(hasUnreadMessage = event.hasUnReadMessage) }
+            }
         }
     }
 
@@ -112,6 +123,32 @@ class DashboardViewModel @Inject constructor(
                 }
 
             }
+        }
+    }
+
+    private fun observeDirectMessageRoom() {
+        viewModelScope.launch {
+            observeDirectMessageRoomUseCase().collect { room ->
+                Log.d("DmRoomUpdated", "${room._id} - ${room.lastMessage?.message} - ${room.lastMessage?.sender?.username}")
+                if (!(room.lastMessage?.sender?.username?:"").equals(uiState.value.username)) {
+                    setState {
+                        copy(hasUnreadMessage = true)
+                    }
+                    saveHasNewDirectMessage(true)
+                }
+            }
+        }
+    }
+
+    private fun saveHasNewDirectMessage(hasNewMessage: Boolean) {
+        viewModelScope.launch {
+            saveHasNewDirectMessageUseCase.invoke(hasNewMessage)
+        }
+    }
+
+    private fun saveHasNewGroupMessage(hasNewMessage: Boolean) {
+        viewModelScope.launch {
+            saveHasNewGroupMessageUseCase.invoke(hasNewMessage)
         }
     }
 

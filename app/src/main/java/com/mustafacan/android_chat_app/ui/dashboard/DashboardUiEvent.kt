@@ -1,6 +1,5 @@
 package com.mustafacan.android_chat_app.ui.dashboard
 
-import androidx.compose.runtime.Composable
 import com.mustafacan.core.ui.component.dialog.DialogModel
 
 sealed class DashboardUiEvent {
@@ -9,4 +8,5 @@ sealed class DashboardUiEvent {
     data class ShowDialog(val dialogModel: DialogModel) : DashboardUiEvent()
     object DismissDialog : DashboardUiEvent()
     data class SetTopAppBarVisibility(val visible: Boolean) : DashboardUiEvent()
+    data class SetUnReadMessage(val hasUnReadMessage: Boolean) : DashboardUiEvent()
 }

@@ -10,5 +10,5 @@ class RoomsRemoteDataSource @Inject constructor(private val roomService: RoomSer
     ApiCallHandler() {
 
     suspend fun getDirectMessageRooms(requestModel: DirectMessageRoomsRequestModel) = apiCall { roomService.directMessageRooms(requestModel) }
-    suspend fun register(request: RegisterRequest) = apiCall { roomService.groupMessageRooms() }
+    suspend fun getGroupMessageRooms() = apiCall { roomService.groupMessageRooms() }
 }

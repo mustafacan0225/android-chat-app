@@ -10,6 +10,7 @@ import com.mustafacan.core.model.users.User
 import com.mustafacan.core.domain.service.SocketService
 import com.mustafacan.core.model.chat.IncomingMessage
 import com.mustafacan.core.model.chat.TypingModel
+import com.mustafacan.core.model.room.DirectMessageRoomSocketModel
 import com.mustafacan.core.model.users.UserStatus
 import com.mustafacan.data.socketio.factory.SocketFactory
 import com.squareup.moshi.Moshi
@@ -156,6 +157,24 @@ class SocketServiceImpl @Inject constructor(
                 result?.let {
                     Log.d("SocketService", "STOP TYPING INCOMING")
                     _incomingEvents.tryEmit(SocketMessage.StopTyping(it))
+                }
+
+            }
+        }
+
+        socket?.on(SocketEvent.DIRECT_MESSAGE_ROOM_UPDATED.eventName) { args ->
+
+            args.firstOrNull()?.let { rawData ->
+                try {
+                    Log.d("SocketService", "incoming DIRECT_MESSAGE_ROOM_UPDATED $rawData")
+
+                    val result = moshi.adapter(DirectMessageRoomSocketModel::class.java).fromJson(rawData.toString())
+                    result?.let {
+                        Log.d("SocketService", "incoming DIRECT_MESSAGE_ROOM_UPDATED")
+                        _incomingEvents.tryEmit(SocketMessage.DirectMessageRoomUpdated(it.room))
+                    }
+                } catch (e: Exception) {
+                    Log.d("SocketService", "error ${e.message}")
                 }
 
             }

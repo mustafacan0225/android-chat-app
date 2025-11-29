@@ -1,13 +1,18 @@
 package com.mustafacan.android_chat_app.ui.bottommenu
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -16,13 +21,17 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.mustafacan.android_chat_app.ui.dashboard.DashboardUiEvent
+import com.mustafacan.android_chat_app.ui.dashboard.DashboardUiState
 import com.mustafacan.core.ui.navigation.NavDestinationItem
 import com.mustafacan.core.ui.navigation.getBottomBarItemColors
 import com.mustafacan.core.ui.theme.BackgroundDark
 
 @Composable
 fun BottomMenu(
-    navController: NavController
+    navController: NavController,
+    uiState: DashboardUiState,
+    onEvent: (DashboardUiEvent) -> Unit
 ) {
     val items = listOf(
         NavDestinationItem.ChatRooms,
@@ -38,10 +47,11 @@ fun BottomMenu(
         val currentDestination = navBackStackEntry?.destination
 
         items.forEachIndexed { index, item ->
-
-            NavigationBarItem(selected = currentDestination?.hierarchy?.any { it.hasRoute(item::class) } == true,
+            val isSelected = currentDestination?.hierarchy?.any { it.hasRoute(item::class) } == true
+            NavigationBarItem(selected = isSelected,
                 label = { Text(text = stringResource(id = item.titleResource), maxLines = 1) },
                 onClick = {
+                    onEvent(DashboardUiEvent.SetUnReadMessage(false))
                     navController.navigate(item) {
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
@@ -50,9 +60,26 @@ fun BottomMenu(
                         restoreState = true
                     }
                 }, icon = {
-                    Icon(painter = painterResource(id = item.icon!!),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp) ) },
+                    Box(modifier = Modifier.size(24.dp)) {
+                        Icon(
+                            painter = painterResource(id = item.icon!!),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp)
+                        )
+
+                        if (index == 1 && uiState.hasUnreadMessage && !isSelected) {
+                            Box(
+                                modifier = Modifier
+                                    .size(10.dp)
+                                    .align(Alignment.TopEnd)
+                                    .background(
+                                        color = Color.Red,
+                                        shape = CircleShape
+                                    )
+                            )
+                        }
+                    }
+                },
                 alwaysShowLabel = true,
                 colors = getBottomBarItemColors()
             )

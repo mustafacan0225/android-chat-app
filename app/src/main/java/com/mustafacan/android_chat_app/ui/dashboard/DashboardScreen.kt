@@ -105,14 +105,11 @@ fun DashboardScreen(
                 enter = slideInVertically(animationSpec = tween(1000), initialOffsetY = { it }),
                 exit = slideOutVertically(animationSpec = tween(1000), targetOffsetY = { it }),
                 content = {
-                    BottomMenu(
-                        navController = navController
-                    )
+                    BottomMenu(navController = navController, uiState, onEvent)
                 }
             )
         }) {
             Box(modifier = Modifier.padding(it)) {
-                //NavigationWatcher(navController)
                 DashboardNavHost(navController = navController)
             }
 
