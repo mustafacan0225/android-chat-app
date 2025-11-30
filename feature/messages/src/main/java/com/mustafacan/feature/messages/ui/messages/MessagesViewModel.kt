@@ -14,6 +14,7 @@ import com.mustafacan.core.domain.usecase.socket.ObserveSocketConnectionUseCase
 import com.mustafacan.core.domain.usecase.socket.ObserveStopTypingUseCase
 import com.mustafacan.core.domain.usecase.socket.ObserveTypingUseCase
 import com.mustafacan.core.domain.usecase.socket.SocketConnectUseCase
+import com.mustafacan.core.model.chat.TypingChannelType
 import com.mustafacan.core.model.chat.UserRef
 import com.mustafacan.core.model.room.DirectMessageRoomsRequestModel
 import com.mustafacan.core.model.room.DirectMessageRoomsResponseModel
@@ -165,7 +166,7 @@ class MessagesViewModel @Inject constructor(
             observeTypingUseCase().collect { model ->
                 val room = findRoomByUserId(model.sender)
                 room?.let {
-                    if (!uiState.value.typingRoomIds.contains(it.id))
+                    if (model.channelType.equals(TypingChannelType.DIRECT.type) && !uiState.value.typingRoomIds.contains(it.id))
                         setState { copy(typingRoomIds = typingRoomIds + it.id) }
                 }
             }
@@ -177,7 +178,7 @@ class MessagesViewModel @Inject constructor(
             observeStopTypingUseCase().collect { model ->
                 val room = findRoomByUserId(model.sender)
                 room?.let {
-                    if (uiState.value.typingRoomIds.contains(it.id))
+                    if (model.channelType.equals(TypingChannelType.DIRECT.type) && uiState.value.typingRoomIds.contains(it.id))
                         setState { copy(typingRoomIds = typingRoomIds - it.id) }
                 }
             }

@@ -1,8 +1,7 @@
 package com.mustafacan.core.model.socket
 
 enum class SocketEvent(val eventName: String) {
-    JOIN_USER("joinUser"),
-    //UPDATE_USER_STATUS("updateUserStatus"),
+    JOIN_ROOM("join_room"),
     ONLINE_USERS("online_users"),
 
     USER_STATUS_UPDATE("user_status_update"),
@@ -14,5 +13,6 @@ enum class SocketEvent(val eventName: String) {
     TYPING("typing"),
     STOP_TYPING("stop_typing"),
 
-    DIRECT_MESSAGE_ROOM_UPDATED("direct_message_room_updated")
+    DIRECT_MESSAGE_ROOM_UPDATED("direct_message_room_updated"),
+    GROUP_MESSAGE_ROOM_UPDATED("group_message_room_updated")
 }

@@ -51,7 +51,10 @@ fun BottomMenu(
             NavigationBarItem(selected = isSelected,
                 label = { Text(text = stringResource(id = item.titleResource), maxLines = 1) },
                 onClick = {
-                    onEvent(DashboardUiEvent.SetUnReadMessage(false))
+                    if (item == NavDestinationItem.Messages)
+                        onEvent(DashboardUiEvent.SetBadgeVisibilityForMessagesTab(false))
+                    else if (item == NavDestinationItem.ChatRooms)
+                        onEvent(DashboardUiEvent.SetBadgeVisibilityForRoomsTab(false))
                     navController.navigate(item) {
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
@@ -67,7 +70,8 @@ fun BottomMenu(
                             modifier = Modifier.size(24.dp)
                         )
 
-                        if (index == 1 && uiState.hasUnreadMessage && !isSelected) {
+                        if ((item == NavDestinationItem.Messages && uiState.badgeVisibilityForMessagesTab && !isSelected)
+                            || (item == NavDestinationItem.ChatRooms && uiState.badgeVisibilityForRoomsTab && !isSelected)) {
                             Box(
                                 modifier = Modifier
                                     .size(10.dp)

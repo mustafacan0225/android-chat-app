@@ -23,6 +23,7 @@ import com.mustafacan.core.model.auth.AuthUser
 import com.mustafacan.core.model.chat.Message
 import com.mustafacan.core.model.chat.MessageRequestModel
 import com.mustafacan.core.model.chat.MessageType
+import com.mustafacan.core.model.chat.TypingChannelType
 import com.mustafacan.core.model.room.DirectMessageRoomsRequestModel
 import com.mustafacan.core.model.socket.SocketConnectionState
 import com.mustafacan.core.model.socket.SocketEvent
@@ -150,7 +151,7 @@ class DirectMessageViewModel @Inject constructor(
             val json = JSONObject().apply {
                 put("sender", uiState.value.userId)
                 put("receiver", uiState.value.receiverUser?.id)
-                //put("roomId", messageRequestModel.roomId) // null ise otomatik olarak JSONObject.NULL olur
+                put("channelType", TypingChannelType.DIRECT.type)
             }
 
             socketEmitEventUseCase.invoke(
@@ -165,6 +166,7 @@ class DirectMessageViewModel @Inject constructor(
             val json = JSONObject().apply {
                 put("sender", uiState.value.userId)
                 put("receiver", uiState.value.receiverUser?.id)
+                put("channelType", TypingChannelType.DIRECT.type)
                 //put("roomId", messageRequestModel.roomId) // null ise otomatik olarak JSONObject.NULL olur
             }
 
@@ -219,7 +221,7 @@ class DirectMessageViewModel @Inject constructor(
     fun observeTyping() {
         viewModelScope.launch {
             observeTypingUseCase().collect { model ->
-                if (model.sender.equals(uiState.value.receiverUser?.id)) {
+                if (model.channelType.equals(TypingChannelType.DIRECT.type) && model.sender.equals(uiState.value.receiverUser?.id)) {
                     setState {
                         copy(showTyping = true)
                     }
@@ -231,7 +233,7 @@ class DirectMessageViewModel @Inject constructor(
     fun observeStopTyping() {
         viewModelScope.launch {
             observeStopTypingUseCase().collect { model ->
-                if (model.sender.equals(uiState.value.receiverUser?.id)) {
+                if (model.channelType.equals(TypingChannelType.DIRECT.type) && model.sender.equals(uiState.value.receiverUser?.id)) {
                     setState {
                         copy(showTyping = false)
                     }
@@ -360,20 +362,6 @@ class DirectMessageViewModel @Inject constructor(
             )
         }
 
-    }
-
-
-
-    suspend fun getRooms() {
-        viewModelScope.launch {
-            val result = getDirectMessageRoomsUseCase.invoke(request = DirectMessageRoomsRequestModel(userId = uiState.value.userId))
-            result.onSuccess {
-                Log.d("rooms***", "Direct Message Room Count: ${it.size}")
-                Log.d("rooms***", "First room info: ${it.get(0).lastMessage?.sender?.username}: ${it.get(0).lastMessage?.message}")
-            }.onFailure {
-                Log.d("rooms***", it.message?: "hata")
-            }
-        }
     }
 
     override fun onCleared() {

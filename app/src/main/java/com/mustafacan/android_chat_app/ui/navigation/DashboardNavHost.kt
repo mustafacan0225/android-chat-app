@@ -17,6 +17,7 @@ import com.mustafacan.core.ui.navigation.parcelableNavType
 import com.mustafacan.feature.chat.ui.directmessage.DirectMessageRoute
 import com.mustafacan.feature.chat.ui.directmessage.DirectMessageViewModel
 import com.mustafacan.feature.messages.ui.navigation.MessagesNavHost
+import com.mustafacan.feature.rooms.ui.navigation.RoomsNavHost
 import com.mustafacan.feature.users.ui.navigation.UsersNavHost
 import kotlin.reflect.typeOf
 
@@ -40,7 +41,7 @@ fun DashboardNavHost(navController: NavHostController) {
             exitTransition = { Transition.exitToLeft() },
             popEnterTransition = { Transition.enterFromLeft() },
             popExitTransition = { Transition.exitToLeft() }){
-            Text("ChatRooms Page", Modifier.padding(16.dp, 40.dp))
+            RoomsNavHost(navController)
         }
 
         composable<NavDestinationItem.Users>(

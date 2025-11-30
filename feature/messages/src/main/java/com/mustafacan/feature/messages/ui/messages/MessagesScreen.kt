@@ -11,22 +11,35 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,27 +53,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mustafacan.core.model.chat.UserRef
-import com.mustafacan.core.model.room.DirectMessageRoomsResponseModel
-import com.mustafacan.core.model.users.User
+import com.mustafacan.core.ui.animation.lottie.LottieAnimation
 import com.mustafacan.core.ui.component.error.ErrorView
 import com.mustafacan.core.ui.component.header.ListHeaderItem
 import com.mustafacan.core.ui.component.loading.VerticalRectangleShimmer
-import com.mustafacan.core.ui.component.typing.TypingComponent
 import com.mustafacan.core.ui.extension.formatAsLocalDateTime
 import com.mustafacan.core.ui.model.UserUiModel
 import com.mustafacan.core.ui.navigation.NavDestinationItem
-import com.mustafacan.core.ui.theme.BackgroundDark
-import com.mustafacan.core.ui.theme.CardButtonTextColor
 import com.mustafacan.core.ui.theme.CardItemBackgroundColor
 import com.mustafacan.core.ui.theme.CardItemTextColor
-import com.mustafacan.core.ui.theme.MessageCardUserNameTextColorForReceiver
-import com.mustafacan.core.ui.theme.MessageItemDateBackground
 import com.mustafacan.core.ui.theme.MessageItemUnreadBadgeColor
+import com.mustafacan.core.ui.theme.TitleTextColor
 import com.mustafacan.core.ui.util.rememberFlowWithLifecycle
 import com.mustafacan.feature.messages.R
 import com.mustafacan.feature.messages.ui.messages.model.DirectMessageRoomUiModel
@@ -78,36 +88,41 @@ fun MessagesRoute(
         uiEffect.collect { effect ->
             when(effect) {
                 is MessagesUiEffect.NavigateToDirectMessage -> {
-                    parentNavController.navigate(NavDestinationItem.DirectMessage(own = viewModel.getOwnInfo(), receiverUser = effect.user, NavDestinationItem.Users::class.qualifiedName?: "NavDestinationItem.Message"))
+                    parentNavController.navigate(NavDestinationItem.DirectMessage(own = viewModel.getOwnInfo(), receiverUser = effect.user, NavDestinationItem.Messages::class.qualifiedName?: "NavDestinationItem.Messages"))
                 }
             }
 
         }
     }
 
-    MessagesScreen(uiState = uiState, onEvent = { viewModel.sendEvent(it) }, viewModel)
+    MessagesScreen(uiState = uiState, onEvent = { viewModel.sendEvent(it) })
 }
 
 @Composable
 fun MessagesScreen(uiState: MessagesUiState,
-                   onEvent: (MessagesUiEvent) -> Unit,
-                   viewModel: MessagesViewModel) {
+                   onEvent: (MessagesUiEvent) -> Unit) {
+
     Column(modifier = Modifier
         .fillMaxSize()
-        .padding(16.dp)) {
-        ListHeaderItem(stringResource(R.string.messages_title))
-        Spacer(modifier = Modifier.height(16.dp))
+        .padding(16.dp))
+    {
 
         if (uiState.loading) {
+            ListHeaderItem(stringResource(R.string.messages_title))
+            Spacer(modifier = Modifier.height(16.dp))
             VerticalRectangleShimmer()
         } else if (uiState.hasError) {
+            ListHeaderItem(stringResource(R.string.messages_title))
+            Spacer(modifier = Modifier.height(16.dp))
             ErrorView(message = stringResource(com.mustafacan.core.ui.R.string.default_error),
                 onRetry = {
                     onEvent(MessagesUiEvent.Retry)
                 })
         } else if (uiState.messageRooms.isEmpty()) {
-
+            EmptyMessageScreen()
         } else {
+            ListHeaderItem(stringResource(R.string.messages_title))
+            Spacer(modifier = Modifier.height(16.dp))
             LazyColumn {
                 items(
                     count = uiState.messageRooms.size,
@@ -139,27 +154,7 @@ fun MessagesScreen(uiState: MessagesUiState,
             }
 
         }
-            /*LazyColumn(modifier = Modifier.weight(1f)) {
-                items(uiState.messageRooms.size) { index ->
-                    val message = uiState.messageRooms[index]
-                    if (message != null) {
-                        var userRef: UserRef? = null
-                        var ownUser: UserRef? = null
-                        message.users.forEach {
-                            if (!it._id.equals(uiState.userId))
-                                userRef = it
-                            else
-                                ownUser = it
-                        }
-                        MessageRoomItem(message, ownUser = ownUser, otherUser = userRef,
-                            buttonClicked = {
-                                onEvent(MessagesUiEvent.NavigateToDirectMessage(user = UserUiModel(id = userRef!!._id, username = userRef!!.username)))
-                            }
-                        )
-                    }
-                }
-            }
-        }*/
+
     }
 }
 
@@ -186,7 +181,7 @@ fun MessageRoomItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
-            verticalAlignment = Alignment.Top   // <<< en önemli satır
+            verticalAlignment = Alignment.Top
         ) {
 
             Image(
@@ -221,11 +216,16 @@ fun MessageRoomItem(
 
             Spacer(modifier = Modifier.width(10.dp))
 
-            Column(
-                horizontalAlignment = Alignment.End
-            ) {
+            Column(horizontalAlignment = Alignment.End,) {
                 if (uiState.typingRoomIds.contains(messageRoom.id)) {
-                    TypingComponent(Modifier.wrapContentWidth())
+                    Box(
+                        modifier = Modifier.wrapContentHeight(),
+                        contentAlignment = Alignment.Center
+                    ) {
+
+                        LottieAnimation(com.mustafacan.core.ui.R.raw.typing, Modifier.width(50.dp).height(25.dp))
+
+                    }
                 } else {
                     if(messageRoom.hasNewMessage) {
                         Text(
@@ -238,16 +238,11 @@ fun MessageRoomItem(
                             maxLines = 1,
                             modifier = Modifier
                                 .padding(6.dp)
-                                .background(
-                                    color = MessageItemDateBackground,//MessageCardUserNameTextColorForReceiver.copy(alpha = 0.15f),
-                                    shape = RoundedCornerShape(4.dp)
-                                )
                                 .padding(horizontal = 3.dp, vertical = 1.dp)
                         )
 
                         Spacer(modifier = Modifier.height(3.dp))
 
-                        // Altındaki turkuaz küçük yuvarlak badge
                         Box(
                             modifier = Modifier
                                 .padding(horizontal = 6.dp)
@@ -273,4 +268,46 @@ fun MessageRoomItem(
             }
         }
     }
+}
+
+@Composable
+fun EmptyMessageScreen() {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Column(modifier = Modifier.fillMaxSize().padding(WindowInsets.navigationBars.asPaddingValues())
+            .imePadding()){
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(R.string.messages_empty_title),
+                    style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
+                    color = TitleTextColor
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                LottieAnimation(
+                    com.mustafacan.core.ui.R.raw.empty_message_anim,
+                    modifier = Modifier
+                        .width(250.dp)
+                        .height(250.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = stringResource(R.string.messages_empty_description),
+                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold),
+                    color = TitleTextColor,
+                    textAlign = TextAlign.Center
+                )
+            }
+
+        }
+
+    }
+
 }

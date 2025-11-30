@@ -3,12 +3,12 @@ package com.mustafacan.android_chat_app.ui.dashboard
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.mustafacan.core.domain.usecase.datastore.GetHasNewDirectMessageUseCase
 import com.mustafacan.core.model.socket.SocketConnectionState
 import com.mustafacan.core.domain.usecase.datastore.GetLocalUserUseCase
 import com.mustafacan.core.domain.usecase.datastore.SaveHasNewDirectMessageUseCase
 import com.mustafacan.core.domain.usecase.datastore.SaveHasNewGroupMessageUseCase
 import com.mustafacan.core.domain.usecase.socket.ObserveDirectMessageRoomUpdatedUseCase
+import com.mustafacan.core.domain.usecase.socket.ObserveGroupMessageRoomUpdatedUseCase
 import com.mustafacan.core.domain.usecase.socket.ObserveSocketConnectionUseCase
 import com.mustafacan.core.domain.usecase.socket.SocketConnectUseCase
 import com.mustafacan.core.domain.usecase.socket.SocketDisconnectUseCase
@@ -31,7 +31,8 @@ class DashboardViewModel @Inject constructor(
     private val socketDisconnectUseCase: SocketDisconnectUseCase,
     private val observeSocketConnectionUseCase: ObserveSocketConnectionUseCase,
     private val getLocalUserUseCase: GetLocalUserUseCase,
-    private val observeDirectMessageRoomUseCase: ObserveDirectMessageRoomUpdatedUseCase,
+    private val observeDirectMessageRoomUpdatedUseCase: ObserveDirectMessageRoomUpdatedUseCase,
+    private val observeGroupMessageRoomUpdatedUseCase: ObserveGroupMessageRoomUpdatedUseCase,
     private val saveHasNewDirectMessageUseCase: SaveHasNewDirectMessageUseCase,
     private val saveHasNewGroupMessageUseCase: SaveHasNewGroupMessageUseCase,
     ) : BaseViewModel<DashboardUiState, DashboardUiEvent, DashboardUiEffect>(initialState = DashboardUiState()) {
@@ -40,7 +41,8 @@ class DashboardViewModel @Inject constructor(
         observeSocketConnectionState()
         getUserName()
         observerScaffoldController()
-        observeDirectMessageRoom()
+        observeDirectMessageRoomUpdated()
+        observeGroupMessageRoomUpdated()
     }
 
     override fun handleEvent(event: DashboardUiEvent) {
@@ -65,8 +67,12 @@ class DashboardViewModel @Inject constructor(
                 setState { copy(topAppBarVisibility = event.visible) }
             }
 
-            is DashboardUiEvent.SetUnReadMessage -> {
-                setState { copy(hasUnreadMessage = event.hasUnReadMessage) }
+            is DashboardUiEvent.SetBadgeVisibilityForMessagesTab -> {
+                setState { copy(badgeVisibilityForMessagesTab = event.visibility) }
+            }
+
+            is DashboardUiEvent.SetBadgeVisibilityForRoomsTab -> {
+                setState { copy(badgeVisibilityForRoomsTab = event.visibility) }
             }
         }
     }
@@ -126,15 +132,29 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
-    private fun observeDirectMessageRoom() {
+    private fun observeDirectMessageRoomUpdated() {
         viewModelScope.launch {
-            observeDirectMessageRoomUseCase().collect { room ->
+            observeDirectMessageRoomUpdatedUseCase().collect { room ->
                 Log.d("DmRoomUpdated", "${room._id} - ${room.lastMessage?.message} - ${room.lastMessage?.sender?.username}")
                 if (!(room.lastMessage?.sender?.username?:"").equals(uiState.value.username)) {
                     setState {
-                        copy(hasUnreadMessage = true)
+                        copy(badgeVisibilityForMessagesTab = true)
                     }
                     saveHasNewDirectMessage(true)
+                }
+            }
+        }
+    }
+
+    private fun observeGroupMessageRoomUpdated() {
+        viewModelScope.launch {
+            observeGroupMessageRoomUpdatedUseCase().collect { room ->
+                Log.d("DmRoomUpdated", "${room._id} - ${room.lastMessage?.message} - ${room.lastMessage?.sender?.username}")
+                if (!(room.lastMessage?.sender?.username?:"").equals(uiState.value.username)) {
+                    setState {
+                        copy(badgeVisibilityForRoomsTab = true)
+                    }
+                    saveHasNewGroupMessage(true)
                 }
             }
         }

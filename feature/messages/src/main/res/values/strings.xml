@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="messages_title">Messages</string>
-
+    <string name="messages_empty_title">Your Message Box is Empty</string>
+    <string name="messages_empty_description">Your chats and messages will appear on this page</string>
 
 </resources>

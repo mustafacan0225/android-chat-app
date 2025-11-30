@@ -1,6 +1,5 @@
 package com.mustafacan.android_chat_app.ui.dashboard
 
-import androidx.compose.runtime.Composable
 import com.mustafacan.core.model.socket.SocketConnectionState
 import com.mustafacan.core.ui.component.dialog.DialogModel
 
@@ -10,5 +9,6 @@ data class DashboardUiState(
     val bottomBarVisibility: Boolean = true,
     val topAppBarVisibility: Boolean = true,
     val username: String = "",
-    val hasUnreadMessage: Boolean = false
+    val badgeVisibilityForMessagesTab: Boolean = false,
+    val badgeVisibilityForRoomsTab: Boolean = false
 )

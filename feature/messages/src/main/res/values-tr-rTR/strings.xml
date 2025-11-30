@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="messages_title">Mesajlar</string>
+    <string name="messages_empty_title">Mesaj Kutun Boş</string>
+    <string name="messages_empty_description">Sohbetleriniz ve mesajlarınız bu sayfada görünecektir</string>
+
 </resources>

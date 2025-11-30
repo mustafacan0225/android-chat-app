@@ -3,6 +3,7 @@ package com.mustafacan.core.model.socket
 import com.mustafacan.core.model.chat.Message
 import com.mustafacan.core.model.chat.TypingModel
 import com.mustafacan.core.model.room.DirectMessageRoomsResponseModel
+import com.mustafacan.core.model.room.GroupMessageRoomsResponseModel
 import com.mustafacan.core.model.users.User
 import com.mustafacan.core.model.users.UserStatus
 
@@ -13,4 +14,5 @@ sealed class SocketMessage {
     data class Typing(val typingModel: TypingModel): SocketMessage()
     data class StopTyping(val typingModel: TypingModel): SocketMessage()
     data class DirectMessageRoomUpdated(val room: DirectMessageRoomsResponseModel): SocketMessage()
+    data class GroupMessageRoomUpdated(val room: GroupMessageRoomsResponseModel): SocketMessage()
 }

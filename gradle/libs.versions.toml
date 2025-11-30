@@ -25,6 +25,7 @@ socketio = "2.1.2"
 paging = "3.3.6"
 constraintlayout = "1.1.1"
 google-code-gson = "2.10.1"
+coil = "2.6.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -95,6 +96,9 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 
 # Gson
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "google-code-gson" }
+
+#Coil
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
 # Gradle Plugins
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }

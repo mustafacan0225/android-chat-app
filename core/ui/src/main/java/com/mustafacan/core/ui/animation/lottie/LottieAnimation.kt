@@ -24,3 +24,4 @@ fun LottieAnimation(animationResId: Int, modifier: Modifier) {
         modifier = modifier
     )
 }
+

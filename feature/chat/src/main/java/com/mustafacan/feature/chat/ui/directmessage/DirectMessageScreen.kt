@@ -301,27 +301,28 @@ fun DirectMessageContent(
         Log.d("dmcompose", "isLoadingMessages")
         VerticalRectangleShimmer()
     }
-    // Hata durumu
+
     else if (uiState.messagesLoadingError != null) {
 
         ErrorView(
             message = stringResource(R.string.default_error),
             onRetry = {
-                // retry eventi buraya eklenebilir
+                // retry
             }
         )
     }
-    // Liste boşsa
+
     else if (uiState.isMessageListEmpty) {
         EmptyMessageScreen(uiState, onEvent)
     }
-    // Mesajlar yüklendi
+
     else {
         LazyColumn(
             modifier = modifier.fillMaxWidth().padding(top = 8.dp, bottom = 16.dp),
             state = messagesLazyListState
         ) {
 
+            //pagination messages
             items(pagedMessages.itemCount) { index ->
                 val message = pagedMessages[index]
                 message?.let {
@@ -329,7 +330,7 @@ fun DirectMessageContent(
                 }
             }
 
-            // Socket’ten gelen mesajlar (paging dışı)
+            //socket messages
             items(uiState.socketMessages.size) { index ->
                 val message = uiState.socketMessages[index]
                 message?.let {
@@ -343,12 +344,11 @@ fun DirectMessageContent(
 
     }
 
-    // Sayfa basinda prepend sırasında hata olduysa
     if (uiState.messagesPrependError != null) {
         ErrorView(
             message = stringResource(R.string.default_error),
             onRetry = {
-                // retry prepend eventi
+                // retry
             }
         )
     }
