@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface MessageRepository {
      fun getPaginatedDirectMessage(senderId: String, receiverId: String): Flow<PagingData<Message>>
+     fun getPaginatedGroupMessage(roomId: String): Flow<PagingData<Message>>
 }

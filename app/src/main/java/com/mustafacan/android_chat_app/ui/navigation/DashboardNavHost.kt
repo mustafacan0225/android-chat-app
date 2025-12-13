@@ -10,12 +10,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.mustafacan.android_chat_app.ui.support.SupportScreen
 import com.mustafacan.core.ui.animation.transition.Transition
 import com.mustafacan.core.ui.model.UserUiModel
 import com.mustafacan.core.ui.navigation.NavDestinationItem
 import com.mustafacan.core.ui.navigation.parcelableNavType
 import com.mustafacan.feature.chat.ui.directmessage.DirectMessageRoute
 import com.mustafacan.feature.chat.ui.directmessage.DirectMessageViewModel
+import com.mustafacan.feature.chat.ui.groupmessage.GroupMessageRoute
+import com.mustafacan.feature.chat.ui.groupmessage.GroupMessageViewModel
 import com.mustafacan.feature.messages.ui.navigation.MessagesNavHost
 import com.mustafacan.feature.rooms.ui.navigation.RoomsNavHost
 import com.mustafacan.feature.users.ui.navigation.UsersNavHost
@@ -57,12 +60,17 @@ fun DashboardNavHost(navController: NavHostController) {
             exitTransition = { Transition.exitToRight() },
             popEnterTransition = { Transition.enterFromRight() },
             popExitTransition = { Transition.exitToRight() }) {
-            Text("Support Page", Modifier.padding(16.dp, 40.dp))
+            SupportScreen()
         }
 
         composable<NavDestinationItem.DirectMessage>(typeMap = mapOf(typeOf<UserUiModel>() to NavType.parcelableNavType<UserUiModel>(), typeOf<String>() to NavType.StringType)) {
             val viewModel = hiltViewModel<DirectMessageViewModel>()
             DirectMessageRoute(viewModel, navController)
+        }
+
+        composable<NavDestinationItem.GroupMessage>(typeMap = mapOf(typeOf<UserUiModel>() to NavType.parcelableNavType<UserUiModel>(), typeOf<String>() to NavType.StringType)) {
+            val viewModel = hiltViewModel<GroupMessageViewModel>()
+            GroupMessageRoute(viewModel, navController)
         }
     }
 }

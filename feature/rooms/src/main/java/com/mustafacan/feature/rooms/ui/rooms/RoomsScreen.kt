@@ -62,8 +62,8 @@ fun RoomsRoute(
     LaunchedEffect(Unit) {
         uiEffect.collect { effect ->
             when(effect) {
-                is RoomsUiEffect.NavigateToDirectMessage -> {
-                    parentNavController.navigate(NavDestinationItem.DirectMessage(own = viewModel.getOwnInfo(), receiverUser = effect.user, NavDestinationItem.ChatRooms::class.qualifiedName?: "NavDestinationItem.ChatRooms"))
+                is RoomsUiEffect.NavigateToGroupMessage -> {
+                    parentNavController.navigate(NavDestinationItem.GroupMessage(own = viewModel.getOwnInfo(), roomId = effect.room.id, roomName = effect.room.name, roomDescription = effect.room.description, roomImage = effect.room.roomImage?: "", previousPage = NavDestinationItem.ChatRooms::class.qualifiedName?: "NavDestinationItem.ChatRooms"))
                 }
 
                 RoomsUiEffect.ScrollToTop -> {
@@ -104,21 +104,14 @@ fun RoomsScreen(uiState: RoomsUiState,
                     key = { index -> uiState.messageRooms[index].id },
                     itemContent = { index ->
                         val room = uiState.messageRooms[index]
-                        var userRef: UserRef? = null
-                        var ownUser: UserRef? = null
-                        room.users.forEach {
-                            if (!it._id.equals(uiState.userId))
-                                userRef = it
-                            else
-                                ownUser = it
-                        }
+
                         RoomItem(
                             uiState= uiState,
                             messageRoom = room,
-                            ownUser = ownUser,
+                            ownUser = uiState.ownUser!!,
                             buttonClicked = {
                                 onEvent(RoomsUiEvent.SetHasNewMessage(room, false))
-                                onEvent(RoomsUiEvent.NavigateToDirectMessage(user = UserUiModel(id = userRef!!._id, username = userRef!!.username)))
+                                onEvent(RoomsUiEvent.NavigateToGroupMessage(user = uiState.ownUser, room = room))
                                 if (index == 0 && uiState.hasUnreadWhileTabClosed)
                                     onEvent(RoomsUiEvent.ClearHasUnreadWhileTabClosed)
                             }
@@ -136,10 +129,10 @@ fun RoomsScreen(uiState: RoomsUiState,
 fun RoomItem(
     uiState: RoomsUiState,
     messageRoom: GroupMessageRoomUiModel,
-    ownUser: UserRef?,
+    ownUser: UserUiModel,
     buttonClicked: () -> Unit
 ) {
-    val sender = if (messageRoom.lastMessage?.sender?._id?.equals(ownUser?._id) ?: false) {
+    val sender = if (messageRoom.lastMessage?.sender?._id?.equals(ownUser.id) ?: false) {
         "${stringResource(com.mustafacan.core.ui.R.string.you)}:"
     } else {
         "(${messageRoom.lastMessage?.sender?.username ?: "?"}):"

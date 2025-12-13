@@ -1,10 +1,11 @@
 package com.mustafacan.feature.rooms.ui.rooms
 
 import com.mustafacan.core.model.socket.SocketConnectionState
+import com.mustafacan.core.ui.model.UserUiModel
 import com.mustafacan.feature.rooms.ui.rooms.model.GroupMessageRoomUiModel
 
 data class RoomsUiState(val socketConnectionState: SocketConnectionState = SocketConnectionState.CONNECTING,
-                        val userId: String = "",
+                        val ownUser: UserUiModel? = null,
                         val loading: Boolean = true,
                         val hasError: Boolean = false,
                         val messageRooms: List<GroupMessageRoomUiModel> = listOf(),

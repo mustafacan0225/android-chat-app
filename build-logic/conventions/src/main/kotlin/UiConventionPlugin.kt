@@ -16,6 +16,7 @@ class UiConventionPlugin : Plugin<Project> {
                 "implementation"(libs.findLibrary("material").get())
                 "implementation"(libs.findLibrary("androidx.material3").get())
                 "implementation"(libs.findLibrary("navigation.compose").get())
+                "implementation"(libs.findLibrary("coil.compose").get())
 
                 "androidTestImplementation"(libs.findLibrary("androidx.ui.test.junit4").get())
                 "debugImplementation"(libs.findLibrary("androidx.ui.tooling").get())

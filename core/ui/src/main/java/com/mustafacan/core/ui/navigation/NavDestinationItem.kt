@@ -42,6 +42,11 @@ sealed class NavDestinationItem(var titleResource: Int, var icon: Int? = null) {
         val own: UserUiModel, val receiverUser: UserUiModel, val previousPage: String
     )
 
+    @Serializable
+    data class GroupMessage(
+        val own: UserUiModel, val roomId: String, val roomName: String, val roomImage: String, val roomDescription: String, val previousPage: String
+    )
+
 
 
 

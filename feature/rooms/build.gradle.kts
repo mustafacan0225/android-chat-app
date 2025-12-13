@@ -5,7 +5,3 @@ plugins {
 android {
     namespace = "com.mustafacan.feature.rooms"
 }
-
-dependencies {
-    implementation(libs.coil.compose)
-}

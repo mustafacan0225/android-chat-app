@@ -1,4 +1,4 @@
-package com.mustafacan.feature.chat.ui.directmessage
+package com.mustafacan.feature.chat.ui.groupmessage
 
 import android.content.Context
 import android.util.Log
@@ -11,6 +11,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.compose.LazyPagingItems
 import com.mustafacan.core.domain.usecase.api.GetDirectMessagePagingDataUseCase
+import com.mustafacan.core.domain.usecase.api.GetGroupMessagePagingDataUseCase
 import com.mustafacan.core.domain.usecase.socket.ObserveReceivedMessageUseCase
 import com.mustafacan.core.domain.usecase.socket.ObserveSocketConnectionUseCase
 import com.mustafacan.core.domain.usecase.socket.ObserveStopTypingUseCase
@@ -42,59 +43,80 @@ import org.json.JSONObject
 import javax.inject.Inject
 
 @HiltViewModel
-class DirectMessageViewModel @Inject constructor(
+class GroupMessageViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val savedStateHandle: SavedStateHandle,
     private val observeUserStatusUseCase: ObserveUserStatusUseCase,
     private val observeReceivedMessageUseCase: ObserveReceivedMessageUseCase,
-    private val getDirectMessagePagingDataUseCase: GetDirectMessagePagingDataUseCase,
+    private val getGroupMessagePagingDataUseCase: GetGroupMessagePagingDataUseCase,
     private val socketEmitEventUseCase: SocketEmitEventUseCase,
     private val observeSocketConnectionUseCase: ObserveSocketConnectionUseCase,
     private val observeTypingUseCase: ObserveTypingUseCase,
     private val observeStopTypingUseCase: ObserveStopTypingUseCase,
-    ) : BaseViewModel<DirectMessageUiState, DirectMessageUiEvent, DirectMessageUiEffect>(initialState = DirectMessageUiState()) {
+) : BaseViewModel<GroupMessageUiState, GroupMessageUiEvent, GroupMessageUiEffect>(initialState = GroupMessageUiState()) {
 
     lateinit var messagesPagingDataFlow: Flow<PagingData<Message>>
     private val _loadStatesFlow = MutableSharedFlow<CombinedLoadStates>(extraBufferCapacity = 1)
+
+    private val availableColors = listOf(
+        Color(0xFFE57373), // kırmızımsı
+        Color(0xFF64B5F6), // mavi
+        Color(0xFF81C784), // yeşil
+        Color(0xFFFFB74D), // turuncu
+        Color(0xFFBA68C8), // mor
+        Color(0xFFFF8A65), // turuncu-pembe
+        Color(0xFF4DB6AC), // turkuaz
+        Color(0xFFA1887F), // kahve
+        Color(0xFF90A4AE), // gri-mavi
+    )
+
+
     init {
         val own: UserUiModel? = savedStateHandle["own"]
-        val receiverUser: UserUiModel? = savedStateHandle["receiverUser"]
+        val roomId: String = savedStateHandle["roomId"]?: ""
+        val roomName: String = savedStateHandle["roomName"]?: ""
+        val roomDescription: String = savedStateHandle["roomDescription"]?: ""
+        val roomImage: String = savedStateHandle["roomImage"]?: ""
+
         val previousPage: String = savedStateHandle["previousPage"]!!
         viewModelScope.launch {
-            setState { copy(userId = own?.id?: "") }
-            messagesPagingDataFlow = getDirectMessagePagingDataUseCase(uiState.value.userId, receiverUser!!.id).cachedIn(viewModelScope)
+            setState { copy(userId = own?.id?: "", roomId = roomId, roomName = roomName, roomImage = roomImage, roomDescription = roomDescription) }
+            messagesPagingDataFlow = getGroupMessagePagingDataUseCase(roomId).cachedIn(viewModelScope)
             setState { copy(previousPage = previousPage) }
             setScaffoldBarsVisibility(false)
             delay(1500)
-            setState { copy(receiverUser = receiverUser, initialProgressVisibility = false) }
-            subscribeUserStatus()
-            observeUserStatus()
+            setState { copy(initialProgressVisibility = false) }
+            //observeUserStatus()
             observeReceivedMessage()
             observeLoadStateStably()
             observeSocketConnectionState()
             observeTyping()
             observeStopTyping()
+            //getRooms()
         }
 
 
     }
 
-    override fun handleEvent(event: DirectMessageUiEvent) {
+    override fun handleEvent(event: GroupMessageUiEvent) {
         when (event) {
-            is DirectMessageUiEvent.MessagesLoadStateChanged -> {
+            is GroupMessageUiEvent.MessagesLoadStateChanged -> {
                 messagesLoadStateChanged(event.messages)
             }
 
-            is DirectMessageUiEvent.SendMessage -> {
+            is GroupMessageUiEvent.SendMessage -> {
 
-                sendMessage(MessageRequestModel(type = MessageType.DIRECT_MESSAGE.value,
-                    uiState.value.userId,
-                    uiState.value.receiverUser!!.id,
-                    uiState.value.messageValue,
-                    ))
+                sendMessage(
+                    MessageRequestModel(type = MessageType.GROUP_MESSAGE.value,
+                        sender = uiState.value.userId,
+                        receiver = "",
+                        message = uiState.value.messageValue,
+                        roomId = uiState.value.roomId
+                    )
+                )
             }
 
-            is DirectMessageUiEvent.MessageValueChanged -> {
+            is GroupMessageUiEvent.MessageValueChanged -> {
                 setState { copy(messageValue = event.message) }
                 if (event.message.length == 0)
                     stopTyping()
@@ -106,7 +128,7 @@ class DirectMessageViewModel @Inject constructor(
         }
     }
 
-    fun subscribeUserStatus() {
+    /*fun subscribeUserStatus() {
         viewModelScope.launch {
             socketEmitEventUseCase.invoke(
                 SocketEvent.SUBSCRIBE_USER_STATUS,
@@ -120,7 +142,7 @@ class DirectMessageViewModel @Inject constructor(
             SocketEvent.UNSUBSCRIBE_USER_STATUS,
             uiState.value.receiverUser!!.id
         )
-    }
+    }*/
 
     fun sendMessage(messageRequestModel: MessageRequestModel) {
         viewModelScope.launch {
@@ -143,8 +165,8 @@ class DirectMessageViewModel @Inject constructor(
         viewModelScope.launch {
             val json = JSONObject().apply {
                 put("sender", uiState.value.userId)
-                put("receiver", uiState.value.receiverUser?.id)
-                put("channelType", TypingChannelType.DIRECT.type)
+                put("roomId", uiState.value.roomId)
+                put("channelType", TypingChannelType.GROUP.type)
             }
 
             socketEmitEventUseCase.invoke(
@@ -158,9 +180,8 @@ class DirectMessageViewModel @Inject constructor(
         viewModelScope.launch {
             val json = JSONObject().apply {
                 put("sender", uiState.value.userId)
-                put("receiver", uiState.value.receiverUser?.id)
-                put("channelType", TypingChannelType.DIRECT.type)
-                //put("roomId", messageRequestModel.roomId) // null ise otomatik olarak JSONObject.NULL olur
+                put("roomId", uiState.value.roomId)
+                put("channelType", TypingChannelType.GROUP.type)
             }
 
             socketEmitEventUseCase.invoke(
@@ -170,7 +191,7 @@ class DirectMessageViewModel @Inject constructor(
         }
     }
 
-    fun observeUserStatus() {
+    /*fun observeUserStatus() {
         viewModelScope.launch {
             observeUserStatusUseCase().collect { userStatus ->
                 Log.d("incomingstatus:", userStatus.status)
@@ -188,21 +209,24 @@ class DirectMessageViewModel @Inject constructor(
                 }
             }
         }
-    }
+    }*/
 
     fun observeReceivedMessage() {
         viewModelScope.launch {
             observeReceivedMessageUseCase().collect { messageItem ->
-
-                if (messageItem.sender._id.equals(uiState.value.userId) || messageItem.sender._id.equals(uiState.value.receiverUser?.id)) {
+                if (messageItem.chatRoom.equals(uiState.value.roomId)) {
                     val alreadyExists = uiState.value.socketMessages.any { it._id == messageItem._id }
 
                     if (!alreadyExists) {
+
                         setState {
                             Log.d("incomingmsg", "${messageItem.message} - ${messageItem._id}")
                             copy(socketMessages = socketMessages + messageItem, isMessageListEmpty = false)
                         }
-                        sendEffect(DirectMessageUiEffect.ScrollToBottom)
+
+                        assignColorIfNeeded(messageItem.sender._id)
+
+                        sendEffect(GroupMessageUiEffect.ScrollToBottom)
 
                     }
                 }
@@ -214,7 +238,7 @@ class DirectMessageViewModel @Inject constructor(
     fun observeTyping() {
         viewModelScope.launch {
             observeTypingUseCase().collect { model ->
-                if (model.channelType.equals(TypingChannelType.DIRECT.type) && model.sender.equals(uiState.value.receiverUser?.id)) {
+                if (model.channelType.equals(TypingChannelType.GROUP.type) && !model.sender.equals(uiState.value.userId)) {
                     setState {
                         copy(showTyping = true)
                     }
@@ -226,7 +250,7 @@ class DirectMessageViewModel @Inject constructor(
     fun observeStopTyping() {
         viewModelScope.launch {
             observeStopTypingUseCase().collect { model ->
-                if (model.channelType.equals(TypingChannelType.DIRECT.type) && model.sender.equals(uiState.value.receiverUser?.id)) {
+                if (model.channelType.equals(TypingChannelType.GROUP.type) && !model.sender.equals(uiState.value.userId)) {
                     setState {
                         copy(showTyping = false)
                     }
@@ -261,7 +285,7 @@ class DirectMessageViewModel @Inject constructor(
         Log.d("LoadState***", "itemCount: ${messages.itemCount}")
         Log.d("LoadState***","first visible index: ${uiState.value.previousFirstVisibleItemIndex} - offset: ${uiState.value.previousFirstVisibleItemOffset}")
         if (!uiState.value.isFirstLoadingCompleted && messages.itemCount >=10) {
-            sendEffect(DirectMessageUiEffect.ScrollToBottom)
+            sendEffect(GroupMessageUiEffect.ScrollToBottom)
         }
 
         setState {
@@ -276,12 +300,20 @@ class DirectMessageViewModel @Inject constructor(
             )
         }
 
+        if (refresh is LoadState.NotLoading && messages.itemCount > 0) {
+            for (i in 0 until messages.itemCount) {
+                messages[i]?.let { msg ->
+                    assignColorIfNeeded(msg.sender._id)
+                }
+            }
+        }
+
         if (prepend is LoadState.Loading) {
             setState {
                 copy(isPrependLoading = true, previousFirstVisibleItemIndex = uiState.value.currentFirstVisibleItemIndex)
             }
         } else if (prepend is LoadState.NotLoading && uiState.value.isPrependLoading) {
-                sendEffect(DirectMessageUiEffect.ScrollToItem)
+            sendEffect(GroupMessageUiEffect.ScrollToItem)
         }
         Log.d("LoadState***", "isPrependLoading: ${uiState.value.isPrependLoading} first visible index: ${uiState.value.previousFirstVisibleItemIndex}")
 
@@ -303,8 +335,11 @@ class DirectMessageViewModel @Inject constructor(
                             prepend is LoadState.NotLoading
 
                     if (allDone) {
+                        Log.d("LoadState***", "✅ Tüm yüklemeler tamamlandı (500ms sessizlik)")
+                        Log.d("LoadState***:","currentFirstVisibleItemIndex: ${uiState.value.currentFirstVisibleItemIndex} - offset: ${uiState.value.previousFirstVisibleItemOffset}")
+                        Log.d("LoadState***:","previousFirstVisibleItemIndex: ${uiState.value.previousFirstVisibleItemIndex} - offset: ${uiState.value.previousFirstVisibleItemOffset}")
                         if (!uiState.value.isFirstLoadingCompleted) {
-                            sendEffect(DirectMessageUiEffect.ScrollToBottom)
+                            sendEffect(GroupMessageUiEffect.ScrollToBottom)
                         }
 
                         setState {
@@ -354,9 +389,21 @@ class DirectMessageViewModel @Inject constructor(
 
     }
 
+    fun assignColorIfNeeded(userId: String) {
+        if (uiState.value.userColorMap.containsKey(userId))
+            return
+
+        val currentMap = uiState.value.userColorMap
+        val colorIndex = currentMap.size % availableColors.size
+        val newColor = availableColors[colorIndex]
+
+        setState {
+            copy(userColorMap = currentMap + (userId to newColor))
+        }
+    }
+
     override fun onCleared() {
         runBlocking {
-            unSubscribeUserStatus()
             setScaffoldBarsVisibility()
         }
         super.onCleared()

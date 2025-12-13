@@ -12,4 +12,8 @@ class MessagesRemoteDataSource @Inject constructor(
         messagesApi.getPaginatedDirectMessages(senderId, receiverId, beforeId)
     }
 
+    suspend fun getPaginatedGroupMessages(roomId: String, beforeId: String? = null) = apiCall {
+        messagesApi.getPaginatedGroupMessages(roomId, beforeId)
+    }
+
 }

@@ -46,7 +46,7 @@ class RoomsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val ownUserInfo = getOwnInfo()
-            setState { copy(userId = ownUserInfo.id) }
+            setState { copy(ownUser = ownUserInfo) }
             hasUnreadWhileTabClosed()
             getGroupMessageRooms()
 
@@ -64,8 +64,8 @@ class RoomsViewModel @Inject constructor(
                 getGroupMessageRooms()
             }
 
-            is RoomsUiEvent.NavigateToDirectMessage -> {
-                sendEffect(RoomsUiEffect.NavigateToDirectMessage(event.user))
+            is RoomsUiEvent.NavigateToGroupMessage -> {
+                sendEffect(RoomsUiEffect.NavigateToGroupMessage(event.user, event.room))
             }
 
             is RoomsUiEvent.SetHasNewMessage -> {
@@ -133,7 +133,7 @@ class RoomsViewModel @Inject constructor(
         viewModelScope.launch {
             observeGroupMessageRoomUpdatedUseCase().collect { room ->
                 Log.d("GroupRoomUpdated", "${room._id} - ${room.lastMessage?.message} - ${room.lastMessage?.sender?.username}")
-                val hasNewMessage = if (!(room.lastMessage?.sender?._id ?: "").equals(uiState.value.userId)) true else false
+                val hasNewMessage = if (!(room.lastMessage?.sender?._id ?: "").equals(uiState.value.ownUser?.id)) true else false
                 //val roomUiModel = room.toUiModel(hasNewMessage = hasNewMessage)
                 val currentRooms = uiState.value.messageRooms.toMutableList()
 

@@ -27,9 +27,18 @@ val OnTertiaryDark = Color(0xFFF8F5F5)
 val OnBackgroundDark = Color(0xFFF8F5F5)
 val OnSurfaceDark = Color(0xFFF8F5F5)
 
+
+val TypingComponentTitleTextColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color.White.copy(alpha = 0.7f) else Color.White
+
 val MessagePageHeaderColor: Color
 @Composable
-get() = if (isSystemInDarkTheme()) BackgroundDark else Color.White
+get() = BackgroundDark
+
+val MessagePageHeaderTitleTextColor: Color
+    @Composable
+    get() = Color.White
 
 val MessagePageBackgroundColor: Color
     @Composable

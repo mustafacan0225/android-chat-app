@@ -1,4 +1,4 @@
-package com.mustafacan.feature.chat.ui.directmessage
+package com.mustafacan.feature.chat.ui.groupmessage
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -60,6 +60,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import coil.compose.AsyncImage
 import com.mustafacan.core.model.chat.Message
 import com.mustafacan.core.ui.R
 import com.mustafacan.feature.chat.R as chatR
@@ -86,9 +87,10 @@ import com.mustafacan.core.ui.theme.SeperatorColor
 import com.mustafacan.core.ui.theme.TitleTextColor
 import com.mustafacan.core.ui.util.rememberFlowWithLifecycle
 import kotlinx.coroutines.delay
+import okhttp3.internal.wait
 
 @Composable
-fun DirectMessageRoute(viewModel: DirectMessageViewModel, navController: NavHostController) {
+fun GroupMessageRoute(viewModel: GroupMessageViewModel, navController: NavHostController) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val uiEffect = rememberFlowWithLifecycle(viewModel.uiEffect)
     val pagedMessages : LazyPagingItems<Message> = viewModel.messagesPagingDataFlow.collectAsLazyPagingItems()
@@ -105,7 +107,7 @@ fun DirectMessageRoute(viewModel: DirectMessageViewModel, navController: NavHost
     LaunchedEffect(Unit) {
         uiEffect.collect { effect ->
             when(effect) {
-                DirectMessageUiEffect.ScrollToBottom -> {
+                GroupMessageUiEffect.ScrollToBottom -> {
                     val lastIndex = pagedMessages.itemCount + uiState.socketMessages.size - 1
                     if (lastIndex >= 0) {
                         delay(50)
@@ -113,7 +115,7 @@ fun DirectMessageRoute(viewModel: DirectMessageViewModel, navController: NavHost
                     }
                 }
 
-                DirectMessageUiEffect.ScrollToItem -> {
+                GroupMessageUiEffect.ScrollToItem -> {
                     messagesLazyListState.scrollToItem(
                         index = uiState.previousFirstVisibleItemIndex + 5, // pageSize
                         scrollOffset = uiState.previousFirstVisibleItemOffset
@@ -155,7 +157,7 @@ fun DirectMessageRoute(viewModel: DirectMessageViewModel, navController: NavHost
         }
     }
 
-    DirectMessageScreen(
+    GroupMessageScreen(
         uiState = uiState,
         pagedMessages = pagedMessages,
         messagesLazyListState = messagesLazyListState,
@@ -164,7 +166,7 @@ fun DirectMessageRoute(viewModel: DirectMessageViewModel, navController: NavHost
 }
 
 @Composable
-fun DirectMessageScreen(uiState: DirectMessageUiState, pagedMessages: LazyPagingItems<Message>, messagesLazyListState: LazyListState, onEvent: (DirectMessageUiEvent) -> Unit) {
+fun GroupMessageScreen(uiState: GroupMessageUiState, pagedMessages: LazyPagingItems<Message>, messagesLazyListState: LazyListState, onEvent: (GroupMessageUiEvent) -> Unit) {
 
     if (uiState.initialProgressVisibility) {
         Column(modifier = Modifier.fillMaxSize().background(MessagePageBackgroundColor),
@@ -176,37 +178,47 @@ fun DirectMessageScreen(uiState: DirectMessageUiState, pagedMessages: LazyPaging
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            Image(
+            /*Image(
                 painter = painterResource(id = if (isSystemInDarkTheme()) com.mustafacan.feature.chat.R.drawable.chat_dark_bg else com.mustafacan.feature.chat.R.drawable.chat_light_bg) ,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.matchParentSize()
+            )*/
+            AsyncImage(
+                model = uiState.roomImage,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.matchParentSize()
             )
 
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .background(Color.Black.copy(alpha = 0.45f))
+            )
+
             Column(modifier = Modifier.fillMaxSize().padding(WindowInsets.navigationBars.asPaddingValues())
                 .imePadding()) {
-                uiState.receiverUser?.let {
-                    DirectMessageHeader(uiState)
+                uiState.roomId?.let {
+                    GroupMessageHeader(uiState)
                     MoreItemsLoading(uiState.isPrependingMessages)
-                    DirectMessageContent(uiState, pagedMessages, messagesLazyListState, onEvent, modifier = Modifier.weight(1f).fillMaxWidth())
-
-
+                    GroupMessageContent(uiState, pagedMessages, messagesLazyListState, onEvent, modifier = Modifier.weight(1f).fillMaxWidth())
 
                     OutlinedTextField(
                         value = uiState.messageValue,
-                        onValueChange = { onEvent(DirectMessageUiEvent.MessageValueChanged(it)) },
+                        onValueChange = { onEvent(GroupMessageUiEvent.MessageValueChanged(it)) },
                         modifier = Modifier.fillMaxWidth().padding(16.dp),
                         trailingIcon = {
                             val image = Icons.Filled.Send
 
-                            IconButton(onClick = { onEvent(DirectMessageUiEvent.SendMessage) }) {
+                            IconButton(onClick = { onEvent(GroupMessageUiEvent.SendMessage) }) {
                                 Icon(imageVector = image, contentDescription = "send", tint = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
                             }
                         },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(
-                            onDone = { onEvent(DirectMessageUiEvent.SendMessage) }
+                            onDone = { onEvent(GroupMessageUiEvent.SendMessage) }
                         ),
                         shape = RoundedCornerShape(24.dp),
                         colors = MessageTextFieldColors,
@@ -222,52 +234,32 @@ fun DirectMessageScreen(uiState: DirectMessageUiState, pagedMessages: LazyPaging
 }
 
 @Composable
-fun DirectMessageHeader(
-    uiState: DirectMessageUiState
+fun GroupMessageHeader(
+    uiState: GroupMessageUiState
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(MessagePageHeaderColor)
     ) {
-        Row(
-            modifier = Modifier
-                .padding(top = 8.dp, start = 16.dp, end = 16.dp)
-                .wrapContentWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
-        ) {
-            Text(
-                text = uiState.receiverUser?.username ?: "",
-                style = MaterialTheme.typography.bodyLarge.copy(fontSize = 18.sp),
-                color = MessagePageHeaderTitleTextColor,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
 
-            Spacer(modifier = Modifier.width(4.dp))
+        Text(modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp),
+            text = uiState.roomName,
+            style = MaterialTheme.typography.bodyLarge.copy(fontSize = 22.sp).copy(fontWeight = FontWeight.ExtraBold),
+            color = MessagePageHeaderTitleTextColor,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
 
-            Card(
-                modifier = Modifier.wrapContentWidth().padding(start = 8.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = if (uiState.receiverUserStatus == stringResource(R.string.connection_state_online))
-                        Color(0xFF4CAF50)
-                    else
-                        Color.Gray
-                )
-            ) {
-                Column {
-                    Text(
-                        modifier = Modifier
-                            .wrapContentSize()
-                            .padding(start = 8.dp, end = 8.dp, top = 4.dp, bottom = 4.dp),
-                        text = uiState.receiverUserStatus,
-                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp),
-                        color = Color.White
-                    )
-                }
-            }
-        }
+        Spacer(modifier = Modifier.width(4.dp))
+
+        Text(modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+            text = uiState.roomDescription,
+            style = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp),
+            color = MessagePageHeaderTitleTextColor,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
 
         if (uiState.showTyping) {
             TypingComponent(Modifier
@@ -276,26 +268,26 @@ fun DirectMessageHeader(
         }
 
         Spacer(
-            modifier = Modifier.padding(top = 8.dp)
+            modifier = Modifier.padding(top = 5.dp, bottom = if (!uiState.showTyping) 8.dp else 0.dp)
                 .fillMaxWidth()
                 .height(1.dp)
-                .background(SeperatorColor)
+                .background(MessagePageHeaderColor)
         )
     }
 }
 
 
 @Composable
-fun DirectMessageContent(
-    uiState: DirectMessageUiState,
+fun GroupMessageContent(
+    uiState: GroupMessageUiState,
     pagedMessages: LazyPagingItems<Message>,
     messagesLazyListState: LazyListState,
-    onEvent: (DirectMessageUiEvent) -> Unit,
+    onEvent: (GroupMessageUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     LaunchedEffect(pagedMessages.loadState) {
-        onEvent(DirectMessageUiEvent.MessagesLoadStateChanged(pagedMessages))
+        onEvent(GroupMessageUiEvent.MessagesLoadStateChanged(pagedMessages))
     }
 
     if (uiState.isLoadingMessages) {
@@ -356,7 +348,7 @@ fun DirectMessageContent(
 }
 
 @Composable
-fun EmptyMessageScreen(uiState: DirectMessageUiState, onEvent: (DirectMessageUiEvent) -> Unit) {
+fun EmptyMessageScreen(uiState: GroupMessageUiState, onEvent: (GroupMessageUiEvent) -> Unit) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -373,7 +365,7 @@ fun EmptyMessageScreen(uiState: DirectMessageUiState, onEvent: (DirectMessageUiE
                 Text(
                     text = stringResource(com.mustafacan.feature.chat.R.string.first_message_title),
                     style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
-                    color = TitleTextColor
+                    color = Color.White
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 LottieAnimation(
@@ -386,25 +378,25 @@ fun EmptyMessageScreen(uiState: DirectMessageUiState, onEvent: (DirectMessageUiE
                 Text(
                     text = stringResource(com.mustafacan.feature.chat.R.string.first_message),
                     style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold),
-                    color = TitleTextColor
+                    color = Color.White
                 )
             }
 
             OutlinedTextField(
                 value = uiState.messageValue,
-                onValueChange = { onEvent(DirectMessageUiEvent.MessageValueChanged(it)) },
+                onValueChange = { onEvent(GroupMessageUiEvent.MessageValueChanged(it)) },
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
                 trailingIcon = {
                     val image = Icons.Filled.Send
 
-                    IconButton(onClick = { onEvent(DirectMessageUiEvent.SendMessage) }) {
+                    IconButton(onClick = { onEvent(GroupMessageUiEvent.SendMessage) }) {
                         Icon(imageVector = image, contentDescription = "send", tint = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
                     }
                 },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(
-                    onDone = { onEvent(DirectMessageUiEvent.SendMessage) }
+                    onDone = { onEvent(GroupMessageUiEvent.SendMessage) }
                 ),
                 shape = RoundedCornerShape(24.dp),
                 colors = MessageTextFieldColors,
@@ -419,9 +411,9 @@ fun EmptyMessageScreen(uiState: DirectMessageUiState, onEvent: (DirectMessageUiE
 }
 
 @Composable
-fun MessageItem(uiState: DirectMessageUiState, message: Message) {
+fun MessageItem(uiState: GroupMessageUiState, message: Message) {
     val isOwnMessage = message.sender._id.equals(uiState.userId)
-
+    val userColor = uiState.userColorMap[message.sender._id]
     val backgroundColor = if (isOwnMessage) MessageCardBackgroundColorForSender else MessageCardBackgroundColorForReceiver
     val horizontalPadding = if (isOwnMessage) PaddingValues(top = 8.dp, bottom = 8.dp, start = 100.dp, end = 16.dp)
     else PaddingValues(top = 8.dp, bottom = 8.dp, start = 16.dp, end = 100.dp)
@@ -434,30 +426,27 @@ fun MessageItem(uiState: DirectMessageUiState, message: Message) {
     ) {
         Column(
             modifier = Modifier
-                .background(color = backgroundColor, shape = RoundedCornerShape(8.dp))
+                .background(color = if (isOwnMessage) backgroundColor else userColor!!, shape = RoundedCornerShape(8.dp))
                 .padding(8.dp)
         ) {
             if (!isOwnMessage) {
                 Text(
                     text = message.sender.username,
                     style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.ExtraBold),
-                    color = MessageCardUserNameTextColorForReceiver
+                    color = Color(0xFF1976D2)
                 )
             }
 
             Text(
                 text = message.message,
                 style = MaterialTheme.typography.bodyLarge,
-                color = if (isOwnMessage) MessageCardTextColorForSender else MessageCardTextColorForReceiver
+                color = if (isOwnMessage) MessageCardTextColorForSender else Color.White
             )
             Text(
                 text = message.createdAt.formatAsLocalDateTime(),
                 style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
-                color = if (isOwnMessage) MessageCardDateColorForSender else MessageCardDateColorForReceiver
+                color = if (isOwnMessage) MessageCardDateColorForSender else MessageCardTextColorForReceiver
             )
         }
     }
 }
-
-
-

@@ -5,7 +5,7 @@ data class Message(
     val chatRoom: String,
     val type: String,
     val sender: UserRef,
-    val receiver: UserRef,
+    val receiver: UserRef? = null,
     val message: String,
     val seenBy: List<UserRef>,
     val createdAt: String

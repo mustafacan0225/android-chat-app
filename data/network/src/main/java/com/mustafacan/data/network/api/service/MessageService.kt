@@ -15,5 +15,10 @@ interface MessageService {
         @Query("beforeId") beforeId: String? = null,
     ): Response<ApiResponse<PagedMessageResponse>>
 
+    @GET("messages/group/paginated")
+    suspend fun getPaginatedGroupMessages(
+        @Query("roomId") roomId: String,
+        @Query("beforeId") beforeId: String? = null,
+    ): Response<ApiResponse<PagedMessageResponse>>
 
 }

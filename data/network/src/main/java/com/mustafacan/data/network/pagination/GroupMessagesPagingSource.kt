@@ -6,10 +6,9 @@ import com.mustafacan.core.model.chat.Message
 import com.mustafacan.data.network.datasource.MessagesRemoteDataSource
 import kotlinx.coroutines.delay
 
-//Direct Message
-class MessagesPagingSource(
-    private val senderId: String,
-    private val receiverId: String,
+//Group Message
+class GroupMessagesPagingSource(
+    private val roomId: String,
     private val remoteDataSource: MessagesRemoteDataSource
 ) : PagingSource<String, Message>() {
 
@@ -19,9 +18,8 @@ class MessagesPagingSource(
         if (beforeId == null)
             delay(2000)
 
-        val result = remoteDataSource.getPaginatedDirectMessages(
-            senderId = senderId,
-            receiverId = receiverId,
+        val result = remoteDataSource.getPaginatedGroupMessages(
+            roomId = roomId,
             beforeId = beforeId
         )
 
