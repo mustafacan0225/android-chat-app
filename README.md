@@ -176,17 +176,17 @@ and **Jetpack Architecture Components**, Realtime updates are implemented using 
     <th align="center">☀️ Light Theme</th>
   </tr>
   <tr>
-    <td align="center"><img src="https://github.com/user-attachments/assets/17ef1c12-1f95-434f-8749-c154ada29f81" width="280"/></td>
-    <td align="center"><img src="https://github.com/user-attachments/assets/29bfca6f-e901-4fb9-97e4-f75c541e5899" width="280"/></td>
-    <td align="center"><img src="https://github.com/user-attachments/assets/ab5a6cc9-a7b6-4eaa-93d5-6f4a4b6c93b1" width="280"/></td>
+    <td align="center"><img src="resources/screenshots/screenshot1.jpg" width="280"/></td>
+    <td align="center"><img src="resources/screenshots/screenshot2.jpg" width="280"/></td>
+    <td align="center"><img src="resources/screenshots/screenshot3.jpg" width="280"/></td>
   </tr>
   <tr>
-    <td align="center"><img src="https://github.com/user-attachments/assets/ea2d5164-05b7-4a92-9992-ac9320fa7157" width="280"/></td>
-    <td align="center"><img src="https://github.com/user-attachments/assets/f0e3a892-a663-4a75-823e-a5b0aa50a56f" width="280"/></td>
-    <td align="center"><img src="https://github.com/user-attachments/assets/4ff89d8c-187a-43f8-b20f-f1ba2ec35532" width="280"/></td>
+    <td align="center"><img src="resources/screenshots/screenshot4.jpg" width="280"/></td>
+    <td align="center"><img src="resources/screenshots/screenshot5.jpg" width="280"/></td>
+    <td align="center"><img src="resources/screenshots/screenshot6.jpg" width="280"/></td>
   </tr>
   <tr>
-    <td align="center"><img src="https://github.com/user-attachments/assets/b18d1d13-66e3-4347-8817-284444d2ccd4" width="280"/></td>
+    <td align="center"><img src="resources/screenshots/screenshot7.jpg" width="280"/></td>
     <td></td>
     <td></td>
   </tr>
@@ -199,17 +199,17 @@ and **Jetpack Architecture Components**, Realtime updates are implemented using 
     <th align="center">🌑 Dark Theme</th>
   </tr>
   <tr>
-    <td align="center"><img src="https://github.com/user-attachments/assets/32700c2d-fbaa-49c4-af22-53f931c750db" width="280"/></td>
-    <td align="center"><img src="https://github.com/user-attachments/assets/bf03684e-d40c-461f-b396-6521cd66a974" width="280"/></td>
-    <td align="center"><img src="https://github.com/user-attachments/assets/6d606fef-5a13-4661-af56-29e8bf6dc6e5" width="280"/></td>
+    <td align="center"><img src="resources/screenshots/screenshot1_dark.jpg" width="280"/></td>
+    <td align="center"><img src="resources/screenshots/screenshot2_dark.jpg" width="280"/></td>
+    <td align="center"><img src="resources/screenshots/screenshot3_dark.jpg" width="280"/></td>
   </tr>
   <tr>
-    <td align="center"><img src="https://github.com/user-attachments/assets/de5ef153-c181-40c0-8e41-74f1643ca78b" width="280"/></td>
-    <td align="center"><img src="https://github.com/user-attachments/assets/ad38f59e-35b8-466b-af7f-9812dc3bdd02" width="280"/></td>
-    <td align="center"><img src="https://github.com/user-attachments/assets/8e4a0f55-f009-4bb7-b762-a0fc9ca53f7e" width="280"/></td>
+    <td align="center"><img src="resources/screenshots/screenshot4_dark.jpg" width="280"/></td>
+    <td align="center"><img src="resources/screenshots/screenshot5_dark.jpg" width="280"/></td>
+    <td align="center"><img src="resources/screenshots/screenshot6_dark.jpg" width="280"/></td>
   </tr>
   <tr>
-    <td align="center"><img src="https://github.com/user-attachments/assets/e6bc194d-322c-4b4a-829e-ecae41c0e47a" width="280"/></td>
+    <td align="center"><img src="resources/screenshots/screenshot7_dark.jpg" width="280"/></td>
     <td></td>
     <td></td>
   </tr>
@@ -244,13 +244,13 @@ and easy to maintain as the project scales.
   </tr>
   <tr>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/4e3811ad-a580-4d87-a2b1-aca6c8ee1675" width="280"/>
+      <img src="resources/screenshots/screenshot8" width="280"/>
     </td>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/630a8ac2-dbcf-4983-9230-3a683316c796" width="280"/>
+      <img src="resources/screenshots/screenshot9" width="280"/>
     </td>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/dcc7550a-d6e6-4cf2-94d6-cb2066d88f5b" width="280"/>
+      <img src="resources/screenshots/screenshot10" width="280"/>
     </td>
   </tr>
 </table>
