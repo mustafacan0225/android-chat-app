@@ -267,10 +267,10 @@ and easy to maintain as the project scales.
     <td align="center"><sub>Screenshot from Android Studio displaying all modules in the project</sub></td>
   </tr>
   <tr>
-    <td align="center" width="70%">
+    <td align="center" width="80%">
       <img src="resources/screenshots/screenshot11.png" width="100%"/>
     </td>
-    <td align="center" width="30%">
+    <td align="center" width="20%">
       <img src="resources/screenshots/screenshot12.png" width="100%"/>
     </td>
   </tr>
