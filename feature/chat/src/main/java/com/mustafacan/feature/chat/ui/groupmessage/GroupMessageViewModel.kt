@@ -10,7 +10,6 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.compose.LazyPagingItems
-import com.mustafacan.core.domain.usecase.api.GetDirectMessagePagingDataUseCase
 import com.mustafacan.core.domain.usecase.api.GetGroupMessagePagingDataUseCase
 import com.mustafacan.core.domain.usecase.socket.ObserveReceivedMessageUseCase
 import com.mustafacan.core.domain.usecase.socket.ObserveSocketConnectionUseCase
@@ -24,7 +23,6 @@ import com.mustafacan.core.model.chat.MessageType
 import com.mustafacan.core.model.chat.TypingChannelType
 import com.mustafacan.core.model.socket.SocketConnectionState
 import com.mustafacan.core.model.socket.SocketEvent
-import com.mustafacan.core.ui.R
 import com.mustafacan.core.ui.component.scaffold.RootScaffoldController
 import com.mustafacan.core.ui.component.scaffold.ScaffoldEvent
 import com.mustafacan.core.ui.model.UserUiModel
@@ -229,6 +227,11 @@ class GroupMessageViewModel @Inject constructor(
                         sendEffect(GroupMessageUiEffect.ScrollToBottom)
 
                     }
+
+                    if (messageItem.sender._id.equals(uiState.value.userId)) {
+                        setState { copy(messageValue = "") }
+                        sendEffect(GroupMessageUiEffect.HideKeyboard)
+                    }
                 }
 
             }
@@ -238,7 +241,9 @@ class GroupMessageViewModel @Inject constructor(
     fun observeTyping() {
         viewModelScope.launch {
             observeTypingUseCase().collect { model ->
-                if (model.channelType.equals(TypingChannelType.GROUP.type) && !model.sender.equals(uiState.value.userId)) {
+                if (model.channelType.equals(TypingChannelType.GROUP.type)
+                    && !model.sender.equals(uiState.value.userId)
+                    && model.roomId != null && model.roomId.equals(uiState.value.roomId)) {
                     setState {
                         copy(showTyping = true)
                     }

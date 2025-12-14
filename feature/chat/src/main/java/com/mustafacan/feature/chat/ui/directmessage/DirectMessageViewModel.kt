@@ -205,6 +205,11 @@ class DirectMessageViewModel @Inject constructor(
                         sendEffect(DirectMessageUiEffect.ScrollToBottom)
 
                     }
+
+                    if (messageItem.sender._id.equals(uiState.value.userId)) {
+                        setState { copy(messageValue = "") }
+                        sendEffect(DirectMessageUiEffect.HideKeyboard)
+                    }
                 }
 
             }

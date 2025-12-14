@@ -45,6 +45,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -96,6 +98,8 @@ fun GroupMessageRoute(viewModel: GroupMessageViewModel, navController: NavHostCo
     val pagedMessages : LazyPagingItems<Message> = viewModel.messagesPagingDataFlow.collectAsLazyPagingItems()
     val messagesLazyListState = rememberLazyListState()
     val lifecycleOwner = LocalLifecycleOwner.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
 
     LaunchedEffect(messagesLazyListState.firstVisibleItemIndex, messagesLazyListState.firstVisibleItemScrollOffset) {
         viewModel.updateScrollPosition(
@@ -121,6 +125,11 @@ fun GroupMessageRoute(viewModel: GroupMessageViewModel, navController: NavHostCo
                         scrollOffset = uiState.previousFirstVisibleItemOffset
                     )
 
+                }
+
+                GroupMessageUiEffect.HideKeyboard -> {
+                    focusManager.clearFocus()
+                    keyboardController?.hide()
                 }
             }
         }
