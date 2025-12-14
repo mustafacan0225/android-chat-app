@@ -255,4 +255,23 @@ and easy to maintain as the project scales.
   </tr>
 </table>
 
+## 📦 Application Modularization
 
+<table align="center">
+  <tr>
+    <th align="center">🗂 Modularization Diagram</th>
+    <th align="center">🖥 Android Studio – Module Overview</th>
+  </tr>
+  <tr>
+    <td align="center"><sub>A visual diagram showing the app module, feature modules, data modules, and core modules, along with their inter-dependencies.</sub></td>
+    <td align="center"><sub>Screenshot from Android Studio displaying all modules in the project</sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="70%">
+      <img src="resources/screenshots/screenshot11.png" width="100%"/>
+    </td>
+    <td align="center" width="30%">
+      <img src="resources/screenshots/screenshot12.png" width="100%"/>
+    </td>
+  </tr>
+</table>
