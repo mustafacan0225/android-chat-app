@@ -33,13 +33,13 @@ and **Jetpack Architecture Components**, Realtime updates are implemented using 
   </tr>
   <tr>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/7d06ca10-a9f2-46de-8b0e-d8867fab74c0" width="280"/>
+      <img src="resources/gifs/Screen_Recording_1.gif" width="280"/>
     </td>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/255fd11d-4a65-4c3a-8f9a-12ba83252175" width="280"/>
+      <img src="resources/gifs/Screen_Recording_2.gif" width="280"/>
     </td>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/87011e07-b851-4487-a58c-a0765b4c21a7" width="280"/>
+      <img src="resources/gifs/Screen_Recording_3.gif" width="280"/>
     </td>
   </tr>
 </table>
@@ -74,13 +74,13 @@ and **Jetpack Architecture Components**, Realtime updates are implemented using 
   </tr>
   <tr>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/ca1f6fb4-be1b-469b-9cbc-5f36f70f1acb" width="280"/>
+      <img src="resources/gifs/Screen_Recording_4.gif" width="280"/>
     </td>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/b3002f58-41d2-44e8-9b22-81311ae4eaa8" width="280"/>
+      <img src="resources/gifs/Screen_Recording_5.gif" width="280"/>
     </td>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/3df0d13a-7303-4d9a-a772-995ae4934856" width="280"/>
+      <img src="resources/gifs/Screen_Recording_6.gif" width="280"/>
     </td>
   </tr>
 </table>
@@ -114,13 +114,13 @@ and **Jetpack Architecture Components**, Realtime updates are implemented using 
   </tr>
   <tr>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/d286634a-dcd2-469c-a7a3-3f8cf82d0e8a" width="280"/>
+      <img src="resources/gifs/Screen_Recording_7.gif" width="280"/>
     </td>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/43300306-7870-4288-8f46-a2a8d1d08ec5" width="280"/>
+      <img src="resources/gifs/Screen_Recording_8.gif" width="280"/>
     </td>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/daeaaeaf-fc07-4720-93db-23cf6a3fc8a0" width="280"/>
+      <img src="resources/gifs/Screen_Recording_9.gif" width="280"/>
     </td>
   </tr>
 </table>
@@ -158,13 +158,13 @@ and **Jetpack Architecture Components**, Realtime updates are implemented using 
   </tr>
   <tr>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/cfead12e-baa6-4575-976b-29d3f2449775" width="280"/>
+      <img src="resources/gifs/Screen_Recording_10.gif" width="280"/>
     </td>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/4a422c3f-41d2-4e43-9086-d33797363bed" width="280"/>
+      <img src="resources/gifs/Screen_Recording_11.gif" width="280"/>
     </td>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/a662d289-0f30-47b6-8f94-eea994e7a0e9" width="280"/>
+      <img src="resources/gifs/Screen_Recording_12.gif" width="280"/>
     </td>
   </tr>
 </table>
@@ -244,13 +244,13 @@ and easy to maintain as the project scales.
   </tr>
   <tr>
     <td align="center">
-      <img src="resources/screenshots/screenshot8" width="280"/>
+      <img src="resources/screenshots/screenshot8.png" width="280"/>
     </td>
     <td align="center">
-      <img src="resources/screenshots/screenshot9" width="280"/>
+      <img src="resources/screenshots/screenshot9.png" width="280"/>
     </td>
     <td align="center">
-      <img src="resources/screenshots/screenshot10" width="280"/>
+      <img src="resources/screenshots/screenshot10.png" width="280"/>
     </td>
   </tr>
 </table>
