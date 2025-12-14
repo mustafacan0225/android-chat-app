@@ -32,14 +32,14 @@ and **Jetpack Architecture Components**, Realtime updates are implemented using 
     </td>
   </tr>
   <tr>
-    <td align="center">
-      <img src="resources/gifs/Screen_Recording_1.gif" width="280"/>
+    <td align="center" width="33%"> 
+      <img src="resources/gifs/Screen_Recording_1.gif" width="100%"/>
     </td>
-    <td align="center">
-      <img src="resources/gifs/Screen_Recording_2.gif" width="280"/>
+    <td align="center" width="33%">
+      <img src="resources/gifs/Screen_Recording_2.gif" width="100%"/>
     </td>
-    <td align="center">
-      <img src="resources/gifs/Screen_Recording_3.gif" width="280"/>
+    <td align="center" width="33%">
+      <img src="resources/gifs/Screen_Recording_3.gif" width="100%"/>
     </td>
   </tr>
 </table>
@@ -73,14 +73,14 @@ and **Jetpack Architecture Components**, Realtime updates are implemented using 
     </td>
   </tr>
   <tr>
-    <td align="center">
-      <img src="resources/gifs/Screen_Recording_4.gif" width="280"/>
+    <td align="center" width="33%">
+      <img src="resources/gifs/Screen_Recording_4.gif" width="100%"/>
     </td>
-    <td align="center">
-      <img src="resources/gifs/Screen_Recording_5.gif" width="280"/>
+    <td align="center" width="33%">
+      <img src="resources/gifs/Screen_Recording_5.gif" width="100%"/>
     </td>
-    <td align="center">
-      <img src="resources/gifs/Screen_Recording_6.gif" width="280"/>
+    <td align="center" width="33%">
+      <img src="resources/gifs/Screen_Recording_6.gif" width="100%"/>
     </td>
   </tr>
 </table>
@@ -113,14 +113,14 @@ and **Jetpack Architecture Components**, Realtime updates are implemented using 
     </td>
   </tr>
   <tr>
-    <td align="center">
-      <img src="resources/gifs/Screen_Recording_7.gif" width="280"/>
+    <td align="center" width="33%">
+      <img src="resources/gifs/Screen_Recording_7.gif" width="100%"/>
     </td>
-    <td align="center">
-      <img src="resources/gifs/Screen_Recording_8.gif" width="280"/>
+    <td align="center" width="33%">
+      <img src="resources/gifs/Screen_Recording_8.gif" width="100%"/>
     </td>
-    <td align="center">
-      <img src="resources/gifs/Screen_Recording_9.gif" width="280"/>
+    <td align="center" width="33%">
+      <img src="resources/gifs/Screen_Recording_9.gif" width="100%"/>
     </td>
   </tr>
 </table>
@@ -157,14 +157,14 @@ and **Jetpack Architecture Components**, Realtime updates are implemented using 
     </td>
   </tr>
   <tr>
-    <td align="center">
-      <img src="resources/gifs/Screen_Recording_10.gif" width="280"/>
+    <td align="center" width="33%">
+      <img src="resources/gifs/Screen_Recording_10.gif" width="100%"/>
     </td>
-    <td align="center">
-      <img src="resources/gifs/Screen_Recording_11.gif" width="280"/>
+    <td align="center" width="33%">
+      <img src="resources/gifs/Screen_Recording_11.gif" width="100%"/>
     </td>
-    <td align="center">
-      <img src="resources/gifs/Screen_Recording_12.gif" width="280"/>
+    <td align="center" width="33%">
+      <img src="resources/gifs/Screen_Recording_12.gif" width="100%"/>
     </td>
   </tr>
 </table>
@@ -176,17 +176,17 @@ and **Jetpack Architecture Components**, Realtime updates are implemented using 
     <th align="center">☀️ Light Theme</th>
   </tr>
   <tr>
-    <td align="center"><img src="resources/screenshots/screenshot1.jpg" width="280"/></td>
-    <td align="center"><img src="resources/screenshots/screenshot2.jpg" width="280"/></td>
-    <td align="center"><img src="resources/screenshots/screenshot3.jpg" width="280"/></td>
+    <td align="center" width="33%"><img src="resources/screenshots/screenshot1.jpg" width="100%"/></td>
+    <td align="center" width="33%"><img src="resources/screenshots/screenshot2.jpg" width="100%"/></td>
+    <td align="center" width="33%"><img src="resources/screenshots/screenshot3.jpg" width="100%"/></td>
   </tr>
   <tr>
-    <td align="center"><img src="resources/screenshots/screenshot4.jpg" width="280"/></td>
-    <td align="center"><img src="resources/screenshots/screenshot5.jpg" width="280"/></td>
-    <td align="center"><img src="resources/screenshots/screenshot6.jpg" width="280"/></td>
+    <td align="center" width="33%"><img src="resources/screenshots/screenshot4.jpg" width="100%"/></td>
+    <td align="center" width="33%"><img src="resources/screenshots/screenshot5.jpg" width="100%"/></td>
+    <td align="center" width="33%"><img src="resources/screenshots/screenshot6.jpg" width="100%"/></td>
   </tr>
   <tr>
-    <td align="center"><img src="resources/screenshots/screenshot7.jpg" width="280"/></td>
+    <td align="center" width="33%"><img src="resources/screenshots/screenshot7.jpg" width="100%"/></td>
     <td></td>
     <td></td>
   </tr>
@@ -199,17 +199,17 @@ and **Jetpack Architecture Components**, Realtime updates are implemented using 
     <th align="center">🌑 Dark Theme</th>
   </tr>
   <tr>
-    <td align="center"><img src="resources/screenshots/screenshot1_dark.jpg" width="280"/></td>
-    <td align="center"><img src="resources/screenshots/screenshot2_dark.jpg" width="280"/></td>
-    <td align="center"><img src="resources/screenshots/screenshot3_dark.jpg" width="280"/></td>
+    <td align="center" width="33%"><img src="resources/screenshots/screenshot1_dark.jpg" width="100%"/></td>
+    <td align="center" width="33%"><img src="resources/screenshots/screenshot2_dark.jpg" width="100%"/></td>
+    <td align="center" width="33%"><img src="resources/screenshots/screenshot3_dark.jpg" width="100%"/></td>
   </tr>
   <tr>
-    <td align="center"><img src="resources/screenshots/screenshot4_dark.jpg" width="280"/></td>
-    <td align="center"><img src="resources/screenshots/screenshot5_dark.jpg" width="280"/></td>
-    <td align="center"><img src="resources/screenshots/screenshot6_dark.jpg" width="280"/></td>
+    <td align="center" width="33%"><img src="resources/screenshots/screenshot4_dark.jpg" width="100%"/></td>
+    <td align="center" width="33%"><img src="resources/screenshots/screenshot5_dark.jpg" width="100%"/></td>
+    <td align="center" width="33%"><img src="resources/screenshots/screenshot6_dark.jpg" width="100%"/></td>
   </tr>
   <tr>
-    <td align="center"><img src="resources/screenshots/screenshot7_dark.jpg" width="280"/></td>
+    <td align="center" width="33%"><img src="resources/screenshots/screenshot7_dark.jpg" width="100%"/></td>
     <td></td>
     <td></td>
   </tr>
@@ -243,14 +243,14 @@ and easy to maintain as the project scales.
     </sub></td>
   </tr>
   <tr>
-    <td align="center">
-      <img src="resources/screenshots/screenshot8.png" width="280"/>
+    <td align="center" width="33%">
+      <img src="resources/screenshots/screenshot8.png" width="100%"/>
     </td>
-    <td align="center">
-      <img src="resources/screenshots/screenshot9.png" width="280"/>
+    <td align="center" width="33%">
+      <img src="resources/screenshots/screenshot9.png" width="100%"/>
     </td>
-    <td align="center">
-      <img src="resources/screenshots/screenshot10.png" width="280"/>
+    <td align="center" width="33%">
+      <img src="resources/screenshots/screenshot10.png" width="100%"/>
     </td>
   </tr>
 </table>
