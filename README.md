@@ -317,6 +317,17 @@ ensuring a **unidirectional data flow** where the UI is a pure function of state
 ViewModels never communicate directly with data sources.
 All business operations are executed via **UseCases from the domain layer**
 
+<table align="center">
+  <tr>
+    <td align="center"><sub>MVI ARCHITECTURE (MVVM with state management)</sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="100%">
+      <img src="resources/screenshots/screenshot13.png" width="100%"/>
+    </td>
+  </tr>
+</table>
+
 ## Domain Layer (core:domain)
 
 The domain layer represents the **core business logic** of the application and is
