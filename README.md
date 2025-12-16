@@ -228,7 +228,6 @@ and easy to maintain as the project scales.
 <table align="center">
   <tr>
     <th align="center">build.gradle.kts(:app) – with 🧩 Convention Plugins</th>
-    <th align="center">build.gradle.kts(:feature:rooms) – with 🧩 Convention Plugins</th>
     <th align="center">build.gradle.kts(:feature:messages) – with 🧩 Convention Plugins</th>
   </tr>
   <tr>
@@ -238,18 +237,12 @@ and easy to maintain as the project scales.
     <td align="center"><sub>
       The feature module applies only the necessary convention plugins. Common setup is centralized in build-logic while module-specific dependencies are added locally.
     </sub></td>
-    <td align="center"><sub>
-      Similarly, the messages feature module uses build-logic for shared configuration and applies only its unique settings in the module.
-    </sub></td>
   </tr>
   <tr>
-    <td align="center" width="33%">
+    <td align="center" width="50%">
       <img src="resources/screenshots/screenshot8.png" width="100%"/>
     </td>
-    <td align="center" width="33%">
-      <img src="resources/screenshots/screenshot9.png" width="100%"/>
-    </td>
-    <td align="center" width="33%">
+    <td align="center" width="50%">
       <img src="resources/screenshots/screenshot10.png" width="100%"/>
     </td>
   </tr>
@@ -260,18 +253,98 @@ and easy to maintain as the project scales.
 <table align="center">
   <tr>
     <th align="center">🗂 Modularization Diagram</th>
-    <th align="center">🖥 Android Studio – Module Overview</th>
   </tr>
   <tr>
     <td align="center"><sub>A visual diagram showing the app module, feature modules, data modules, and core modules, along with their inter-dependencies.</sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="100%">
+      <img src="resources/screenshots/screenshot11.png" width="100%"/>
+    </td>
+  </tr>
+</table>
+
+<table align="center">
+  <tr>
+    <th align="center">🖥 Android Studio – Module Overview</th>
+  </tr>
+  <tr>
     <td align="center"><sub>Screenshot from Android Studio displaying all modules in the project</sub></td>
   </tr>
   <tr>
-    <td align="center" width="80%">
-      <img src="resources/screenshots/screenshot11.png" width="100%"/>
-    </td>
-    <td align="center" width="20%">
+    <td align="center" width="100%">
       <img src="resources/screenshots/screenshot12.png" width="100%"/>
     </td>
   </tr>
 </table>
+
+## Architecture Overview
+
+This project follows a **Multi-Module Clean Architecture** combined with **MVI** 
+and **Jetpack Compose**.
+
+- **Feature modules** contain UI (Jetpack Compose) and ViewModels
+- **Domain module (core:domain)** acts as an isolation layer
+- **Data modules** handle external data sources:
+  - :data:network (REST)
+  - :data:socketio (Socket.IO)
+  - :data:datastore (Local storage)
+
+**Feature modules never communicate directly with data modules.**  
+All communication is done via **UseCases and repository interfaces**
+defined in the domain layer.
+
+This structure enforces **dependency inversion** by keeping all abstractions
+inside the domain layer and all implementations inside data modules.
+
+## Feature Layer (UI + ViewModel)
+
+Feature modules are responsible for **UI rendering** and **state management**.
+The UI is built with **Jetpack Compose** and follows an **MVI-based architecture**.
+
+Each screen is backed by a ViewModel that extends a common BaseViewModel and
+defines three core contracts:
+- **UiState** exposed via **StateFlow** to represent the current UI state
+- **UiEvent** to model user-driven interactions such as input and clicks
+- **UiEffect** exposed as a one-time stream for navigation and transient UI actions
+
+User interactions are sent to the ViewModel as UiEvents.
+The ViewModel processes these events, updates the state using a reducer-style
+approach, and emits new UiState values.
+Jetpack Compose observes state changes and automatically recomposes the UI,
+ensuring a **unidirectional data flow** where the UI is a pure function of state.
+
+ViewModels never communicate directly with data sources.
+All business operations are executed via **UseCases from the domain layer**
+
+## Domain Layer (core:domain)
+
+The domain layer represents the **core business logic** of the application and is
+completely independent from framework and data source implementations.
+
+This module contains:
+- **UseCase classes** that define individual business operations
+- **Repository interfaces** that describe data access contracts
+
+UseCases are called from ViewModels and interact only with repository interfaces.
+The domain layer defines **what the application does**, not **how it is done**,
+making it stable and reusable.
+
+The domain module does not depend on feature or data modules.
+It serves as the central abstraction layer that enforces clean boundaries.
+
+## Data Layer (data modules)
+
+Each data module focuses on a specific data source:
+- **data:network** for REST API communication
+- **data:socketio** for real-time socket operations
+- **data:datastore** for local persistence
+
+Data modules implement the repository interfaces defined in the domain layer and
+contain all framework-specific code such as REST communication, Socket.IO
+real-time messaging, serialization, and local storage
+
+Dependencies between domain abstractions and data implementations are wired using
+**Dagger Hilt**.
+This allows the application to follow **dependency inversion**, ensuring that
+high-level business logic remains independent from low-level implementation details.
