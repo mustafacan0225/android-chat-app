@@ -319,7 +319,7 @@ All business operations are executed via **UseCases from the domain layer**
 
 <table align="center">
   <tr>
-    <td align="center"><sub>MVI ARCHITECTURE (MVVM with state management)</sub></td>
+    <td align="center"><sub>FEATURE LAYER - MVI ARCHITECTURE (MVVM with state management)</sub></td>
   </tr>
   <tr>
     <td align="center" width="100%">
@@ -359,3 +359,18 @@ Dependencies between domain abstractions and data implementations are wired usin
 **Dagger Hilt**.
 This allows the application to follow **dependency inversion**, ensuring that
 high-level business logic remains independent from low-level implementation details.
+
+## Core UI Layer (core:ui)
+
+The **core:ui** module provides shared UI components used across all feature modules.
+
+It contains:
+- Reusable Jetpack Compose components(searchbar, button, dialog, etc.)
+- Common layouts and UI patterns
+- Animations(lottie, shimmer, transition)
+
+All composables are built with **state hoisting** in mind, ensuring that UI components
+remain stateless, flexible, and easily reusable by feature modules.
+
+By centralizing UI elements in the **core:ui** module, the app maintains visual
+consistency, reduces duplication, and keeps UI logic clean and modular.
