@@ -387,7 +387,7 @@ consistency, reduces duplication, and keeps UI logic clean and modular.
 ### Android
 - Kotlin
 - Coroutines
-- Flow(StateFlow - SharedFlow)
+- Flow / StateFlow / SharedFlow
 - ViewModel
 - Lifecycle
 
