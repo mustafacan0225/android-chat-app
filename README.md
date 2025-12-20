@@ -374,3 +374,74 @@ remain stateless, flexible, and easily reusable by feature modules.
 
 By centralizing UI elements in the **core:ui** module, the app maintains visual
 consistency, reduces duplication, and keeps UI logic clean and modular.
+
+
+
+<h2>Tech Stack</h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td>
+
+### Android
+- Kotlin
+- Coroutines
+- Flow(StateFlow - SharedFlow)
+- ViewModel
+- Lifecycle
+
+- Jetpack Compose
+- MVI Architecture
+- Androidx Paging
+- Material Design 3
+- Navigation Compose
+- State Hoisting
+- Compose State Management
+- ConstraintLayout for Compose
+- Lottie Animation
+- Coil
+
+### Architecture
+- Multi-Module Architecture
+- Clean Architecture
+- Feature-based modularization (shared domain & data layers)
+- Centralized domain and data layers
+- Framework-independent domain layer
+- Separation of concerns
+- Scalable and testable design
+
+### Dependency Injection
+- Dagger Hilt
+- Module-scoped dependency graphs
+- Clear ownership of DI modules (core / data / feature)
+
+### Networking & Realtime
+- Socket.IO
+- Retrofit2
+- OkHttp3
+- Gson
+- Moshi
+
+### Local Data & Persistence
+- DataStore
+- Single source of truth
+- Reactive streams with Flow
+
+### Build & Tooling
+- Gradle Kotlin DSL
+- Custom Build Logic
+- Version Catalogs
+- Convention Plugins
+- Multi-module Gradle setup
+- Strict module dependency rules
+
+### Backend (Demo Purpose)
+- Node.js
+- Express
+- Socket.IO
+- MongoDB
+</td>
+    </tr>
+  </tbody>
+</table>
