@@ -436,12 +436,18 @@ consistency, reduces duplication, and keeps UI logic clean and modular.
 - Multi-module Gradle setup
 - Strict module dependency rules
 
-### Backend (Demo Purpose)
-- Node.js
-- Express
-- Socket.IO
+
+## Backend Application
+
+This Android application communicates with a dedicated Node.js backend service.
+
+🔗 **Backend Server Repository**  
+https://github.com/mustafacan0225/demo-chat-app-server
+
+### Highlights
+- Node.js + Express REST API
 - MongoDB
-</td>
-    </tr>
-  </tbody>
-</table>
+- JSON-only API responses
+- Retrofit-friendly request/response structure
+- Cursor-based pagination for chat history
+- Socket.IO for real-time messaging
