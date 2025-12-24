@@ -451,3 +451,10 @@ https://github.com/mustafacan0225/demo-chat-app-server
 - Retrofit-friendly request/response structure
 - Cursor-based pagination for chat history
 - Socket.IO for real-time messaging
+
+## TODO / Roadmap (Android)
+
+- [ ] Unit Tests
+- [ ] Compose UI Tests
+- [ ] Seen-by (Message Read) Feature
+
