@@ -26,6 +26,9 @@ paging = "3.3.6"
 constraintlayout = "1.1.1"
 google-code-gson = "2.10.1"
 coil = "2.6.0"
+test-coroutines = "1.8.0"
+mockito = "5.5.0"
+kotlin-test-junit = "2.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -103,6 +106,11 @@ coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coi
 # Gradle Plugins
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+
+#Test
+test-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "test-coroutines" }
+mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+kotlin-test-junit = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit", version.ref = "kotlin-test-junit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

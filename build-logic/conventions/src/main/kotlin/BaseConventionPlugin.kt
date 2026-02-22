@@ -71,6 +71,10 @@ class BaseConventionPlugin : Plugin<Project> {
                 "androidTestImplementation"(libs.findLibrary("androidx.junit").get())
                 "androidTestImplementation"(libs.findLibrary("androidx.espresso.core").get())
 
+                "testImplementation"(libs.findLibrary("test-coroutines").get())
+                "testImplementation"(libs.findLibrary("mockito").get())
+                "testImplementation"(libs.findLibrary("kotlin-test-junit").get())
+
             }
         }
     }

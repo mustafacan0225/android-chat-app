@@ -9,3 +9,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.serialization) apply false
     alias(libs.plugins.kotlin.jvm) apply false
 }
+
+tasks.register("clean", Delete::class) {
+    delete(layout.buildDirectory)
+}
